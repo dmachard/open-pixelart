@@ -5,6 +5,63 @@ physical LED matrix using **Bluetooth**.
 
 The project includes both the **firmware** for the ESP32-C3 and a **web app** for drawing, upload, and slideshow control.
 
+<img src="imgs/demo.gif" title="demo">
+
+## Hardware setup
+
+- **ESP32-C3 Super mini**:  Microcontroller
+- **WS2812B LED Matrix 16×16**: 256 addressable RGB LEDs
+- **Power Supply**:  5 V DC, ≥ 1 A recommended
+- **3D Printed Enclosure**: STL and FreeCAD files included in `/enclosure/`
+
+**Pinout:**
+| Signal | ESP32-C3 Pin | Notes |
+|--------|--------------|-------|
+| LED Data | GPIO 8 | Configurable via `DATA_PIN` |
+| 5V | VIN | Power input |
+| GND | GND | Common ground |
+
+<img src="imgs/circuit.png" title="demo">
+
+## Firmware (ESP32-C3 + WS2812B)
+
+Firmware for controlling a 16×16 WS2812B LED matrix using an ESP32-C3 via **Bluetooth Low Energy (BLE)**.  
+Designed to work with the **Web Control App**, which lets you draw and upload pixel art or animations wirelessly.
+
+**Advertised Bluetooth device name:** `Matrix16x16`
+
+## Web Control App
+
+The Webapp uses the Web Bluetooth API to send data directly to your ESP32-C3.
+
+Available at https://dmachard.github.io/open-pixelart/
+
+<img src="imgs/webapp_connect.png" width="500">
+<img src="imgs/webapp_mode.png" width="500">
+<img src="imgs/webapp_draw.png" width="500">
+
+This web interface lets you:
+- Draw and color pixel art with instant LED feedback
+- Control brightness  
+- Save/load drawings as `.json` files  
+- Play animated slideshows
+
+Each drawing must be stored as a `.json` file in the `/drawings/` directory.  
+Corresponding thumbnail images should be placed in the `/images/` directory.
+
+You can generate a PNG thumbnail from any exported JSON drawing with the provided script:
+
+```
+cd web/
+python3 -m venv venv
+source venv/bin/activate
+python -m pip install -r requirements.txt
+python scripts/json_to_png.py drawings/led-matrix.json
+```
+
+## Gallery
+
+
 <table>
 
 <tr>
@@ -91,55 +148,3 @@ The project includes both the **firmware** for the ESP32-C3 and a **web app** fo
 <td><img src="web/images/stitch.png" width="50" title="stitch"></td>
 </tr>
 </table>
-
-## Hardware setup
-
-- **ESP32-C3**:  Microcontroller (BLE + WiFi)
-- **LED Matrix 16×16**: WS2812B (256 addressable RGB LEDs)
-- **Power Supply**:  5 V DC, ≥ 3 A recommended
-- **3D Printed Enclosure**: STL and FreeCAD files included in `/enclosure/`
-
-<img src="imgs/demo.gif" title="demo">
-
-**Pinout:**
-| Signal | ESP32-C3 Pin | Notes |
-|--------|--------------|-------|
-| LED Data | GPIO 8 | Configurable via `DATA_PIN` |
-| 5V | VIN | Power input |
-| GND | GND | Common ground |
-
-## Firmware (ESP32-C3 + WS2812B)
-
-Firmware for controlling a 16×16 WS2812B LED matrix using an ESP32-C3 via **Bluetooth Low Energy (BLE)**.  
-Designed to work with the **Web Control App**, which lets you draw and upload pixel art or animations wirelessly.
-
-**Advertised Bluetooth device name:** `Matrix16x16`
-
-## Web Control App
-
-The Webapp uses the Web Bluetooth API to send data directly to your ESP32-C3.
-
-Available at https://dmachard.github.io/pixelart-16x16/
-
-<img src="imgs/webapp_connect.png" width="500">
-<img src="imgs/webapp_mode.png" width="500">
-<img src="imgs/webapp_draw.png" width="500">
-
-This web interface lets you:
-- Draw and color pixel art with instant LED feedback
-- Control brightness  
-- Save/load drawings as `.json` files  
-- Play animated slideshows
-
-Each drawing must be stored as a `.json` file in the `/drawings/` directory.  
-Corresponding thumbnail images should be placed in the `/images/` directory.
-
-You can generate a PNG thumbnail from any exported JSON drawing with the provided script:
-
-```
-cd web/
-python3 -m venv venv
-source venv/bin/activate
-python -m pip install -r requirements.txt
-python scripts/json_to_png.py drawings/led-matrix.json
-```
