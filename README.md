@@ -61,7 +61,6 @@ python scripts/json_to_png.py drawings/led-matrix.json
 
 ## Gallery
 
-
 <table>
 
 <tr>
@@ -148,3 +147,77 @@ python scripts/json_to_png.py drawings/led-matrix.json
 <td><img src="web/images/stitch.png" width="50" title="stitch"></td>
 </tr>
 </table>
+
+
+## BLE Frame Format
+
+Each frame sent via BLE follows this structure:
+
+```
+[Header: 6 bytes][Palette: N×3 bytes][Pixels: 128 bytes]
+```
+
+### Header Format (6 bytes)
+
+| Byte | Name | Type | Range | Description |
+|------|------|------|-------|-------------|
+| `[0]` | **mode** | uint8 | 0-3 | Display mode |
+| `[1]` | **brightness** | uint8 | 0-255 | Global brightness |
+| `[2]` | **paletteSize** | uint8 | 1-16 | Number of colors in palette |
+| `[3]` | **frameIndex** | uint8 | 0-9 | Current frame index |
+| `[4]` | **totalFrames** | uint8 | 1-10 | Total number of frames |
+| `[5]` | **transition** | uint8 | 0-8 | Transition effect mode |
+
+
+### Byte [0] - Display Mode
+
+| Value | Mode | Description |
+|-------|------|-------------|
+| `0` | **MODE_DRAW** | Real-time drawing |
+| `1` | **MODE_GALLERY** | Automatic slideshow |
+
+### Byte [1] - Brightness
+
+- **Range**: 0-255
+- **Default**: 25
+- **Note**: Applied globally via `FastLED.setBrightness()`
+
+### Byte [2] - Palette Size
+
+- **Range**: 1-16
+- **Note**: Limited to 16 colors to optimize memory
+- Values > 16 are clamped to 16 on ESP32
+
+### Byte [3] - Frame Index
+
+- **Range**: 0-9 (max 10 frames)
+- **Usage**:
+  - `MODE_DRAW`: always `0`
+  - `MODE_GALLERY`: `0` to `totalFrames - 1`
+
+### Byte [4] - Total Frames
+
+- **Range**: 1-10
+- **Usage**:
+  - `MODE_DRAW`: always `1`
+  - `MODE_GALLERY`: total number of frames in slideshow
+
+### Byte [5] - Transition Mode
+
+| Value | Name | Description | Duration |
+|-------|------|-------------|----------|
+| `0` | **TR_RANDOM** | Pixels appear randomly | ~8s (256 × 30ms) |
+| `1` | **TR_INSTANT** | Instant change (no transition) | 0s |
+
+
+### Palette Format (N × 3 bytes)
+
+Starting at byte `[6]`, the palette contains RGB color triplets:
+
+```
+[R₀, G₀, B₀, R₁, G₁, B₁, ..., Rₙ₋₁, Gₙ₋₁, Bₙ₋₁]
+```
+
+### Pixel Data Format (128 bytes)
+
+Starting at byte `[6 + paletteSize × 3]`, pixel data is packed with **2 pixels per byte**.

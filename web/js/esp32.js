@@ -9,11 +9,25 @@ function hexToRgb(hex) {
     ];
 }
 
+// Transition modes constants
+const TRANSITIONS = {
+    RANDOM: 0,        // random pixels
+    INSTANT: 1     // instant full frame
+};
+
 // Minimal ESP32 BLE helper
 (function () {
     let _isWriting = false;
 
-    async function send({ pixels, palette, brightness = 25, mode = 0, frameIndex=0, totalFrames=0} = {}) {
+    async function send({ 
+        pixels, 
+        palette, 
+        brightness = 25, 
+        mode = 0, 
+        frameIndex=0,
+        totalFrames=0, 
+        transition=TRANSITIONS.INSTANT
+    } = {}) {
         const char = window.ledmatrix?.ble?.getCharacteristic?.();
         if (!char) throw new Error('BLE is not connected.');
 
@@ -30,7 +44,8 @@ function hexToRgb(hex) {
             // [2] paletteSize (1 byte = N)
             // [3] frame index
             // [4] total frames
-            // [5..(3+3*N-1)] palette RGB triplets (3*N bytes)
+            // [5] transition mode (1 byte)
+            // [6..(3+3*N-1)] palette RGB triplets (3*N bytes)
             // [...] packed pixel indices (2 per byte)
             const data = [];
             data.push(mode);
@@ -38,6 +53,7 @@ function hexToRgb(hex) {
             data.push(finalPalette.length);
             data.push(frameIndex);
             data.push(totalFrames);
+            data.push(transition);
             
             finalPalette.forEach(([r, g, b]) => data.push(r, g, b));
 
