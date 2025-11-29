@@ -9,12 +9,6 @@ function hexToRgb(hex) {
     ];
 }
 
-// Transition modes constants
-const TRANSITIONS = {
-    RANDOM: 0,        // random pixels
-    INSTANT: 1     // instant full frame
-};
-
 // Minimal ESP32 BLE helper
 (function () {
     let _isWriting = false;
@@ -26,7 +20,7 @@ const TRANSITIONS = {
         mode = 0, 
         frameIndex=0,
         totalFrames=0, 
-        transition=TRANSITIONS.INSTANT
+        transition=0
     } = {}) {
         const char = window.ledmatrix?.ble?.getCharacteristic?.();
         if (!char) throw new Error('BLE is not connected.');
