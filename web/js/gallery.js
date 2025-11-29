@@ -61,6 +61,11 @@ const galleryData = [
     { name: "Stitch", thumb: "images/stitch.png", file: "drawings/stitch.json" },
 ];
 
+const TRANSITIONS = {
+    PROGRESSIVE: 0, 
+    INSTANT: 1 
+};
+
 let selectedGalleryItems = new Set();
 
 function initSlideshowMode() {
@@ -171,6 +176,7 @@ async function sendSlideshow() {
 async function sendSelectedDrawings() {
     try {
         const brightness = parseInt(document.getElementById('brightnessSlideshowSelect').value);
+        const transition = getCurrentTransition();
         const selectedIndices = Array.from(selectedGalleryItems);
         const totalFrames = selectedIndices.length;
         
@@ -192,7 +198,8 @@ async function sendSelectedDrawings() {
                     brightness,
                     mode: 1,
                     frameIndex,
-                    totalFrames
+                    totalFrames,
+                    transition
                 });
                 
                 await new Promise(r => setTimeout(r, 50));
@@ -208,4 +215,9 @@ async function sendSelectedDrawings() {
     } catch (err) {
         showNotification('✗ Error sending drawings', true);
     }
+}
+
+function getCurrentTransition() {
+    const select = document.getElementById('displayModeSelect');
+    return select?.value === 'progressive' ? TRANSITIONS.PROGRESSIVE : TRANSITIONS.INSTANT;
 }
