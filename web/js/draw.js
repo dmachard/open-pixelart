@@ -230,7 +230,8 @@ async function sendCurrentDrawing() {
             pixels: pixelsFlat,
             palette: palette,
             brightness: brightness,
-            mode: 0
+            mode: 0,
+            transition: 1
         });
         showNotification('✓ Drawing sent!');
     } catch (err) {
@@ -251,7 +252,12 @@ function sendToESP32Debounced() {
         const { pixelsFlat, palette } = preparePixelsAndPalette();
 
         // Send to ESP32
-        window.ledmatrix.esp32.send({  pixels: pixelsFlat, palette: palette, brightness: brightness, mode: 0 });
+        window.ledmatrix.esp32.send({  
+            pixels: pixelsFlat, 
+            palette: palette,
+            brightness: brightness, 
+            mode: 0,
+            transition: 1 });
         sendTimeout = null;
     }, 20);
 
