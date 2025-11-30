@@ -155,20 +155,10 @@ Each frame sent via BLE follows this structure:
 The full BLE frame is always kept below the maximum MTU, ensuring that it fits in a single BLE write without fragmentation.
 
 ```
-[Header: 6 bytes][Palette: N×3 bytes][Pixels: 128 bytes]
+[Header: 8 bytes][Palette: N×3 bytes][Pixels: 128 bytes]
 ```
 
 Header (6 bytes):
-
-| Byte | Name | Type | Range | Description |
-|------|------|------|-------|-------------|
-| `[0]` | **mode** | uint8 | 0-3 | Display mode, 0=Draw, 1=Gallery |
-| `[1]` | **brightness** | uint8 | 0-255 | Global brightness, default: 25 |
-| `[2]` | **paletteSize** | uint8 | 1-16 | Number of colors in palette |
-| `[3]` | **frameIndex** | uint8 | 0-9 | Current frame index |
-| `[4]` | **totalFrames** | uint8 | 1-10 | Total number of frames |
-| `[5]` | **transition** | uint8 | 0-8 | Transition effect mode, 0=Random, 1=Random |
-| `[6-7]` | **frameduration** | uint16 | Header (6 bytes):
 
 | Byte | Name | Type | Range | Description |
 |------|------|------|-------|-------------|
