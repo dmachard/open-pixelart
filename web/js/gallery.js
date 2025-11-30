@@ -133,6 +133,7 @@ function updateSlideshowButtons() {
 async function sendSlideshow() {
     try {
         const brightness = parseInt(document.getElementById('brightnessSlideshowSelect').value);
+        const frameDuration = parseInt(document.getElementById('frameDurationSelect').value);
         const transition = getCurrentTransition();
 
         if (!galleryData || galleryData.length === 0) return;
@@ -160,7 +161,8 @@ async function sendSlideshow() {
                     mode: 1,
                     frameIndex,
                     totalFrames,
-                    transition
+                    transition,
+                    frameDuration
                 });
                 
                 await new Promise(r => setTimeout(r, 50));
@@ -181,6 +183,7 @@ async function sendSelectedDrawings() {
         const transition = getCurrentTransition();
         const selectedIndices = Array.from(selectedGalleryItems);
         const totalFrames = selectedIndices.length;
+        const frameDuration = parseInt(document.getElementById('frameDurationSelect').value);
         
         for (let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
             const item = galleryData[selectedIndices[frameIndex]];
@@ -201,7 +204,8 @@ async function sendSelectedDrawings() {
                     mode: 1,
                     frameIndex,
                     totalFrames,
-                    transition
+                    transition,
+                    frameDuration
                 });
                 
                 await new Promise(r => setTimeout(r, 50));

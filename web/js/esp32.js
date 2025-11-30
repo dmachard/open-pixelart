@@ -20,7 +20,8 @@ function hexToRgb(hex) {
         mode = 0, 
         frameIndex=0,
         totalFrames=0, 
-        transition=0
+        transition=0,
+        frameDuration = 15
     } = {}) {
         const char = window.ledmatrix?.ble?.getCharacteristic?.();
         if (!char) throw new Error('BLE is not connected.');
@@ -39,7 +40,8 @@ function hexToRgb(hex) {
             // [3] frame index
             // [4] total frames
             // [5] transition mode (1 byte)
-            // [6..(3+3*N-1)] palette RGB triplets (3*N bytes)
+            // [6-7] frame duration in seconds (2 bytes, uint16_t, little-endian)
+            // [8..(8+3*N-1)] palette RGB triplets (3*N bytes)
             // [...] packed pixel indices (2 per byte)
             const data = [];
             data.push(mode);
@@ -49,6 +51,12 @@ function hexToRgb(hex) {
             data.push(totalFrames);
             data.push(transition);
             
+            // Frame duration as uint16_t (little-endian)
+            const durationClamped = Math.max(1, Math.min(frameDuration, 65535));
+            data.push(durationClamped & 0xFF);        // Low byte
+            data.push((durationClamped >> 8) & 0xFF); // High byte
+
+            // Palette RGB triplets
             finalPalette.forEach(([r, g, b]) => data.push(r, g, b));
 
             // Pack pixels (2 per byte)

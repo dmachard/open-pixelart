@@ -90,7 +90,20 @@
                     <option value="100">100</option>
                 </select>
             </div>
-            
+
+            <div class="brightness-card" title="Frame duration">
+                <span class="icon">⏱️</span>
+                <select id="frameDurationSelect">
+                    <option value="3">3s</option>
+                    <option value="5">5s</option>
+                    <option value="10">10s</option>
+                    <option value="15" selected>15s</option>
+                    <option value="20">20s</option>
+                    <option value="30">30s</option>
+                    <option value="60">60s</option>
+                </select>
+            </div>
+
             <div class="control-btn hidden" id="sendSelectedBtn">
                 <span class="icon">📤</span>
                 <span>Send</span>
@@ -168,9 +181,9 @@
     </div>
 
     <script src="./js/ble.js?v=3" defer></script>
-    <script src="./js/esp32.js?v=11" defer></script>
+    <script src="./js/esp32.js?v=12" defer></script>
     <script src="./js/draw.js?v=3"></script>
-    <script src="./js/gallery.js?v=18"></script>
+    <script src="./js/gallery.js?v=19"></script>
     <script src="./js/app.js?v=63"></script>
 </body>
 </html>
