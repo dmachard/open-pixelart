@@ -68,6 +68,28 @@ const TRANSITIONS = {
 
 let selectedGalleryItems = new Set();
 
+// Progress bar functions
+function showProgress(current, total, text = 'Sending') {
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressFill = document.getElementById('progressFill');
+    
+    progressBar.classList.remove('hidden');
+    progressText.textContent = `${text} ${current}/${total}`;
+    
+    const percent = Math.round((current / total) * 100);
+    progressPercent.textContent = `${percent}%`;
+    progressFill.style.width = `${percent}%`;
+}
+
+function hideProgress() {
+    const progressBar = document.getElementById('progressBar');
+    setTimeout(() => {
+        progressBar.classList.add('hidden');
+    }, 500);
+}
+
 function initSlideshowMode() {
     renderGallery();
     initSlideshowControls();
@@ -142,6 +164,8 @@ async function sendSlideshow() {
         const framesToSend = shuffled.slice(0, Math.min(10, shuffled.length));
         const totalFrames = framesToSend.length;
         
+        showProgress(0, totalFrames, 'Sending slideshow');
+
         for (let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
             const item = framesToSend[frameIndex];
             try {
@@ -165,14 +189,17 @@ async function sendSlideshow() {
                     frameDuration
                 });
                 
+                showProgress(frameIndex + 1, totalFrames, 'Sending slideshow');
                 await new Promise(r => setTimeout(r, 50));
             } catch (err) {
                 console.warn('Error slideshow:', item.name, err);
             }
         }
         
+        hideProgress();
         showNotification(`🎞️ Slideshow sent (${totalFrames} frames)`);
     } catch (err) {
+        hideProgress();
         showNotification('✗ Error sending slideshow', true);
     }
 }
@@ -185,6 +212,7 @@ async function sendSelectedDrawings() {
         const totalFrames = selectedIndices.length;
         const frameDuration = parseInt(document.getElementById('frameDurationSelect').value);
         
+        showProgress(0, totalFrames, 'Sending selection');
         for (let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
             const item = galleryData[selectedIndices[frameIndex]];
             try {
@@ -208,17 +236,20 @@ async function sendSelectedDrawings() {
                     frameDuration
                 });
                 
+                showProgress(frameIndex + 1, totalFrames, 'Sending selection');
                 await new Promise(r => setTimeout(r, 50));
             } catch (err) {
                 console.warn('Error sending drawing:', item.name, err);
             }
         }
         
+        hideProgress();
         showNotification(`✓ Sent ${totalFrames} drawings`);
         selectedGalleryItems.clear();
         document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
         updateSlideshowButtons();
     } catch (err) {
+        hideProgress();
         showNotification('✗ Error sending drawings', true);
     }
 }

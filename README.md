@@ -168,4 +168,15 @@ Header (6 bytes):
 | `[3]` | **frameIndex** | uint8 | 0-9 | Current frame index |
 | `[4]` | **totalFrames** | uint8 | 1-10 | Total number of frames |
 | `[5]` | **transition** | uint8 | 0-8 | Transition effect mode, 0=Random, 1=Random |
+| `[6-7]` | **frameduration** | uint16 | Header (6 bytes):
+
+| Byte | Name | Type | Range | Description |
+|------|------|------|-------|-------------|
+| `[0]` | **mode** | uint8 | 0-3 | Display mode, 0=Draw, 1=Gallery |
+| `[1]` | **brightness** | uint8 | 0-255 | Global brightness, default: 25 |
+| `[2]` | **paletteSize** | uint8 | 1-16 | Number of colors in palette |
+| `[3]` | **frameIndex** | uint8 | 0-9 | Current frame index |
+| `[4]` | **totalFrames** | uint8 | 1-10 | Total number of frames |
+| `[5]` | **transition** | uint8 | 0-8 | Transition effect mode, 0=Random, 1=Random |
+| `[6-7]` | **frameDuration** | uint16 | 1-65535 | Frame duration in seconds (little-endian), default: 15 |
 
