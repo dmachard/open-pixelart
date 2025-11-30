@@ -167,6 +167,6 @@ Header (6 bytes):
 | `[2]` | **paletteSize** | uint8 | 1-16 | Number of colors in palette |
 | `[3]` | **frameIndex** | uint8 | 0-9 | Current frame index |
 | `[4]` | **totalFrames** | uint8 | 1-10 | Total number of frames |
-| `[5]` | **transition** | uint8 | 0-8 | Transition effect mode, 0=Random, 1=Random |
+| `[5]` | **transition** | uint8 | 0-8 | Transition effect mode, 0=Progressive, 1=Instant |
 | `[6-7]` | **frameDuration** | uint16 | 1-65535 | Frame duration in seconds (little-endian), default: 15 |
 
