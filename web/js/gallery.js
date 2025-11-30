@@ -133,7 +133,8 @@ function updateSlideshowButtons() {
 async function sendSlideshow() {
     try {
         const brightness = parseInt(document.getElementById('brightnessSlideshowSelect').value);
-        
+        const transition = getCurrentTransition();
+
         if (!galleryData || galleryData.length === 0) return;
         
         const shuffled = galleryData.slice().sort(() => Math.random() - 0.5);
@@ -158,7 +159,8 @@ async function sendSlideshow() {
                     brightness,
                     mode: 1,
                     frameIndex,
-                    totalFrames
+                    totalFrames,
+                    transition
                 });
                 
                 await new Promise(r => setTimeout(r, 50));
