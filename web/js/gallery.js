@@ -156,7 +156,7 @@ async function sendSlideshow() {
     try {
         const brightness = parseInt(document.getElementById('brightnessSlideshowSelect').value);
         const frameDuration = parseInt(document.getElementById('frameDurationSelect').value);
-        const transition = getCurrentTransition();
+        // const transition = getCurrentTransition();
 
         if (!galleryData || galleryData.length === 0) return;
         
@@ -185,7 +185,7 @@ async function sendSlideshow() {
                     mode: 1,
                     frameIndex,
                     totalFrames,
-                    transition,
+                    transition: TRANSITIONS.INSTANT,
                     frameDuration
                 });
                 
@@ -207,7 +207,7 @@ async function sendSlideshow() {
 async function sendSelectedDrawings() {
     try {
         const brightness = parseInt(document.getElementById('brightnessSlideshowSelect').value);
-        const transition = getCurrentTransition();
+        // const transition = getCurrentTransition();
         const selectedIndices = Array.from(selectedGalleryItems);
         const totalFrames = selectedIndices.length;
         const frameDuration = parseInt(document.getElementById('frameDurationSelect').value);
@@ -232,7 +232,7 @@ async function sendSelectedDrawings() {
                     mode: 1,
                     frameIndex,
                     totalFrames,
-                    transition,
+                    transition: TRANSITIONS.INSTANT,
                     frameDuration
                 });
                 
@@ -254,7 +254,7 @@ async function sendSelectedDrawings() {
     }
 }
 
-function getCurrentTransition() {
-    const select = document.getElementById('displayModeSelect');
-    return select?.value === 'progressive' ? TRANSITIONS.PROGRESSIVE : TRANSITIONS.INSTANT;
-}
+// function getCurrentTransition() {
+//     const select = document.getElementById('displayModeSelect');
+//     return select?.value === 'progressive' ? TRANSITIONS.PROGRESSIVE : TRANSITIONS.INSTANT;
+// }
