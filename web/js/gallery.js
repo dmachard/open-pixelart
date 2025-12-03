@@ -91,6 +91,10 @@ function hideProgress() {
 }
 
 function initSlideshowMode() {
+    // Use device dimensions if available, otherwise default to 16x16
+    const gridWidth = currentDeviceInfo?.width || 16;
+    const gridHeight = currentDeviceInfo?.height || 16;
+    
     renderGallery();
     initSlideshowControls();
 }

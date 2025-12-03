@@ -1,6 +1,8 @@
 
 // ========== DRAW MODE ==========
 
+let gridWidth = 16;
+let gridHeight = 16;
 let pixels = Array(16).fill().map(() => Array(16).fill(null));
 let pixelElements = [];
 let brightness = 25;
@@ -11,6 +13,13 @@ let lastPixel = null;
 let sendTimeout = null;
 
 function initDrawMode() {
+    // Use device dimensions if available, otherwise default to 16x16
+    gridWidth = currentDeviceInfo?.width || 16;
+    gridHeight = currentDeviceInfo?.height || 16;
+    
+    // Reinitialize pixels array if dimensions changed
+    pixels = Array(gridHeight).fill().map(() => Array(gridWidth).fill(null));
+    
     if (pixelElements.length === 0) {
         createGrid();
         initPalette();
@@ -23,9 +32,9 @@ function createGrid() {
     gridDiv.innerHTML = '';
     pixelElements = [];
     
-    for (let y = 0; y < 16; y++) {
+    for (let y = 0; y < gridHeight; y++) {
         pixelElements[y] = [];
-        for (let x = 0; x < 16; x++) {
+        for (let x = 0; x < gridWidth; x++) {
             const pixel = document.createElement('div');
             pixel.className = 'pixel';
             pixel.dataset.x = x;

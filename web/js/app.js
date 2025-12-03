@@ -23,6 +23,7 @@ if (DEBUG) {
 }
 
 let currentDevice = null;
+let currentDeviceInfo = null;
 
 const SERVICE_UUID = '12345678-1234-1234-1234-123456789012';
 const CHAR_UUID   = '87654321-4321-4321-4321-210987654321';
@@ -53,11 +54,28 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
         const { device } = await window.ledmatrix.ble.connect(SERVICE_UUID, CHAR_UUID);
         currentDevice = device;
         
-        showNotification('✓ Connected to ' + (device.name || 'Device'));
-        document.getElementById('deviceName').textContent = device.name || 'LED Matrix';
+        // Try to read device info
+        currentDeviceInfo = await window.ledmatrix.ble.getDeviceInfo();
+        
+        const deviceLabel = currentDeviceInfo?.model || device.name || 'LED Matrix';
+        showNotification('✓ Connected to ' + deviceLabel);
+        
+        // Update device display
+        const deviceNameEl = document.getElementById('deviceName');
+        if (currentDeviceInfo) {
+            const dimensions = currentDeviceInfo.width && currentDeviceInfo.height 
+                ? ` (${currentDeviceInfo.width}x${currentDeviceInfo.height})` 
+                : '';
+            deviceNameEl.textContent = deviceLabel + dimensions;
+            deviceNameEl.title = 'Model: ' + deviceLabel + ', Dimensions: ' + currentDeviceInfo.width + 'x' + currentDeviceInfo.height;
+        } else {
+            deviceNameEl.textContent = deviceLabel;
+        }
+        
         showPage('modePage');
         
         device.addEventListener('gattserverdisconnected', () => {
+            currentDeviceInfo = null;
             showNotification('Disconnected');
             showPage('connectionPage');
         });

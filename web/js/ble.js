@@ -44,7 +44,35 @@
         return !!navigator.bluetooth;
     }
 
+    function getDevice() {
+        return _device;
+    }
+
+    async function getDeviceInfo() {
+        if (!_device) return null;
+        
+        try {
+            const server = await _device.gatt.connect();
+            const service = await server.getPrimaryService('12345678-1234-1234-1234-123456789012');
+            
+            // Try to read device info characteristic
+            try {
+                const infoChar = await service.getCharacteristic('12345678-1234-1234-1234-123456789013');
+                const value = await infoChar.readValue();
+                const decoder = new TextDecoder();
+                const jsonStr = decoder.decode(value);
+                return JSON.parse(jsonStr);
+            } catch (e) {
+                console.warn('Device info characteristic not available:', e);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error reading device info:', error);
+            return null;
+        }
+    }
+
     window.ledmatrix = window.ledmatrix || {};
     window.ledmatrix.ble = window.ledmatrix.ble || {};
-    Object.assign(window.ledmatrix.ble, { connect, disconnect, getCharacteristic, isConnected, isSupported});
+    Object.assign(window.ledmatrix.ble, { connect, disconnect, getCharacteristic, isConnected, isSupported, getDevice, getDeviceInfo});
 })();
