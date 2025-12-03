@@ -14,7 +14,7 @@
 // Device-specific configurations
 #ifdef USE_WS2812
     #define DEVICE_MODEL "WS2812"
-    #define DATA_PIN 8
+    #define LED_DATA_PIN 8
     #define MATRIX_WIDTH 16
     #define MATRIX_HEIGHT 16
     #define NUM_LEDS (MATRIX_WIDTH * MATRIX_HEIGHT)

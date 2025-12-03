@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <FastLED.h>
 
 #include "config.h"
 #include "display.h"
