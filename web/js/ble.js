@@ -52,22 +52,36 @@
         if (!_device) return null;
         
         try {
-            const server = await _device.gatt.connect();
+            // Use existing connection if available
+            let server = _device.gatt;
+            if (!server.connected) {
+                await server.connect();
+            }
+            
             const service = await server.getPrimaryService('12345678-1234-1234-1234-123456789012');
+            console.log('✓ Service found');
             
             // Try to read device info characteristic
             try {
                 const infoChar = await service.getCharacteristic('12345678-1234-1234-1234-123456789013');
+                console.log('✓ Info characteristic found');
+                
                 const value = await infoChar.readValue();
+                console.log('✓ Read value:', value);
+                
                 const decoder = new TextDecoder();
                 const jsonStr = decoder.decode(value);
-                return JSON.parse(jsonStr);
+                console.log('✓ Decoded JSON:', jsonStr);
+                
+                const info = JSON.parse(jsonStr);
+                console.log('✓ Device info:', info);
+                return info;
             } catch (e) {
-                console.warn('Device info characteristic not available:', e);
+                console.warn('Device info characteristic not available:', e.message);
                 return null;
             }
         } catch (error) {
-            console.error('Error reading device info:', error);
+            console.error('Error reading device info:', error.message);
             return null;
         }
     }
