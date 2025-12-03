@@ -63,7 +63,7 @@
             
             // Try to read device info characteristic
             try {
-                const infoChar = await service.getCharacteristic('12345678-1234-1234-1234-123456789013');
+                const infoChar = await service.getCharacteristic('12345678-4321-1234-4321-123456789012');
                 console.log('✓ Info characteristic found');
                 
                 const value = await infoChar.readValue();
