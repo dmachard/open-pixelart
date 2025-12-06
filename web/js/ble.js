@@ -64,15 +64,10 @@
             // Try to read device info characteristic
             try {
                 const infoChar = await service.getCharacteristic('12345678-4321-1234-4321-123456789012');
-                console.log('✓ Info characteristic found');
-                
                 const value = await infoChar.readValue();
-                console.log('✓ Read value:', value);
-                
+  
                 const decoder = new TextDecoder();
                 const jsonStr = decoder.decode(value);
-                console.log('✓ Decoded JSON:', jsonStr);
-                
                 const info = JSON.parse(jsonStr);
                 console.log('✓ Device info:', info);
                 return info;

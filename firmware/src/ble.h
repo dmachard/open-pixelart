@@ -2,32 +2,28 @@
 #define BLE_MANAGER_H
 
 #include <Arduino.h>
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
-
+#include <NimBLEDevice.h>
 #include "config.h"
 
 typedef void (*DataCallback)(uint8_t* data, size_t length);
 typedef void (*DisconnectCallback)();
 
-extern BLEServer* pServer;
-extern BLECharacteristic* pCharData;
-extern BLECharacteristic* pCharInfo;
+extern NimBLEServer* pServer;
+extern NimBLECharacteristic* pCharData;
+extern NimBLECharacteristic* pCharInfo;
 extern bool deviceConnected;
-
 extern DataCallback dataCallback;
 extern DisconnectCallback disconnectCallback;
 
-class ServerCallbacks: public BLEServerCallbacks {
+class ServerCallbacks: public NimBLEServerCallbacks {
 public:
-    void onConnect(BLEServer* pServer) override;
-    void onDisconnect(BLEServer* pServer) override;
+    void onConnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo) override;
+    void onDisconnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo, int reason) override;
 };
 
-class DataCallbacks: public BLECharacteristicCallbacks {
+class DataCallbacks: public NimBLECharacteristicCallbacks {
 public:
-    void onWrite(BLECharacteristic *pChar) override;
+    void onWrite(NimBLECharacteristic *pChar, NimBLEConnInfo& connInfo) override;
 };
 
 void initBLE(DataCallback callback, DisconnectCallback onDisconnect = nullptr);

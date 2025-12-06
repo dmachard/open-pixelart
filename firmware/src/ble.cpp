@@ -1,45 +1,40 @@
 #include "ble.h"
 
-BLEServer* pServer = nullptr;
-BLECharacteristic* pCharData = nullptr;
-BLECharacteristic* pCharInfo = nullptr;
+NimBLEServer* pServer = nullptr;
+NimBLECharacteristic* pCharData = nullptr;
+NimBLECharacteristic* pCharInfo = nullptr;
 bool deviceConnected = false;
-
 DataCallback dataCallback = nullptr;
 DisconnectCallback disconnectCallback = nullptr;
 
-void ServerCallbacks::onConnect(BLEServer* pServer) {
+void ServerCallbacks::onConnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo) {
     deviceConnected = true;
     Serial.println("✓ Client connected");
     
-    // send device info upon connection
+    // Send device info upon connection
     String deviceInfo = String("{\"model\":\"") + DEVICE_MODEL + 
-                      "\",\"width\":" + MATRIX_WIDTH + 
-                      ",\"height\":" + MATRIX_HEIGHT + "}";
-    
+                       "\",\"width\":" + MATRIX_WIDTH + 
+                       ",\"height\":" + MATRIX_HEIGHT + "}";
     pCharInfo->setValue(deviceInfo.c_str());
     pCharInfo->notify();
-    
     Serial.println("→ Device info sent: " + deviceInfo);
 }
 
-void ServerCallbacks::onDisconnect(BLEServer* pServer) {
+void ServerCallbacks::onDisconnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo, int reason) {
     deviceConnected = false;
-    Serial.println("✗ Client disconnected");
-
-    // callbacks for disconnect
+    Serial.printf("✗ Client disconnected (reason: %d)\n", reason);
+    
+    // Callback for disconnect
     if (disconnectCallback) {
         disconnectCallback();
     }
-
-    // pServer->startAdvertising() doit être appelé sur le serveur, pas sur pServer->getAdvertising()
-    BLEDevice::startAdvertising(); // Utilisation de la fonction globale ou la bonne méthode sur le serveur
-    // Note : pServer->startAdvertising(); est la bonne méthode pour la lib ESP32 BLE
-    pServer->startAdvertising(); 
+    
+    // Restart advertising
+    NimBLEDevice::startAdvertising();
     Serial.println("✓ BLE restarted");
 }
 
-void DataCallbacks::onWrite(BLECharacteristic *pChar) {
+void DataCallbacks::onWrite(NimBLECharacteristic *pChar, NimBLEConnInfo& connInfo) {
     std::string value = pChar->getValue();
     Serial.printf("Data received: %d bytes\n", value.length());
     
@@ -51,41 +46,45 @@ void DataCallbacks::onWrite(BLECharacteristic *pChar) {
 void initBLE(DataCallback callback, DisconnectCallback onDisconnect) {
     dataCallback = callback;
     disconnectCallback = onDisconnect;
-    Serial.println("Initializing BLE...");
     
-    BLEDevice::init(BLE_DEVICE_NAME);
-    pServer = BLEDevice::createServer();
+    Serial.println("Initializing NimBLE...");
+    
+    NimBLEDevice::init(BLE_DEVICE_NAME);
+    
+    // Configuration NimBLE pour optimiser la mémoire
+    NimBLEDevice::setPower(ESP_PWR_LVL_P9); // Max power
+    NimBLEDevice::setSecurityAuth(false, false, true); // No bonding
+    
+    pServer = NimBLEDevice::createServer();
     pServer->setCallbacks(new ServerCallbacks());
     
-    BLEService *pService = pServer->createService(SERVICE_UUID);
+    NimBLEService *pService = pServer->createService(SERVICE_UUID);
     
     // Characteristic for frame data (WRITE)
     pCharData = pService->createCharacteristic(
         CHAR_DATA_UUID,
-        BLECharacteristic::PROPERTY_WRITE
+        NIMBLE_PROPERTY::WRITE
     );
     pCharData->setCallbacks(new DataCallbacks());
     
     // Characteristic for device info (READ + NOTIFY)
     pCharInfo = pService->createCharacteristic(
         CHAR_INFO_UUID,
-        BLECharacteristic::PROPERTY_READ | 
-        BLECharacteristic::PROPERTY_NOTIFY
+        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY
     );
     
     // Define device info
     String deviceInfo = String("{\"model\":\"") + DEVICE_MODEL + 
-                      "\",\"width\":" + MATRIX_WIDTH + 
-                      "\",\"height\":" + MATRIX_HEIGHT + "}";
+                       "\",\"width\":" + MATRIX_WIDTH + 
+                       ",\"height\":" + MATRIX_HEIGHT + "}";
     pCharInfo->setValue(deviceInfo.c_str());
     
     pService->start();
     
-    BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+    NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
     pAdvertising->addServiceUUID(SERVICE_UUID);
-    pAdvertising->setScanResponse(true);
     pAdvertising->start();
     
-    Serial.printf("✓ BLE started - Model: %s (%dx%d)\n", 
+    Serial.printf("✓ NimBLE started - Model: %s (%dx%d)\n", 
                   DEVICE_MODEL, MATRIX_WIDTH, MATRIX_HEIGHT);
 }
