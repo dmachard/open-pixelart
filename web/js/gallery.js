@@ -30,7 +30,7 @@ const galleryData = [
     { name: "Hand", thumb: "images/hand.png", file: "drawings/hand.json" },
     { name: "City", thumb: "images/city.png", file: "drawings/city.json" },
     { name: "Bear", thumb: "images/bear.png", file: "drawings/bear.json" },
-    { name: "Bear", thumb: "images/bear2.png", file: "drawings/bear2json" },
+    { name: "Bear", thumb: "images/bear2.png", file: "drawings/bear2.json" },
     { name: "Sonic", thumb: "images/sonic.png", file: "drawings/sonic.json" },
     { name: "Yoshi", thumb: "images/yoshi.png", file: "drawings/yoshi.json" },
     { name: "Pacman", thumb: "images/pacman.png", file: "drawings/pacman.json" },
@@ -52,6 +52,7 @@ const galleryData = [
     { name: "Franchektein", thumb: "images/franchektein.png", file: "drawings/franchektein.json" },
     { name: "Counter", thumb: "images/counter.png", file: "drawings/counter.json" },
     { name: "Iron Man", thumb: "images/ironman.png", file: "drawings/ironman.json" },
+    { name: "Iron Man", thumb: "images/ironman2.png", file: "drawings/ironman2.json" },
     { name: "Rocket", thumb: "images/rocket.png", file: "drawings/rocket.json" },
     { name: "Goomba", thumb: "images/goomba.png", file: "drawings/goomba.json" },
     { name: "Clock", thumb: "images/clock.png", file: "drawings/clock.json" },
@@ -59,6 +60,12 @@ const galleryData = [
     { name: "Playstation", thumb: "images/playstation.png", file: "drawings/playstation.json" },
     { name: "Pikachu", thumb: "images/pikachu.png", file: "drawings/pikachu.json" },
     { name: "Stitch", thumb: "images/stitch.png", file: "drawings/stitch.json" },
+    { name: "Open", thumb: "images/open.png", file: "drawings/open.json" },
+    { name: "Note", thumb: "images/note.png", file: "drawings/note.json" },
+    { name: "Christmas tree", thumb: "images/christmastree.png", file: "drawings/christmastree.json" },
+    { name: "Unicorn", thumb: "images/unicorn.png", file: "drawings/unicorn.json" },
+    { name: "Ghost buster", thumb: "images/ghostbuster.png", file: "drawings/ghostbuster.json" },
+    { name: "Phone", thumb: "images/phone.png", file: "drawings/phone.json" },
 ];
 
 const TRANSITIONS = {
