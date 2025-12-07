@@ -92,6 +92,11 @@
     animation: spin 0.8s linear infinite;
 }
 
+.btn-hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
 @keyframes spin {
     to { transform: rotate(360deg); }
 }

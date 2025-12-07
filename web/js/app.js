@@ -69,8 +69,8 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
 
     // Disable button during connection
     btn.disabled = true;
-    btn.classList.add('loading');
-    
+    btn.classList.add("btn-hide");
+
     try {
         if (!window.ledmatrix?.ble?.isSupported?.()) {
             throw new Error('Bluetooth not supported');
@@ -125,11 +125,9 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
         // Hide after delay
         setTimeout(() => {
             hideConnectionStatus();
+            btn.disabled = false;
+            btn.classList.remove("btn-hide");
         }, 3000);
-    } finally {
-        // Re-enable button
-        btn.disabled = false;
-        btn.classList.remove('loading');
     }
 });
 
@@ -142,6 +140,12 @@ document.querySelectorAll('.mode-card').forEach(card => {
             if (currentDevice && currentDevice.gatt.connected) {
                 currentDevice.gatt.disconnect();
             }
+
+            // re-enable connect button
+            const btn = document.getElementById('connectBtn');
+            btn.disabled = false;
+            btn.classList.remove("btn-hide");
+            
             showPage('connectionPage');
             return;
         }
