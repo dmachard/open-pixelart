@@ -70,7 +70,6 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
     // Disable button during connection
     btn.disabled = true;
     btn.classList.add('loading');
-    showConnectionStatus('🔍 Searching for devices...', 'connecting');
     
     try {
         if (!window.ledmatrix?.ble?.isSupported?.()) {

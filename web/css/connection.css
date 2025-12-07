@@ -96,7 +96,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* État de connexion */
 .connection-status {
     margin-top: 1.5rem;
     padding: 0.75rem 1rem;
