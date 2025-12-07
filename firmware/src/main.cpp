@@ -9,36 +9,40 @@
 #define MODE_DRAW 0
 #define MODE_GALLERY 1
 
+FrameDecoder decoder;
+Frame decodedFrame;
 Frame frames[MAX_FRAMES];
+
 uint8_t frameCount = 0;
-uint8_t currentFrame = 0;
+uint8_t currentFrameIndex = 0;
 unsigned long lastFrameChange = 0;
+
 
 void updateDisplay() {
     if (frameCount == 0) return;
 
     unsigned long now = millis();
-    Frame& f = frames[currentFrame];
+    Frame& f = frames[currentFrameIndex];
 
     if (now - lastFrameChange >= f.duration_ms) {
-        currentFrame = (currentFrame + 1) % frameCount;
+        currentFrameIndex = (currentFrameIndex + 1) % frameCount;
         lastFrameChange = now;
-        displayFrame(frames[currentFrame]);
+        displayFrame(frames[currentFrameIndex]);
     }
 }
 
 void onIncomingData(uint8_t* data, size_t len) {
-    Frame f;
-    if (!FrameDecoder::decode(f, data, len)) {
+
+    if (!decoder.decode(decodedFrame, data, len)) {
         Serial.println("Failed to decode frame");
         return;
     }
 
-    switch (f.deviceMode) {
+    switch (decodedFrame.deviceMode) {
         case MODE_DRAW:
             frameCount = 1;
-            currentFrame = 0;
-            frames[0] = f;
+            currentFrameIndex = 0;
+            frames[0] = decodedFrame;
             
             lastFrameChange = millis();
             displayFrame(frames[0]);
@@ -46,25 +50,25 @@ void onIncomingData(uint8_t* data, size_t len) {
             break;
         case MODE_GALLERY:
             // On first frame, set total frame count
-            if (f.frameIndex == 0) {
-                frameCount = min((uint8_t)f.frameTotal, (uint8_t)MAX_FRAMES);
-                currentFrame = 0;
+            if (decodedFrame.frameIndex == 0) {
+                frameCount = min((uint8_t)decodedFrame.frameTotal, (uint8_t)MAX_FRAMES);
+                currentFrameIndex = 0;
             }
             
             // Store the received frame at its index
-            if (f.frameIndex < frameCount) { 
-                frames[f.frameIndex] = f;
+            if (decodedFrame.frameIndex < frameCount) { 
+                frames[decodedFrame.frameIndex] = decodedFrame;
             }
 
             // Start slideshow if last frame received
-            if (f.frameIndex + 1 == f.frameTotal && frameCount > 0) {
+            if (decodedFrame.frameIndex + 1 == decodedFrame.frameTotal && frameCount > 0) {
                 lastFrameChange = millis();
                 displayFrame(frames[0]); 
                 Serial.printf("Switched to GALLERY Mode: %d frames ready.\n", frameCount);
             }
             break;
         default:
-            Serial.printf("Unknown Mode received: %d\n", f.deviceMode);
+            Serial.printf("Unknown Mode received: %d\n", decodedFrame.deviceMode);
             frameCount = 0;
             break;
     }
@@ -72,7 +76,7 @@ void onIncomingData(uint8_t* data, size_t len) {
 
 void onClientDisconnect() {
     frameCount = 0;
-    currentFrame = 0;
+    currentFrameIndex = 0;
     clearDisplay();
 }
 

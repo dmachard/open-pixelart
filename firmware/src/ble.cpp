@@ -9,12 +9,13 @@ DisconnectCallback disconnectCallback = nullptr;
 
 void ServerCallbacks::onConnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo) {
     deviceConnected = true;
-    Serial.println("✓ Client connected");
+    Serial.printf("✓ Client connected (initial MTU: %d bytes)\n", connInfo.getMTU());
     
     // Send device info upon connection
     String deviceInfo = String("{\"model\":\"") + DEVICE_MODEL + 
                        "\",\"width\":" + MATRIX_WIDTH + 
-                       ",\"height\":" + MATRIX_HEIGHT + "}";
+                       ",\"height\":" + MATRIX_HEIGHT + 
+                       ",\"mtu\":" + connInfo.getMTU() + "}";
     pCharInfo->setValue(deviceInfo.c_str());
     pCharInfo->notify();
     Serial.println("→ Device info sent: " + deviceInfo);
@@ -32,6 +33,21 @@ void ServerCallbacks::onDisconnect(NimBLEServer* pServer, NimBLEConnInfo& connIn
     // Restart advertising
     NimBLEDevice::startAdvertising();
     Serial.println("✓ BLE restarted");
+}
+
+void ServerCallbacks::onMTUChange(uint16_t mtu, NimBLEConnInfo& connInfo) {
+    Serial.printf("MTU changed to: %d bytes\n", mtu);
+    
+    // Resend device info with updated MTU
+    if (pCharInfo && deviceConnected) {
+        String deviceInfo = String("{\"model\":\"") + DEVICE_MODEL + 
+                           "\",\"width\":" + MATRIX_WIDTH + 
+                           ",\"height\":" + MATRIX_HEIGHT + 
+                           ",\"mtu\":" + mtu + "}";
+        pCharInfo->setValue(deviceInfo.c_str());
+        pCharInfo->notify();
+        Serial.println("Updated device info sent with new MTU");
+    }
 }
 
 void DataCallbacks::onWrite(NimBLECharacteristic *pChar, NimBLEConnInfo& connInfo) {
@@ -54,7 +70,8 @@ void initBLE(DataCallback callback, DisconnectCallback onDisconnect) {
     // Configuration NimBLE pour optimiser la mémoire
     NimBLEDevice::setPower(ESP_PWR_LVL_P9); // Max power
     NimBLEDevice::setSecurityAuth(false, false, true); // No bonding
-    
+    NimBLEDevice::setMTU(517);  // Ask for max MTU size
+
     pServer = NimBLEDevice::createServer();
     pServer->setCallbacks(new ServerCallbacks());
     
