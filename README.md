@@ -155,7 +155,7 @@ python scripts/json_to_png.py drawings/led-matrix.json
 <td><img src="web/images/christmastree.png" width="50" title="christmas tree"></td>
 <td><img src="web/images/note.png" width="50" title="note"></td>
 <td><img src="web/images/open.png" width="50" title="open"></td>
-<td><img src="web/images/ironman1.png" width="50" title="ironman"></td>
+<td><img src="web/images/ironman.png" width="50" title="ironman"></td>
 </tr>
 </table>
 

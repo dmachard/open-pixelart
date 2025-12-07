@@ -51,7 +51,7 @@ const galleryData = [
     { name: "Candle", thumb: "images/candle.png", file: "drawings/candle.json" },
     { name: "Franchektein", thumb: "images/franchektein.png", file: "drawings/franchektein.json" },
     { name: "Counter", thumb: "images/counter.png", file: "drawings/counter.json" },
-    { name: "Iron Man", thumb: "images/ironman1.png", file: "drawings/ironman1.json" },
+    { name: "Iron Man", thumb: "images/ironman.png", file: "drawings/ironman.json" },
     { name: "Iron Man", thumb: "images/ironman2.png", file: "drawings/ironman2.json" },
     { name: "Iron Man", thumb: "images/ironman3.png", file: "drawings/ironman3.json" },
     { name: "Rocket", thumb: "images/rocket.png", file: "drawings/rocket.json" },
