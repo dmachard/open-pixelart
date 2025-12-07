@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Open PixelArt</title>
     <link rel="stylesheet" href="./css/style.css?v=67">
-    <link rel="stylesheet" href="./css/connection.css?v=3">
+    <link rel="stylesheet" href="./css/connection.css?v=4">
     <link rel="stylesheet" href="./css/mode.css?v=2">
     <link rel="stylesheet" href="./css/draw.css?v=5">
     <link rel="stylesheet" href="./css/gallery.css?v=3">
@@ -21,6 +21,9 @@
             <button id="connectBtn" class="btn-connect" style="width: 100%; height: 48px; font-size: 1.1rem;">
                 Connect Device
             </button>
+            <div id="connectionStatus" class="connection-status">
+                <span id="connectionMessage"></span>
+            </div>
         </div>
     </div>
 
@@ -70,14 +73,6 @@
                 <span class="icon">🎞️</span>
                 <span>Slideshow</span>
             </div>
-
-            <!-- <div class="brightness-card" id="displayModeBtn" title="Display mode">
-                <span class="icon">🔀</span>
-                <select id="displayModeSelect">
-                    <option value="progressive">Progressive</option>
-                    <option value="instant">Instant</option>
-                </select>
-            </div> -->
 
             <div class="brightness-card">
                 <span class="icon">💡</span>
@@ -192,10 +187,10 @@
         </div>
     </div>
 
-    <script src="./js/ble.js?v=5" defer></script>
-    <script src="./js/esp32.js?v=12" defer></script>
+    <script src="./js/ble.js?v=6" defer></script>
+    <script src="./js/esp32.js?v=13" defer></script>
     <script src="./js/draw.js?v=4"></script>
     <script src="./js/gallery.js?v=23"></script>
-    <script src="./js/app.js?v=65"></script>
+    <script src="./js/app.js?v=66"></script>
 </body>
 </html>

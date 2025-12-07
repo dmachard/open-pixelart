@@ -37,6 +37,26 @@ function showNotification(message, isError = false) {
     setTimeout(() => notif.remove(), 2000);
 }
 
+
+// ========== CONNECTION STATUS ==========
+function showConnectionStatus(message, type = 'connecting') {
+    const status = document.getElementById('connectionStatus');
+    const messageEl = document.getElementById('connectionMessage');
+    
+    if (!status || !messageEl) return;
+    
+    messageEl.textContent = message;
+    status.className = `connection-status show ${type}`;
+}
+
+function hideConnectionStatus() {
+    const status = document.getElementById('connectionStatus');
+    if (status) {
+        status.classList.remove('show');
+    }
+}
+
+
 // ========== NAVIGATION ==========
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -45,12 +65,20 @@ function showPage(pageId) {
 
 // ========== CONNECTION PAGE ==========
 document.getElementById('connectBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('connectBtn');
+
+    // Disable button during connection
+    btn.disabled = true;
+    btn.classList.add('loading');
+    showConnectionStatus('🔍 Searching for devices...', 'connecting');
+    
     try {
-        showNotification('Connecting...');
         if (!window.ledmatrix?.ble?.isSupported?.()) {
             throw new Error('Bluetooth not supported');
         }
         
+        // Connect to device
+        showConnectionStatus('Connecting to device...', 'connecting');
         const { device } = await window.ledmatrix.ble.connect(SERVICE_UUID, CHAR_UUID);
         currentDevice = device;
         
@@ -58,7 +86,7 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
         currentDeviceInfo = await window.ledmatrix.ble.getDeviceInfo();
         
         const deviceLabel = currentDeviceInfo?.model || device.name || 'LED Matrix';
-        showNotification('✓ Connected to ' + deviceLabel);
+        showConnectionStatus('Connected successfully!', 'connecting');
         
         // Update device display
         const deviceNameEl = document.getElementById('deviceName');
@@ -67,20 +95,42 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
                 ? ` (${currentDeviceInfo.width}x${currentDeviceInfo.height})` 
                 : '';
             deviceNameEl.textContent = deviceLabel + dimensions;
-            deviceNameEl.title = 'Model: ' + deviceLabel + ', Dimensions: ' + currentDeviceInfo.width + 'x' + currentDeviceInfo.height;
+            deviceNameEl.title = 'Model: ' + deviceLabel + ', Dimensions: ' + 
+                                currentDeviceInfo.width + '×' + currentDeviceInfo.height;
         } else {
             deviceNameEl.textContent = deviceLabel;
         }
         
-        showPage('modePage');
+        // Transition to mode page
+        setTimeout(() => {
+            hideConnectionStatus();
+            showPage('modePage');
+        }, 500);
         
+        // Handle disconnection
         device.addEventListener('gattserverdisconnected', () => {
             currentDeviceInfo = null;
             showNotification('Disconnected');
             showPage('connectionPage');
+            hideConnectionStatus();
         });
     } catch (error) {
-        showNotification('Error: ' + error.message, true);
+        console.error('Connection failed:', error);
+
+        // Display error message
+        showConnectionStatus(
+            `${error.message}`, 
+            'error'
+        );
+
+        // Hide after delay
+        setTimeout(() => {
+            hideConnectionStatus();
+        }, 3000);
+    } finally {
+        // Re-enable button
+        btn.disabled = false;
+        btn.classList.remove('loading');
     }
 });
 

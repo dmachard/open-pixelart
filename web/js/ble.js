@@ -19,6 +19,18 @@
         _device = device;
         _characteristic = characteristic;
 
+        // Attempt to read device info and update MTU if available
+        try {
+            const info = await getDeviceInfo();
+            if (info && info.mtu) {
+                if (window.ledmatrix?.esp32?.setMTU) {
+                    window.ledmatrix.esp32.setMTU(info.mtu);
+                }
+            }
+        } catch (e) {
+            console.warn('Could not retrieve device info:', e);
+        }
+
         return { device, characteristic };
     }
 
@@ -69,7 +81,12 @@
                 const decoder = new TextDecoder();
                 const jsonStr = decoder.decode(value);
                 const info = JSON.parse(jsonStr);
+                
                 console.log('✓ Device info:', info);
+                console.log(`  - Model: ${info.model}`);
+                console.log(`  - Size: ${info.width}×${info.height}`);
+                console.log(`  - MTU: ${info.mtu || 'unknown'} bytes`);
+
                 return info;
             } catch (e) {
                 console.warn('Device info characteristic not available:', e.message);
