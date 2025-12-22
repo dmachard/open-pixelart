@@ -156,6 +156,9 @@ python scripts/json_to_png.py drawings/led-matrix.json
 <td><img src="web/images/note.png" width="50" title="note"></td>
 <td><img src="web/images/open.png" width="50" title="open"></td>
 <td><img src="web/images/ironman.png" width="50" title="ironman"></td>
+<td><img src="web/images/santa.png" width="50" title="santa"></td>
+<td><img src="web/images/home2.png" width="50" title="home"></td>
+<td><img src="web/images/cat5.png" width="50" title="cat"></td>
 </tr>
 </table>
 

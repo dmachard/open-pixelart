@@ -17,6 +17,8 @@ const galleryData = [
     { name: "Cat", thumb: "images/cat1.png", file: "drawings/cat1.json" },
     { name: "Cat", thumb: "images/cat2.png", file: "drawings/cat2.json" },
     { name: "Cat", thumb: "images/cat3.png", file: "drawings/cat3.json" },
+    { name: "Cat", thumb: "images/cat4.png", file: "drawings/cat4.json" },
+    { name: "Cat", thumb: "images/cat5.png", file: "drawings/cat5.json" },
     { name: "Buzz", thumb: "images/buzz.png", file: "drawings/buzz.json" },
     { name: "Fox", thumb: "images/fox1.png", file: "drawings/fox1.json" },
     { name: "Fox", thumb: "images/fox2.png", file: "drawings/fox2.json" },
@@ -25,6 +27,7 @@ const galleryData = [
     { name: "Bot", thumb: "images/bot2.png", file: "drawings/bot2.json" },
     { name: "I love you", thumb: "images/iloveyou.png", file: "drawings/iloveyou.json" },
     { name: "Home", thumb: "images/home.png", file: "drawings/home.json" },
+    { name: "Home", thumb: "images/home2.png", file: "drawings/home2.json" },
     { name: "Ghost", thumb: "images/ghost1.png", file: "drawings/ghost1.json" },
     { name: "Ghost", thumb: "images/ghost2.png", file: "drawings/ghost2.json" },
     { name: "Hand", thumb: "images/hand.png", file: "drawings/hand.json" },
@@ -67,6 +70,7 @@ const galleryData = [
     { name: "Unicorn", thumb: "images/unicorn.png", file: "drawings/unicorn.json" },
     { name: "Ghost buster", thumb: "images/ghostbuster.png", file: "drawings/ghostbuster.json" },
     { name: "Phone", thumb: "images/phone.png", file: "drawings/phone.json" },
+    { name: "Santa", thumb: "images/santa.png", file: "drawings/santa.json" },
 ];
 
 const TRANSITIONS = {
