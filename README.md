@@ -5,9 +5,6 @@ physical LED matrix using **Bluetooth**.
 
 The project includes both the **firmware** for the ESP32-C3 and a **web app** for drawing, upload, and slideshow control.
 
-⚠️ Note: The Web Control App works on **Android (Chrome)** and **desktop platforms (Windows, Linux) using Chrome**. 
-Other browsers may not be supported.
-
 <img src="imgs/demo.gif" title="demo">
 
 ## Hardware setup
@@ -31,13 +28,15 @@ Other browsers may not be supported.
 Firmware for controlling a 16×16 WS2812B LED matrix using an ESP32-C3 via **Bluetooth Low Energy (BLE)**.  
 Designed to work with the **Web Control App**, which lets you draw and upload pixel art or animations wirelessly.
 
-**Advertised Bluetooth device name:** `Matrix16x16`
+**Advertised Bluetooth device name:** `OpenPixelArt`
 
 ## Web Control App
 
 The Webapp uses the Web Bluetooth API to send data directly to your ESP32-C3.
-
 Available at https://dmachard.github.io/open-pixelart/
+
+⚠️ Note: The Web Control App works on **Android (Chrome)** and **desktop platforms (Windows, Linux) using Chrome**. 
+Other browsers may not be supported.
 
 <img src="imgs/webapp_connect.png" width="500">
 <img src="imgs/webapp_mode.png" width="500">
