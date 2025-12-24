@@ -5,6 +5,9 @@ physical LED matrix using **Bluetooth**.
 
 The project includes both the **firmware** for the ESP32-C3 and a **web app** for drawing, upload, and slideshow control.
 
+⚠️ Note: The Web Control App works on **Android (Chrome)** and **desktop platforms (Windows, Linux) using Chrome**. 
+Other browsers may not be supported.
+
 <img src="imgs/demo.gif" title="demo">
 
 ## Hardware setup
