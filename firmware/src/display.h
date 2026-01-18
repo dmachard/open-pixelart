@@ -3,14 +3,15 @@
 
 #include "config.h"
 #include "decoder.h"
+#include <Arduino.h>
 
 #ifdef USE_WS2812
-    #include <FastLED.h>
-    extern CRGB leds[NUM_LEDS];
+#include <FastLED.h>
+extern CRGB leds[NUM_LEDS];
 #endif
 
 int getPhysicalLedIndex(int x, int y);
-void initDisplay();
+void initDisplay(uint8_t brightness);
 void displayFrame(const Frame &f);
 void clearDisplay();
 

@@ -91,12 +91,25 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
         // Update device display
         const deviceNameEl = document.getElementById('deviceName');
         if (currentDeviceInfo) {
-            const dimensions = currentDeviceInfo.width && currentDeviceInfo.height
-                ? ` (${currentDeviceInfo.width}x${currentDeviceInfo.height})`
-                : '';
+            if (currentDeviceInfo.brightness !== undefined) {
+                window.globalBrightness = currentDeviceInfo.brightness;
+                console.log('Restored brightness from device:', window.globalBrightness);
+            }
+
+            const dimensionsText = currentDeviceInfo.width && currentDeviceInfo.height
+                ? `${currentDeviceInfo.width}×${currentDeviceInfo.height}`
+                : '16×16';
+
+            const dimensions = ` (${dimensionsText})`;
             deviceNameEl.textContent = deviceLabel + dimensions;
             deviceNameEl.title = 'Model: ' + deviceLabel + ', Dimensions: ' +
-                currentDeviceInfo.width + '×' + currentDeviceInfo.height;
+                dimensionsText + ', Brightness: ' + window.globalBrightness;
+
+            // Update settings info
+            const infoModelEl = document.getElementById('infoModel');
+            const infoResEl = document.getElementById('infoResolution');
+            if (infoModelEl) infoModelEl.textContent = deviceLabel;
+            if (infoResEl) infoResEl.textContent = dimensionsText;
         } else {
             deviceNameEl.textContent = deviceLabel;
         }

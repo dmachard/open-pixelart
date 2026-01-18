@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./css/mode.css?v=2">
     <link rel="stylesheet" href="./css/draw.css?v=5">
     <link rel="stylesheet" href="./css/gallery.css?v=3">
+    <link rel="stylesheet" href="./css/settings.css?v=1">
 </head>
 
 <body>
@@ -176,31 +177,45 @@
     <!-- PAGE: SETTINGS MODE -->
     <div id="settingsPage" class="page settings-page">
         <div class="settings-header">
-            <h1>Settings</h1>
+            <h1>Paramètres</h1>
+            <p>Personnalisez votre expérience Open PixelArt</p>
         </div>
 
         <div class="settings-container">
             <div class="settings-card">
                 <div class="settings-label">
                     <span class="icon">💡</span>
-                    <span>Global Brightness</span>
+                    <span>Luminosité Globale</span>
                 </div>
                 <div class="settings-control">
-                    <select id="brightnessSettingsSelect" style="width: 100%;">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="25" selected>25</option>
-                        <option value="50">50</option>
-                        <option value="75">75</option>
-                        <option value="100">100</option>
+                    <select id="brightnessSettingsSelect">
+                        <option value="10">10 - Sombre</option>
+                        <option value="20">20 - Doux</option>
+                        <option value="25">25 - Par défaut</option>
+                        <option value="50">50 - Médium</option>
+                        <option value="75">75 - Lumineux</option>
+                        <option value="100">100 - Maximum</option>
                     </select>
                 </div>
-                <p class="settings-help">Brightness is saved automatically to the device memory.</p>
+                <p class="settings-help">La luminosité est sauvegardée automatiquement dans la mémoire de l'appareil.
+                </p>
             </div>
 
-            <div class="control-btn" id="backFromSettings" style="margin-top: 20px;">
+            <div class="settings-card">
+                <div class="settings-label">
+                    <span class="icon">ℹ️</span>
+                    <span>Informations Appareil</span>
+                </div>
+                <div class="settings-help">
+                    Modèle: <strong id="infoModel">-</strong><br>
+                    Résolution: <strong id="infoResolution">-</strong><br>
+                    Connexion: <strong>Bluetooth Low Energy</strong>
+                </div>
+            </div>
+
+            <div class="control-btn" id="backFromSettings">
                 <span class="icon">←</span>
-                <span>Back</span>
+                <span>Retour au Menu</span>
             </div>
         </div>
     </div>
@@ -209,7 +224,7 @@
     <script src="./js/esp32.js?v=13" defer></script>
     <script src="./js/draw.js?v=5"></script>
     <script src="./js/gallery.js?v=27"></script>
-    <script src="./js/app.js?v=69"></script>
+    <script src="./js/app.js?v=70"></script>
 </body>
 
 </html>

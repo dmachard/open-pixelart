@@ -54,6 +54,7 @@ void onIncomingData(uint8_t *data, size_t len) {
     if (decodedFrame.brightness != storedBrightness) {
       storedBrightness = decodedFrame.brightness;
       preferences.putUChar("brightness", storedBrightness);
+      currentBLEBrightness = storedBrightness;
       Serial.printf("Brightness saved to NVS: %d\n", storedBrightness);
     }
 
@@ -80,6 +81,7 @@ void onIncomingData(uint8_t *data, size_t len) {
       if (decodedFrame.brightness != storedBrightness) {
         storedBrightness = decodedFrame.brightness;
         preferences.putUChar("brightness", storedBrightness);
+        currentBLEBrightness = storedBrightness;
         Serial.printf("Brightness saved to NVS: %d\n", storedBrightness);
       }
 
@@ -91,6 +93,7 @@ void onIncomingData(uint8_t *data, size_t len) {
     if (decodedFrame.brightness != storedBrightness) {
       storedBrightness = decodedFrame.brightness;
       preferences.putUChar("brightness", storedBrightness);
+      currentBLEBrightness = storedBrightness;
       Serial.printf("Brightness saved to NVS (Settings): %d\n",
                     storedBrightness);
 
@@ -124,10 +127,10 @@ void setup() {
   Serial.printf("Loaded brightness from NVS: %d\n", storedBrightness);
 
   // Initialize display
-  initDisplay();
+  initDisplay(storedBrightness);
 
   // Initialize BLE with callbacks
-  initBLE(onIncomingData, onClientDisconnect);
+  initBLE(onIncomingData, onClientDisconnect, storedBrightness);
 }
 
 void loop() {
