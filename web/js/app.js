@@ -3,7 +3,7 @@ const DEBUG = new URLSearchParams(window.location.search).get("debug") === "1";
 if (DEBUG) {
     console.warn("Debug mode enabled");
 
-    window.showPage = function(pageId) {
+    window.showPage = function (pageId) {
         document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
         document.getElementById(pageId).classList.add("active");
     };
@@ -24,9 +24,10 @@ if (DEBUG) {
 
 let currentDevice = null;
 let currentDeviceInfo = null;
+window.globalBrightness = 25; // Default brightness
 
 const SERVICE_UUID = '12345678-1234-1234-1234-123456789012';
-const CHAR_UUID   = '87654321-4321-4321-4321-210987654321';
+const CHAR_UUID = '87654321-4321-4321-4321-210987654321';
 
 // ========== NOTIFICATIONS ==========
 function showNotification(message, isError = false) {
@@ -42,9 +43,9 @@ function showNotification(message, isError = false) {
 function showConnectionStatus(message, type = 'connecting') {
     const status = document.getElementById('connectionStatus');
     const messageEl = document.getElementById('connectionMessage');
-    
+
     if (!status || !messageEl) return;
-    
+
     messageEl.textContent = message;
     status.className = `connection-status show ${type}`;
 }
@@ -75,37 +76,37 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
         if (!window.ledmatrix?.ble?.isSupported?.()) {
             throw new Error('Bluetooth not supported');
         }
-        
+
         // Connect to device
         showConnectionStatus('Connecting to device...', 'connecting');
         const { device } = await window.ledmatrix.ble.connect(SERVICE_UUID, CHAR_UUID);
         currentDevice = device;
-        
+
         // Try to read device info
         currentDeviceInfo = await window.ledmatrix.ble.getDeviceInfo();
-        
+
         const deviceLabel = currentDeviceInfo?.model || device.name || 'LED Matrix';
         showConnectionStatus('Connected successfully!', 'connecting');
-        
+
         // Update device display
         const deviceNameEl = document.getElementById('deviceName');
         if (currentDeviceInfo) {
-            const dimensions = currentDeviceInfo.width && currentDeviceInfo.height 
-                ? ` (${currentDeviceInfo.width}x${currentDeviceInfo.height})` 
+            const dimensions = currentDeviceInfo.width && currentDeviceInfo.height
+                ? ` (${currentDeviceInfo.width}x${currentDeviceInfo.height})`
                 : '';
             deviceNameEl.textContent = deviceLabel + dimensions;
-            deviceNameEl.title = 'Model: ' + deviceLabel + ', Dimensions: ' + 
-                                currentDeviceInfo.width + '×' + currentDeviceInfo.height;
+            deviceNameEl.title = 'Model: ' + deviceLabel + ', Dimensions: ' +
+                currentDeviceInfo.width + '×' + currentDeviceInfo.height;
         } else {
             deviceNameEl.textContent = deviceLabel;
         }
-        
+
         // Transition to mode page
         setTimeout(() => {
             hideConnectionStatus();
             showPage('modePage');
         }, 500);
-        
+
         // Handle disconnection
         device.addEventListener('gattserverdisconnected', () => {
             currentDeviceInfo = null;
@@ -118,7 +119,7 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
 
         // Display error message
         showConnectionStatus(
-            `${error.message}`, 
+            `${error.message}`,
             'error'
         );
 
@@ -135,7 +136,7 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
 document.querySelectorAll('.mode-card').forEach(card => {
     card.addEventListener('click', () => {
         const mode = card.dataset.mode;
-        
+
         if (mode === 'disconnect') {
             if (currentDevice && currentDevice.gatt.connected) {
                 currentDevice.gatt.disconnect();
@@ -145,20 +146,65 @@ document.querySelectorAll('.mode-card').forEach(card => {
             const btn = document.getElementById('connectBtn');
             btn.disabled = false;
             btn.classList.remove("btn-hide");
-            
+
             showPage('connectionPage');
             return;
         }
-        
+
         if (mode === 'draw') {
             initDrawMode();
             showPage('drawPage');
         } else if (mode === 'gallery') {
             initSlideshowMode();
             showPage('galleryPage');
+        } else if (mode === 'settings') {
+            initSettingsMode();
+            showPage('settingsPage');
         } else if (mode === 'clock') {
             initClockMode();
             showPage('clockPage');
         }
     });
 });
+
+// ========== SETTINGS MODE ==========
+function initSettingsMode() {
+    const brightnessSelect = document.getElementById('brightnessSettingsSelect');
+    const backBtn = document.getElementById('backFromSettings');
+
+    // Remove existing listeners to avoid duplicates
+    const newBrightnessSelect = brightnessSelect.cloneNode(true);
+    brightnessSelect.parentNode.replaceChild(newBrightnessSelect, brightnessSelect);
+
+    const newBackBtn = backBtn.cloneNode(true);
+    backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+
+    newBackBtn.addEventListener('click', () => showPage('modePage'));
+
+    newBrightnessSelect.value = window.globalBrightness;
+
+    newBrightnessSelect.addEventListener('change', async (e) => {
+        window.globalBrightness = parseInt(e.target.value);
+        console.log('Changing global brightness to:', window.globalBrightness);
+
+        try {
+            // Send a dummy frame with MODE_SETTINGS (2)
+            // We send a full black 16x16 frame to satisfy the decoder requirements
+            const gridWidth = currentDeviceInfo?.width || 16;
+            const gridHeight = currentDeviceInfo?.height || 16;
+
+            await window.ledmatrix.esp32.send({
+                pixels: new Array(gridWidth * gridHeight).fill(0),
+                palette: ['#000000'],
+                brightness: window.globalBrightness,
+                mode: 2, // MODE_SETTINGS
+                frameIndex: 0,
+                totalFrames: 1
+            });
+            showNotification('✓ Brightness saved');
+        } catch (err) {
+            console.error('Error saving brightness:', err);
+            showNotification('✗ Error saving brightness', true);
+        }
+    });
+}

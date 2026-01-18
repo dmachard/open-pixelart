@@ -74,8 +74,8 @@ const galleryData = [
 ];
 
 const TRANSITIONS = {
-    PROGRESSIVE: 0, 
-    INSTANT: 1 
+    PROGRESSIVE: 0,
+    INSTANT: 1
 };
 
 let selectedGalleryItems = new Set();
@@ -86,10 +86,10 @@ function showProgress(current, total, text = 'Sending') {
     const progressText = document.getElementById('progressText');
     const progressPercent = document.getElementById('progressPercent');
     const progressFill = document.getElementById('progressFill');
-    
+
     progressBar.classList.remove('hidden');
     progressText.textContent = `${text} ${current}/${total}`;
-    
+
     const percent = Math.round((current / total) * 100);
     progressPercent.textContent = `${percent}%`;
     progressFill.style.width = `${percent}%`;
@@ -106,7 +106,7 @@ function initSlideshowMode() {
     // Use device dimensions if available, otherwise default to 16x16
     const gridWidth = currentDeviceInfo?.width || 16;
     const gridHeight = currentDeviceInfo?.height || 16;
-    
+
     renderGallery();
     initSlideshowControls();
 }
@@ -114,13 +114,13 @@ function initSlideshowMode() {
 function renderGallery() {
     const galleryEl = document.getElementById('gallery');
     galleryEl.innerHTML = '';
-    
+
     galleryData.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = 'gallery-item';
         div.dataset.index = index;
         div.title = item.name;
-        
+
         // Use thumbnail image instead of canvas
         const img = document.createElement('img');
         img.src = item.thumb;
@@ -129,9 +129,9 @@ function renderGallery() {
         img.style.height = '100%';
         img.style.objectFit = 'contain';
         img.style.imageRendering = 'pixelated';
-        
+
         div.appendChild(img);
-        
+
         div.addEventListener('click', () => {
             if (selectedGalleryItems.has(index)) {
                 selectedGalleryItems.delete(index);
@@ -142,7 +142,7 @@ function renderGallery() {
             }
             updateSlideshowButtons();
         });
-        
+
         galleryEl.appendChild(div);
     });
 }
@@ -152,7 +152,7 @@ function initSlideshowControls() {
         selectedGalleryItems.clear();
         showPage('modePage');
     });
-    
+
     document.getElementById('sendSlideshowBtn').addEventListener('click', sendSlideshow);
     document.getElementById('sendSelectedBtn').addEventListener('click', sendSelectedDrawings);
 }
@@ -170,16 +170,16 @@ function updateSlideshowButtons() {
 
 async function sendSlideshow() {
     try {
-        const brightness = parseInt(document.getElementById('brightnessSlideshowSelect').value);
+        const brightness = window.globalBrightness;
         const frameDuration = parseInt(document.getElementById('frameDurationSelect').value);
         // const transition = getCurrentTransition();
 
         if (!galleryData || galleryData.length === 0) return;
-        
+
         const shuffled = galleryData.slice().sort(() => Math.random() - 0.5);
         const framesToSend = shuffled.slice(0, Math.min(10, shuffled.length));
         const totalFrames = framesToSend.length;
-        
+
         showProgress(0, totalFrames, 'Sending slideshow');
 
         for (let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
@@ -190,10 +190,10 @@ async function sendSlideshow() {
                     console.warn('File not found:', item.name);
                     continue;
                 }
-                
+
                 const json = await res.json();
                 const { pixelsFlat, palette } = preparePixelsAndPalette(json.pixels);
-                
+
                 await window.ledmatrix.esp32.send({
                     pixels: pixelsFlat,
                     palette,
@@ -204,14 +204,14 @@ async function sendSlideshow() {
                     transition: TRANSITIONS.INSTANT,
                     frameDuration
                 });
-                
+
                 showProgress(frameIndex + 1, totalFrames, 'Sending slideshow');
                 await new Promise(r => setTimeout(r, 50));
             } catch (err) {
                 console.warn('Error slideshow:', item.name, err);
             }
         }
-        
+
         hideProgress();
         showNotification(`🎞️ Slideshow sent (${totalFrames} frames)`);
     } catch (err) {
@@ -222,12 +222,12 @@ async function sendSlideshow() {
 
 async function sendSelectedDrawings() {
     try {
-        const brightness = parseInt(document.getElementById('brightnessSlideshowSelect').value);
+        const brightness = window.globalBrightness;
         // const transition = getCurrentTransition();
         const selectedIndices = Array.from(selectedGalleryItems);
         const totalFrames = selectedIndices.length;
         const frameDuration = parseInt(document.getElementById('frameDurationSelect').value);
-        
+
         showProgress(0, totalFrames, 'Sending selection');
         for (let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
             const item = galleryData[selectedIndices[frameIndex]];
@@ -237,10 +237,10 @@ async function sendSelectedDrawings() {
                     console.warn('File not found:', item.name);
                     continue;
                 }
-                
+
                 const json = await res.json();
                 const { pixelsFlat, palette } = preparePixelsAndPalette(json.pixels);
-                
+
                 await window.ledmatrix.esp32.send({
                     pixels: pixelsFlat,
                     palette,
@@ -251,14 +251,14 @@ async function sendSelectedDrawings() {
                     transition: TRANSITIONS.INSTANT,
                     frameDuration
                 });
-                
+
                 showProgress(frameIndex + 1, totalFrames, 'Sending selection');
                 await new Promise(r => setTimeout(r, 50));
             } catch (err) {
                 console.warn('Error sending drawing:', item.name, err);
             }
         }
-        
+
         hideProgress();
         showNotification(`✓ Sent ${totalFrames} drawings`);
         selectedGalleryItems.clear();

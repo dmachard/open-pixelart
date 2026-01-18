@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="./css/draw.css?v=5">
     <link rel="stylesheet" href="./css/gallery.css?v=3">
 </head>
+
 <body>
 
     <!-- PAGE 1: CONNECTION -->
@@ -34,20 +36,26 @@
                 <h1>Select Mode</h1>
                 <div class="device-name">Connected to: <span id="deviceName">Device</span></div>
             </div>
-            
+
             <div class="mode-grid">
                 <div class="mode-card" data-mode="draw">
                     <span class="mode-icon">🎨</span>
                     <div class="mode-name">Draw</div>
                     <div class="mode-description">Create your own pixel art designs</div>
                 </div>
-                
+
                 <div class="mode-card" data-mode="gallery">
                     <span class="mode-icon">🎞️</span>
                     <div class="mode-name">Gallery</div>
                     <div class="mode-description">Browse and send preset drawings</div>
                 </div>
-                
+
+                <div class="mode-card" data-mode="settings">
+                    <span class="mode-icon">⚙️</span>
+                    <div class="mode-name">Settings</div>
+                    <div class="mode-description">Configure device preferences</div>
+                </div>
+
                 <div class="mode-card" data-mode="disconnect">
                     <span class="mode-icon">🔌</span>
                     <div class="mode-name">Disconnect</div>
@@ -62,29 +70,18 @@
         <div class="gallery-header">
             <h1>Gallery</h1>
         </div>
-        
+
         <div class="slideshow-controls">
             <div class="control-btn" id="backFromSlideshow">
                 <span class="icon">←</span>
                 <span>Back</span>
             </div>
-            
+
             <div class="control-btn" id="sendSlideshowBtn">
                 <span class="icon">🎞️</span>
                 <span>Slideshow</span>
             </div>
 
-            <div class="brightness-card">
-                <span class="icon">💡</span>
-                <select id="brightnessSlideshowSelect">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="25" selected>25</option>
-                    <option value="50">50</option>
-                    <option value="75">75</option>
-                    <option value="100">100</option>
-                </select>
-            </div>
 
             <div class="brightness-card" title="Frame duration">
                 <span class="icon">⏱️</span>
@@ -148,17 +145,6 @@
                 <span>Load</span>
             </div>
 
-            <div class="brightness-card">
-                <span class="icon">💡</span>
-                <select id="brightnessSelect">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="25" selected>25</option>
-                    <option value="50">50</option>
-                    <option value="75">75</option>
-                    <option value="100">100</option>
-                </select>
-            </div>
 
             <input type="file" id="fileInput" accept=".json" style="display:none">
         </div>
@@ -166,7 +152,7 @@
         <div class="grid-wrapper">
             <div id="grid" class="grid"></div>
         </div>
-        
+
         <div id="palette" class="palette-container">
             <div id="eraser" class="swatch eraser" title="Eraser">✕</div>
             <div class="swatch" data-color="#ffffff" style="background:#ffffff"></div>
@@ -187,10 +173,43 @@
         </div>
     </div>
 
+    <!-- PAGE: SETTINGS MODE -->
+    <div id="settingsPage" class="page settings-page">
+        <div class="settings-header">
+            <h1>Settings</h1>
+        </div>
+
+        <div class="settings-container">
+            <div class="settings-card">
+                <div class="settings-label">
+                    <span class="icon">💡</span>
+                    <span>Global Brightness</span>
+                </div>
+                <div class="settings-control">
+                    <select id="brightnessSettingsSelect" style="width: 100%;">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="75">75</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <p class="settings-help">Brightness is saved automatically to the device memory.</p>
+            </div>
+
+            <div class="control-btn" id="backFromSettings" style="margin-top: 20px;">
+                <span class="icon">←</span>
+                <span>Back</span>
+            </div>
+        </div>
+    </div>
+
     <script src="./js/ble.js?v=6" defer></script>
     <script src="./js/esp32.js?v=13" defer></script>
-    <script src="./js/draw.js?v=4"></script>
-    <script src="./js/gallery.js?v=26"></script>
-    <script src="./js/app.js?v=68"></script>
+    <script src="./js/draw.js?v=5"></script>
+    <script src="./js/gallery.js?v=27"></script>
+    <script src="./js/app.js?v=69"></script>
 </body>
+
 </html>
