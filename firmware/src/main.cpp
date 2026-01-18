@@ -22,6 +22,22 @@ unsigned long lastFrameChange = 0;
 Preferences preferences;
 uint8_t storedBrightness = 25;
 
+void saveFrameToNVS(const Frame &f) {
+  preferences.putBytes("last_frame", &f, sizeof(Frame));
+  Serial.println("💾 Frame saved to NVS");
+}
+
+bool loadFrameFromNVS(Frame &f) {
+  if (preferences.isKey("last_frame")) {
+    size_t len = preferences.getBytes("last_frame", &f, sizeof(Frame));
+    if (len == sizeof(Frame)) {
+      Serial.println("📂 Frame restored from NVS");
+      return true;
+    }
+  }
+  return false;
+}
+
 void updateDisplay() {
   if (frameCount == 0)
     return;
@@ -59,6 +75,7 @@ void onIncomingData(uint8_t *data, size_t len) {
     }
 
     displayFrame(frames[0]);
+    saveFrameToNVS(frames[0]);
     Serial.println("Switched to DRAW Mode.");
     break;
   case MODE_GALLERY:
@@ -86,6 +103,7 @@ void onIncomingData(uint8_t *data, size_t len) {
       }
 
       displayFrame(frames[0]);
+      saveFrameToNVS(frames[0]);
       Serial.printf("Switched to GALLERY Mode: %d frames ready.\n", frameCount);
     }
     break;
@@ -112,9 +130,10 @@ void onIncomingData(uint8_t *data, size_t len) {
 }
 
 void onClientDisconnect() {
+  // Clear slideshow state but keep the last frame on screen
   frameCount = 0;
   currentFrameIndex = 0;
-  clearDisplay();
+  Serial.println("Client disconnected - keeping last frame displayed");
 }
 
 void setup() {
@@ -128,6 +147,13 @@ void setup() {
 
   // Initialize display
   initDisplay(storedBrightness);
+
+  // Restore last image if available
+  if (loadFrameFromNVS(frames[0])) {
+    frameCount = 1;
+    currentFrameIndex = 0;
+    displayFrame(frames[0]);
+  }
 
   // Initialize BLE with callbacks
   initBLE(onIncomingData, onClientDisconnect, storedBrightness);
