@@ -3,13 +3,18 @@
 (function () {
     // Internal storage of the last-connected device/characteristic
     let _device = null;
+    let _server = null;
+    let _service = null;
     let _characteristic = null;
 
     async function connect(serviceUuid, charUuid) {
         if (!navigator.bluetooth) throw new Error('BLE not supported in this browser.');
 
         const device = await navigator.bluetooth.requestDevice({
-            filters: [{ services: [serviceUuid] }]
+            filters: [
+                { services: [serviceUuid] }
+            ],
+            optionalServices: [serviceUuid] // Recommended for Android
         });
 
         const server = await device.gatt.connect();
@@ -17,9 +22,14 @@
         const characteristic = await service.getCharacteristic(charUuid);
 
         _device = device;
+        _server = server;
+        _service = service;
         _characteristic = characteristic;
 
-        // Attempt to read device info and update MTU if available
+        // Attempt to read device info
+        // We wait a bit on Android to allow the GATT stack to stabilize
+        await new Promise(r => setTimeout(r, 500));
+
         try {
             const info = await getDeviceInfo();
             if (info && info.mtu) {
@@ -40,6 +50,8 @@
             console.log('BLE disconnected.');
         }
         _device = null;
+        _server = null;
+        _service = null;
         _characteristic = null;
     }
 
@@ -49,7 +61,7 @@
     }
 
     function isConnected() {
-        return this.device && this.device.gatt && this.device.gatt.connected;
+        return _device && _device.gatt && _device.gatt.connected;
     }
 
     function isSupported() {
@@ -61,32 +73,28 @@
     }
 
     async function getDeviceInfo() {
-        if (!_device) return null;
-        
+        if (!_device || !_service) return null;
+
         try {
-            // Use existing connection if available
-            let server = _device.gatt;
-            if (!server.connected) {
-                await server.connect();
+            // Use cached service or fetch it if missing
+            let service = _service;
+            if (!_service) {
+                if (!_server.connected) await _server.connect();
+                service = await _server.getPrimaryService('12345678-1234-1234-1234-123456789012');
             }
-            
-            const service = await server.getPrimaryService('12345678-1234-1234-1234-123456789012');
-            console.log('✓ Service found');
-            
-            // Try to read device info characteristic
+
+            // Info characteristic UUID (defined in ESP32 config.h)
+            const INFO_CHAR_UUID = '12345678-4321-1234-4321-123456789012';
+
             try {
-                const infoChar = await service.getCharacteristic('12345678-4321-1234-4321-123456789012');
+                const infoChar = await service.getCharacteristic(INFO_CHAR_UUID);
                 const value = await infoChar.readValue();
-  
+
                 const decoder = new TextDecoder();
                 const jsonStr = decoder.decode(value);
                 const info = JSON.parse(jsonStr);
-                
-                console.log('✓ Device info:', info);
-                console.log(`  - Model: ${info.model}`);
-                console.log(`  - Size: ${info.width}×${info.height}`);
-                console.log(`  - MTU: ${info.mtu || 'unknown'} bytes`);
 
+                console.log('✓ Device info synced:', info);
                 return info;
             } catch (e) {
                 console.warn('Device info characteristic not available:', e.message);
@@ -100,5 +108,13 @@
 
     window.ledmatrix = window.ledmatrix || {};
     window.ledmatrix.ble = window.ledmatrix.ble || {};
-    Object.assign(window.ledmatrix.ble, { connect, disconnect, getCharacteristic, isConnected, isSupported, getDevice, getDeviceInfo});
+    Object.assign(window.ledmatrix.ble, {
+        connect,
+        disconnect,
+        getCharacteristic,
+        isConnected,
+        isSupported,
+        getDevice,
+        getDeviceInfo
+    });
 })();

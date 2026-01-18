@@ -44,7 +44,7 @@ Other browsers may not be supported.
 
 This web interface lets you:
 - Draw and color pixel art with instant LED feedback
-- Control brightness  
+- **Hardware Persistence**: All settings (brightness) and the last displayed image are saved in the ESP32's NVS memory and restored automatically at boot.
 - Save/load drawings as `.json` files  
 - Play animated slideshows
 
