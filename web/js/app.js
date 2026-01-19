@@ -25,7 +25,7 @@ if (DEBUG) {
 let currentDevice = null;
 let currentDeviceInfo = null;
 window.globalBrightness = 25; // Default brightness
-window.clockColorIndex = 0;   // Default color (Lime)
+window.clockColorIndex = 2;   // Default color (Cyan)
 
 const SERVICE_UUID = '12345678-1234-1234-1234-123456789012';
 const CHAR_UUID = '87654321-4321-4321-4321-210987654321';
