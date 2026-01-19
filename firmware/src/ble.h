@@ -15,6 +15,7 @@ extern bool deviceConnected;
 extern DataCallback dataCallback;
 extern DisconnectCallback disconnectCallback;
 extern uint8_t currentBLEBrightness;
+extern uint8_t currentClockColorIndex;
 
 class ServerCallbacks : public NimBLEServerCallbacks {
 public:
@@ -30,6 +31,6 @@ public:
 };
 
 void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
-             uint8_t initialBrightness);
+             uint8_t initialBrightness, uint8_t initialClockColor);
 
 #endif

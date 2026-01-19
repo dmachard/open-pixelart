@@ -36,6 +36,26 @@ void displayFrame(const Frame &f) {
 #endif
 }
 
+void drawPixel(int x, int y, Pixel p) {
+#ifdef USE_WS2812
+  if (x >= 0 && x < MATRIX_WIDTH && y >= 0 && y < MATRIX_HEIGHT) {
+    leds[getPhysicalLedIndex(x, y)] = CRGB(p.r, p.g, p.b);
+  }
+#endif
+}
+
+void setDisplayBrightness(uint8_t b) {
+#ifdef USE_WS2812
+  FastLED.setBrightness(b);
+#endif
+}
+
+void showDisplay() {
+#ifdef USE_WS2812
+  FastLED.show();
+#endif
+}
+
 void clearDisplay() {
 #ifdef USE_WS2812
   FastLED.clear();

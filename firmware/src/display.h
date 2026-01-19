@@ -13,6 +13,9 @@ extern CRGB leds[NUM_LEDS];
 int getPhysicalLedIndex(int x, int y);
 void initDisplay(uint8_t brightness);
 void displayFrame(const Frame &f);
+void drawPixel(int x, int y, Pixel p);
+void setDisplayBrightness(uint8_t b);
 void clearDisplay();
+void showDisplay();
 
 #endif

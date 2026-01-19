@@ -7,6 +7,7 @@ bool deviceConnected = false;
 DataCallback dataCallback = nullptr;
 DisconnectCallback disconnectCallback = nullptr;
 uint8_t currentBLEBrightness = 25;
+uint8_t currentClockColorIndex = 0;
 
 void ServerCallbacks::onConnect(NimBLEServer *pServer,
                                 NimBLEConnInfo &connInfo) {
@@ -19,6 +20,7 @@ void ServerCallbacks::onConnect(NimBLEServer *pServer,
                       "\",\"width\":" + MATRIX_WIDTH +
                       ",\"height\":" + MATRIX_HEIGHT +
                       ",\"brightness\":" + currentBLEBrightness +
+                      ",\"clockColorIndex\":" + currentClockColorIndex +
                       ",\"mtu\":" + connInfo.getMTU() + "}";
   pCharInfo->setValue(deviceInfo.c_str());
   pCharInfo->notify();
@@ -45,10 +47,12 @@ void ServerCallbacks::onMTUChange(uint16_t mtu, NimBLEConnInfo &connInfo) {
 
   // Resend device info with updated MTU
   if (pCharInfo && deviceConnected) {
-    String deviceInfo =
-        String("{\"model\":\"") + DEVICE_MODEL +
-        "\",\"width\":" + MATRIX_WIDTH + ",\"height\":" + MATRIX_HEIGHT +
-        ",\"brightness\":" + currentBLEBrightness + ",\"mtu\":" + mtu + "}";
+    String deviceInfo = String("{\"model\":\"") + DEVICE_MODEL +
+                        "\",\"width\":" + MATRIX_WIDTH +
+                        ",\"height\":" + MATRIX_HEIGHT +
+                        ",\"brightness\":" + currentBLEBrightness +
+                        ",\"clockColorIndex\":" + currentClockColorIndex +
+                        ",\"mtu\":" + mtu + "}";
     pCharInfo->setValue(deviceInfo.c_str());
     pCharInfo->notify();
     Serial.println("Updated device info sent with new MTU");
@@ -66,10 +70,11 @@ void DataCallbacks::onWrite(NimBLECharacteristic *pChar,
 }
 
 void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
-             uint8_t initialBrightness) {
+             uint8_t initialBrightness, uint8_t initialClockColor) {
   dataCallback = callback;
   disconnectCallback = onDisconnect;
   currentBLEBrightness = initialBrightness;
+  currentClockColorIndex = initialClockColor;
 
   Serial.println("Initializing NimBLE...");
 
@@ -98,7 +103,8 @@ void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
   String deviceInfo = String("{\"model\":\"") + DEVICE_MODEL +
                       "\",\"width\":" + MATRIX_WIDTH +
                       ",\"height\":" + MATRIX_HEIGHT +
-                      ",\"brightness\":" + currentBLEBrightness + "}";
+                      ",\"brightness\":" + currentBLEBrightness +
+                      ",\"clockColorIndex\":" + currentClockColorIndex + "}";
   pCharInfo->setValue(deviceInfo.c_str());
 
   pService->start();
