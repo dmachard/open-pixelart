@@ -1,9 +1,8 @@
 # Open PixelArt
 
-Paint pixels in your browser and watch them **instantly** light up on your 
-physical LED matrix using **Bluetooth**.  
+**Open PixelArt** is an all-in-one platform to turn your physical 16x16 LED matrix into a vibrant display. Create pixel art, play animations, or customize a beautiful clock—all **instantly** synced from your browser via **Bluetooth**.
 
-The project includes both the **firmware** for the ESP32-C3 and a **web app** for drawing, upload, and slideshow control.
+The project includes both the **firmware** for the ESP32-C3 and a powerful **web app** for drawing, clock customization, and slideshow control.
 
 <img src="imgs/demo.gif" title="demo">
 
@@ -43,8 +42,8 @@ Other browsers may not be supported.
 <img src="imgs/webapp_draw.png" width="500">
 
 This web interface lets you:
-- Draw and color pixel art with instant LED feedback
-- **Hardware Persistence**: All settings (brightness) and the last displayed image are saved in the ESP32's NVS memory and restored automatically at boot.
+- **Hardware Persistence**: All settings (brightness, default mode at startup, clock color) and the last displayed image are saved in the ESP32's NVS memory and restored automatically at boot.
+- **Clock Mode**: Display current time with an animated edge-border seconds indicator and customizable digit colors (Lime, White, Cyan, Orange).
 - Save/load drawings as `.json` files  
 - Play animated slideshows
 
@@ -178,10 +177,10 @@ Header (6 bytes):
 
 | Byte | Name | Type | Range | Description |
 |------|------|------|-------|-------------|
-| `[0]` | **mode** | uint8 | 0-3 | Display mode, 0=Draw, 1=Gallery |
+| `[0]` | **mode** | uint8 | 0-3 | Display mode: 0=Draw, 1=Gallery, 2=Settings, 3=Clock |
 | `[1]` | **brightness** | uint8 | 0-255 | Global brightness, default: 25 |
 | `[2]` | **paletteSize** | uint8 | 1-16 | Number of colors in palette |
-| `[3]` | **frameIndex** | uint8 | 0-9 | Current frame index |
+| `[3]` | **frameIndex** | uint8 | 0-255 | Multi-purpose: Current frame index (Gallery), Color index (Clock), or Next default mode (Settings) |
 | `[4]` | **totalFrames** | uint8 | 1-10 | Total number of frames |
 | `[5]` | **transition** | uint8 | 0-8 | Transition effect mode, 0=Progressive, 1=Instant |
 | `[6-7]` | **frameDuration** | uint16 | 1-65535 | Frame duration in seconds (little-endian), default: 15 |
