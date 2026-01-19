@@ -25,6 +25,7 @@ if (DEBUG) {
 let currentDevice = null;
 let currentDeviceInfo = null;
 window.globalBrightness = 25; // Default brightness
+window.clockColorIndex = 0;   // Default color (Lime)
 
 const SERVICE_UUID = '12345678-1234-1234-1234-123456789012';
 const CHAR_UUID = '87654321-4321-4321-4321-210987654321';
@@ -110,6 +111,11 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
             const infoResEl = document.getElementById('infoResolution');
             if (infoModelEl) infoModelEl.textContent = deviceLabel;
             if (infoResEl) infoResEl.textContent = dimensionsText;
+
+            // Update clock color if available
+            if (currentDeviceInfo.clockColorIndex !== undefined) {
+                window.clockColorIndex = currentDeviceInfo.clockColorIndex;
+            }
         } else {
             deviceNameEl.textContent = deviceLabel;
         }
@@ -244,6 +250,31 @@ function initSettingsMode() {
             }
         });
     }
+
+    const clockColorSelect = document.getElementById('clockColorSettingsSelect');
+    if (clockColorSelect) {
+        clockColorSelect.value = window.clockColorIndex;
+        clockColorSelect.addEventListener('change', async (e) => {
+            window.clockColorIndex = parseInt(e.target.value);
+            console.log('Changing clock color to:', window.clockColorIndex);
+
+            try {
+                // Send MODE_CLOCK (3) with clock color index in frameIndex
+                await window.ledmatrix.esp32.send({
+                    pixels: new Array(16 * 16).fill(0),
+                    palette: ['#000000'],
+                    brightness: window.globalBrightness,
+                    mode: 3, // MODE_CLOCK
+                    frameIndex: window.clockColorIndex,
+                    totalFrames: 1
+                });
+                showNotification('✓ Clock color saved');
+            } catch (err) {
+                console.error('Error saving clock color:', err);
+                showNotification('✗ Error saving clock color', true);
+            }
+        });
+    }
 }
 
 // ========== CLOCK MODE ==========
@@ -255,7 +286,7 @@ async function initClockMode() {
             palette: ['#000000'],
             brightness: window.globalBrightness,
             mode: 3, // MODE_CLOCK
-            frameIndex: 0,
+            frameIndex: window.clockColorIndex,
             totalFrames: 1
         });
         showNotification('🕒 Clock mode activated');
