@@ -51,6 +51,12 @@
                     <div class="mode-description">Browse and send preset drawings</div>
                 </div>
 
+                <div class="mode-card" data-mode="clock">
+                    <span class="mode-icon">🕒</span>
+                    <div class="mode-name">Clock</div>
+                    <div class="mode-description">Display the current time</div>
+                </div>
+
                 <div class="mode-card" data-mode="settings">
                     <span class="mode-icon">⚙️</span>
                     <div class="mode-name">Settings</div>
@@ -203,13 +209,30 @@
 
             <div class="settings-card">
                 <div class="settings-label">
+                    <span class="icon">🚀</span>
+                    <span>Default mode at startup</span>
+                </div>
+                <div class="settings-control">
+                    <select id="defaultModeSettingsSelect">
+                        <option value="0">Drawing (Last image)</option>
+                        <option value="1">Gallery (Disabled)</option>
+                        <option value="3">Clock</option>
+                    </select>
+                </div>
+                <p class="settings-help">The selected mode will be activated automatically when the device is powered
+                    on.
+                </p>
+            </div>
+
+            <div class="settings-card">
+                <div class="settings-label">
                     <span class="icon">ℹ️</span>
-                    <span>Informations Appareil</span>
+                    <span>Device information</span>
                 </div>
                 <div class="settings-help">
-                    Modèle: <strong id="infoModel">-</strong><br>
-                    Résolution: <strong id="infoResolution">-</strong><br>
-                    Connexion: <strong>Bluetooth Low Energy</strong>
+                    Model: <strong id="infoModel">-</strong><br>
+                    Resolution: <strong id="infoResolution">-</strong><br>
+                    Connection: <strong>Bluetooth Low Energy</strong>
                 </div>
             </div>
 
@@ -224,7 +247,7 @@
     <script src="./js/esp32.js?v=13" defer></script>
     <script src="./js/draw.js?v=5"></script>
     <script src="./js/gallery.js?v=27"></script>
-    <script src="./js/app.js?v=70"></script>
+    <script src="./js/app.js?v=71"></script>
 </body>
 
 </html>

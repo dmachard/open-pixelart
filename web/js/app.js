@@ -175,7 +175,7 @@ document.querySelectorAll('.mode-card').forEach(card => {
             showPage('settingsPage');
         } else if (mode === 'clock') {
             initClockMode();
-            showPage('clockPage');
+            showPage('modePage'); // No dedicated page, just send command
         }
     });
 });
@@ -202,16 +202,13 @@ function initSettingsMode() {
 
         try {
             // Send a dummy frame with MODE_SETTINGS (2)
-            // We send a full black 16x16 frame to satisfy the decoder requirements
-            const gridWidth = currentDeviceInfo?.width || 16;
-            const gridHeight = currentDeviceInfo?.height || 16;
-
+            // frameIndex is 255 to indicate no change to default_mode
             await window.ledmatrix.esp32.send({
-                pixels: new Array(gridWidth * gridHeight).fill(0),
+                pixels: new Array(16 * 16).fill(0),
                 palette: ['#000000'],
                 brightness: window.globalBrightness,
                 mode: 2, // MODE_SETTINGS
-                frameIndex: 0,
+                frameIndex: 255,
                 totalFrames: 1
             });
             showNotification('✓ Brightness saved');
@@ -220,4 +217,50 @@ function initSettingsMode() {
             showNotification('✗ Error saving brightness', true);
         }
     });
+
+    const defaultModeSelect = document.getElementById('defaultModeSettingsSelect');
+    if (defaultModeSelect) {
+        // We don't have the current defaultMode from device info yet, 
+        // but we can set it via MODE_SETTINGS.
+
+        defaultModeSelect.addEventListener('change', async (e) => {
+            const newDefaultMode = parseInt(e.target.value);
+            console.log('Changing default mode to:', newDefaultMode);
+
+            try {
+                // Send MODE_SETTINGS (2) with default_mode in frameIndex (byte 3)
+                await window.ledmatrix.esp32.send({
+                    pixels: new Array(16 * 16).fill(0),
+                    palette: ['#000000'],
+                    brightness: window.globalBrightness,
+                    mode: 2, // MODE_SETTINGS
+                    frameIndex: newDefaultMode,
+                    totalFrames: 1
+                });
+                showNotification('✓ Default mode saved');
+            } catch (err) {
+                console.error('Error saving default mode:', err);
+                showNotification('✗ Error saving default mode', true);
+            }
+        });
+    }
+}
+
+// ========== CLOCK MODE ==========
+async function initClockMode() {
+    console.log('Switching to Clock Mode');
+    try {
+        await window.ledmatrix.esp32.send({
+            pixels: new Array(16 * 16).fill(0),
+            palette: ['#000000'],
+            brightness: window.globalBrightness,
+            mode: 3, // MODE_CLOCK
+            frameIndex: 0,
+            totalFrames: 1
+        });
+        showNotification('🕒 Clock mode activated');
+    } catch (err) {
+        console.error('Error switching to clock mode:', err);
+        showNotification('✗ Error clock mode', true);
+    }
 }
