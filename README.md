@@ -1,8 +1,6 @@
 # Open PixelArt
 
-**Open PixelArt** is an all-in-one platform to turn your physical 16x16 LED matrix into a vibrant display. Create pixel art, play animations, or customize a beautiful clock—all **instantly** synced from your browser via **Bluetooth**.
-
-The project includes both the **firmware** for the ESP32-C3 and a powerful **web app** for drawing, clock customization, and slideshow control.
+A Bluetooth-controlled LED matrix project powered by ESP32. Draw pixel art, play animations, or just display a clock.
 
 <img src="imgs/demo.gif" title="demo">
 
