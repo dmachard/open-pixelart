@@ -2,6 +2,10 @@
 
 A Bluetooth-controlled LED matrix project powered by ESP32. Draw pixel art, play animations, or just display a clock.
 
+
+▶️ [See video](https://github.com/user-attachments/assets/048136df-9e7c-436d-b4ce-061c26e4e01e)
+
+
 <img src="imgs/demo.gif" title="demo">
 
 ## Hardware setup
