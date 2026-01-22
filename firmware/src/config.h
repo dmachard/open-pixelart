@@ -20,4 +20,8 @@
     #define NUM_LEDS (MATRIX_WIDTH * MATRIX_HEIGHT)
 #endif
 
+// RTC (DS3231) Configuration
+#define RTC_SDA_PIN 6
+#define RTC_SCL_PIN 7
+
 #endif
