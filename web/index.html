@@ -57,6 +57,12 @@
                     <div class="mode-description">Display the current time</div>
                 </div>
 
+                <div class="mode-card" data-mode="audio">
+                    <span class="mode-icon">🎵</span>
+                    <div class="mode-name">Audio</div>
+                    <div class="mode-description">Real-time audio visualizer</div>
+                </div>
+
                 <div class="mode-card" data-mode="settings">
                     <span class="mode-icon">⚙️</span>
                     <div class="mode-name">Settings</div>
@@ -259,11 +265,36 @@
         </div>
     </div>
 
+    <!-- PAGE: AUDIO MODE -->
+    <div id="audioPage" class="page audio-page">
+        <div class="audio-header">
+            <h1>Audio Visualizer</h1>
+            <p>Make your matrix dance to the music</p>
+        </div>
+        <div class="slideshow-controls">
+            <div class="control-btn" id="backFromAudio">
+                <span class="icon">←</span>
+                <span>Back</span>
+            </div>
+            <div class="control-btn" id="toggleAudioBtn">
+                <span class="icon">▶️</span>
+                <span id="audioStatusText">Start</span>
+            </div>
+        </div>
+
+        <div class="audio-container">
+            <canvas id="audioCanvas" width="256" height="100"></canvas>
+            <p class="settings-help" style="text-align: center; margin-top: 10px;">Grant microphone access to start the
+                visualization.</p>
+        </div>
+    </div>
+
     <script src="./js/ble.js?v=7" defer></script>
     <script src="./js/esp32.js?v=13" defer></script>
     <script src="./js/draw.js?v=5"></script>
     <script src="./js/gallery.js?v=27"></script>
-    <script src="./js/app.js?v=72"></script>
+    <script src="./js/audio.js?v=1"></script>
+    <script src="./js/app.js?v=73"></script>
 </body>
 
 </html>

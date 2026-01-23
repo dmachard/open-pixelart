@@ -182,6 +182,8 @@ document.querySelectorAll('.mode-card').forEach(card => {
         } else if (mode === 'clock') {
             initClockMode();
             showPage('modePage'); // No dedicated page, just send command
+        } else if (mode === 'audio') {
+            initAudioMode();
         }
     });
 });
