@@ -100,19 +100,52 @@
         canvasCtx.fillStyle = '#1a1a1a';
         canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const barWidth = (canvas.width / 16);
-        let x = 0;
-
         const spectrum = calculateSpectrum(dataArray);
 
-        for (let i = 0; i < 16; i++) {
-            const value = spectrum[i];
-            const barHeight = (value / 255) * canvas.height;
+        const styleSelect = document.getElementById('audioStyleSelect');
+        const style = styleSelect ? parseInt(styleSelect.value) : 0;
 
-            canvasCtx.fillStyle = `hsl(${(i / 16) * 360}, 70%, 50%)`;
-            canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+        if (style === 1) {
+            // RADIAL MODE
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const maxRadius = Math.min(centerX, centerY) - 10;
 
-            x += barWidth;
+            // Calculate average energy
+            let total = 0;
+            for (let i = 0; i < 16; i++) total += spectrum[i];
+            const avg = total / 16;
+
+            const radius = (avg / 255) * maxRadius;
+
+            const hue = (Date.now() / 50) % 360;
+
+            canvasCtx.beginPath();
+            canvasCtx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            canvasCtx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+            canvasCtx.fill();
+
+            // Glow
+            canvasCtx.beginPath();
+            canvasCtx.arc(centerX, centerY, radius + 20, 0, 2 * Math.PI);
+            canvasCtx.strokeStyle = `hsla(${hue}, 100%, 50%, 0.3)`;
+            canvasCtx.lineWidth = 10;
+            canvasCtx.stroke();
+
+        } else {
+            // BARS MODE
+            const barWidth = (canvas.width / 16);
+            let x = 0;
+
+            for (let i = 0; i < 16; i++) {
+                const value = spectrum[i];
+                const barHeight = (value / 255) * canvas.height;
+
+                canvasCtx.fillStyle = `hsl(${(i / 16) * 360}, 70%, 50%)`;
+                canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+
+                x += barWidth;
+            }
         }
     }
 
@@ -139,7 +172,9 @@
         }
 
         try {
-            await sendAudioSpectrum(mappedSpectrum);
+            const styleSelect = document.getElementById('audioStyleSelect');
+            const style = styleSelect ? parseInt(styleSelect.value) : 0;
+            await sendAudioSpectrum(mappedSpectrum, style);
         } catch (e) {
             console.error('BLE send error:', e);
         }
@@ -147,13 +182,14 @@
         setTimeout(sendToESP32, 30);
     }
 
-    async function sendAudioSpectrum(spectrum) {
+    async function sendAudioSpectrum(spectrum, style) {
         const char = window.ledmatrix?.ble?.getCharacteristic?.();
         if (!char) return;
 
-        // Header: [mode, brightness, paletteSize, frameIndex, totalFrames, transition, durL, durH]
+        // Header: [mode, brightness, style, frameIndex, totalFrames, transition, durL, durH]
         // Mode 4 = AUDIO
-        const header = [4, window.globalBrightness || 25, 0, 0, 0, 0, 0, 0];
+        // data[2] = style
+        const header = [4, window.globalBrightness || 25, style || 0, 0, 0, 0, 0, 0];
         const data = new Uint8Array(header.length + spectrum.length);
         data.set(header, 0);
         data.set(spectrum, header.length);

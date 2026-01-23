@@ -271,7 +271,33 @@
             <h1>Audio Visualizer</h1>
             <p>Make your matrix dance to the music</p>
         </div>
-        <div class="slideshow-controls">
+
+        <div class="audio-container"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+
+            <div class="settings-card" style="width: 100%; max-width: 300px; margin-bottom: 20px;">
+                <div class="settings-label">
+                    <span class="icon">📊</span>
+                    <span>Style</span>
+                </div>
+                <div class="settings-control">
+                    <select id="audioStyleSelect">
+                        <option value="0">Bars (Classic)</option>
+                        <option value="1">Radial (Pulse)</option>
+                    </select>
+                </div>
+            </div>
+
+            <canvas id="audioCanvas" width="256" height="256"
+                style="background: #000; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); max-width: 256px; width: 100%; aspect-ratio: 1/1;"></canvas>
+
+            <p class="settings-help" style="text-align: center; margin-top: 10px;">
+                Grant microphone access to start the visualization.
+            </p>
+        </div>
+
+        <div class="slideshow-controls"
+            style="margin-top: 20px; width: 100%; justify-content: center; gap: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px;">
             <div class="control-btn" id="backFromAudio">
                 <span class="icon">←</span>
                 <span>Back</span>
@@ -281,19 +307,13 @@
                 <span id="audioStatusText">Start</span>
             </div>
         </div>
-
-        <div class="audio-container">
-            <canvas id="audioCanvas" width="256" height="100"></canvas>
-            <p class="settings-help" style="text-align: center; margin-top: 10px;">Grant microphone access to start the
-                visualization.</p>
-        </div>
     </div>
 
     <script src="./js/ble.js?v=7" defer></script>
     <script src="./js/esp32.js?v=13" defer></script>
     <script src="./js/draw.js?v=5"></script>
     <script src="./js/gallery.js?v=27"></script>
-    <script src="./js/audio.js?v=2"></script>
+    <script src="./js/audio.js?v=3"></script>
     <script src="./js/app.js?v=73"></script>
 </body>
 
