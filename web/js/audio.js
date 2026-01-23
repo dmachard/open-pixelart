@@ -7,8 +7,8 @@
     let animationId = null;
 
     // UI Elements
-    const canvas = document.getElementById('audioCanvas');
-    const canvasCtx = canvas?.getContext('2d');
+    // UI Elements
+    // Canvas removed as requested
     const toggleBtn = document.getElementById('toggleAudioBtn');
     const statusText = document.getElementById('audioStatusText');
     const backBtn = document.getElementById('backFromAudio');
@@ -31,7 +31,7 @@
             statusText.textContent = 'Stop';
             toggleBtn.querySelector('.icon').textContent = '⏹️';
 
-            visualize();
+            // Start sending data to ESP32
             sendToESP32();
 
             console.log('Audio visualizer started');
@@ -86,67 +86,6 @@
             spectrum[i] = value;
         }
         return spectrum;
-    }
-
-    function visualize() {
-        if (!isActive) return;
-        animationId = requestAnimationFrame(visualize);
-
-        analyser.getByteFrequencyData(dataArray);
-
-        if (!canvasCtx) return;
-
-        // Draw preview on canvas
-        canvasCtx.fillStyle = '#1a1a1a';
-        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const spectrum = calculateSpectrum(dataArray);
-
-        const styleSelect = document.getElementById('audioStyleSelect');
-        const style = styleSelect ? parseInt(styleSelect.value) : 0;
-
-        if (style === 1) {
-            // RADIAL MODE
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const maxRadius = Math.min(centerX, centerY) - 10;
-
-            // Calculate average energy
-            let total = 0;
-            for (let i = 0; i < 16; i++) total += spectrum[i];
-            const avg = total / 16;
-
-            const radius = (avg / 255) * maxRadius;
-
-            const hue = (Date.now() / 50) % 360;
-
-            canvasCtx.beginPath();
-            canvasCtx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-            canvasCtx.fillStyle = `hsl(${hue}, 100%, 50%)`;
-            canvasCtx.fill();
-
-            // Glow
-            canvasCtx.beginPath();
-            canvasCtx.arc(centerX, centerY, radius + 20, 0, 2 * Math.PI);
-            canvasCtx.strokeStyle = `hsla(${hue}, 100%, 50%, 0.3)`;
-            canvasCtx.lineWidth = 10;
-            canvasCtx.stroke();
-
-        } else {
-            // BARS MODE
-            const barWidth = (canvas.width / 16);
-            let x = 0;
-
-            for (let i = 0; i < 16; i++) {
-                const value = spectrum[i];
-                const barHeight = (value / 255) * canvas.height;
-
-                canvasCtx.fillStyle = `hsl(${(i / 16) * 360}, 70%, 50%)`;
-                canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
-
-                x += barWidth;
-            }
-        }
     }
 
     let lastSend = 0;
