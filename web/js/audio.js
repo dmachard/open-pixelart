@@ -55,6 +55,39 @@
         console.log('Audio visualizer stopped');
     }
 
+    function calculateSpectrum(inputData) {
+        const spectrum = new Uint8Array(16);
+        // We want to focus on 0-14kHz roughly.
+        // FFT size 256 -> 128 bins. Sample rate ~44-48k.
+        // 128 bins over 22k -> ~172Hz per bin.
+        // To cover ~14kHz, we need ~81 bins.
+        // Let's use 5 bins per bar * 16 bars = 80 bins.
+        const binsPerBar = 5;
+        const gain = 2.0; // Boost the signal
+
+        for (let i = 0; i < 16; i++) {
+            let sum = 0;
+            for (let j = 0; j < binsPerBar; j++) {
+                // Offset i * binsPerBar
+                const binIndex = i * binsPerBar + j;
+                if (binIndex < inputData.length) {
+                    sum += inputData[binIndex];
+                }
+            }
+            // Average
+            let value = sum / binsPerBar;
+
+            // Apply gain
+            value = value * gain;
+
+            // Clamp
+            if (value > 255) value = 255;
+
+            spectrum[i] = value;
+        }
+        return spectrum;
+    }
+
     function visualize() {
         if (!isActive) return;
         animationId = requestAnimationFrame(visualize);
@@ -68,19 +101,13 @@
         canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
         const barWidth = (canvas.width / 16);
-        let barHeight;
         let x = 0;
 
-        for (let i = 0; i < 16; i++) {
-            // Simple mapping: average multiple bins for each bar
-            const binRange = Math.floor(dataArray.length / 16);
-            let sum = 0;
-            for (let j = 0; j < binRange; j++) {
-                sum += dataArray[i * binRange + j];
-            }
-            const value = sum / binRange;
+        const spectrum = calculateSpectrum(dataArray);
 
-            barHeight = (value / 255) * canvas.height;
+        for (let i = 0; i < 16; i++) {
+            const value = spectrum[i];
+            const barHeight = (value / 255) * canvas.height;
 
             canvasCtx.fillStyle = `hsl(${(i / 16) * 360}, 70%, 50%)`;
             canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
@@ -103,24 +130,16 @@
 
         analyser.getByteFrequencyData(dataArray);
 
-        const spectrum = new Uint8Array(16);
-        const binRange = Math.floor(dataArray.length / 16);
+        const spectrum = calculateSpectrum(dataArray);
+        const mappedSpectrum = new Uint8Array(16);
 
         for (let i = 0; i < 16; i++) {
-            let sum = 0;
-            for (let j = 0; j < binRange; j++) {
-                sum += dataArray[i * binRange + j];
-            }
-            const value = sum / binRange;
-            // Map 0-255 to 0-16
-            spectrum[i] = Math.round((value / 255) * 16);
+            // Map 0-255 to 0-16 for the display
+            mappedSpectrum[i] = Math.round((spectrum[i] / 255) * 16);
         }
 
         try {
-            // We need a way to send raw data. 
-            // Standard esp32.send might be too heavy.
-            // Let's use a specialized function or just use send with mode 4.
-            await sendAudioSpectrum(spectrum);
+            await sendAudioSpectrum(mappedSpectrum);
         } catch (e) {
             console.error('BLE send error:', e);
         }
