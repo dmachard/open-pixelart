@@ -152,8 +152,13 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
 });
 
 // ========== MODE SELECTION ==========
-document.querySelectorAll('.mode-card').forEach(card => {
-    card.addEventListener('click', () => {
+// ========== MODE SELECTION ==========
+const modeGrid = document.querySelector('.mode-grid');
+if (modeGrid) {
+    modeGrid.addEventListener('click', (e) => {
+        const card = e.target.closest('.mode-card');
+        if (!card) return;
+
         const mode = card.dataset.mode;
 
         if (mode === 'disconnect') {
@@ -195,7 +200,7 @@ document.querySelectorAll('.mode-card').forEach(card => {
             showPage('textPage');
         }
     });
-});
+}
 
 // ========== SETTINGS MODE ==========
 function initSettingsMode() {
