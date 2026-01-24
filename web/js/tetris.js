@@ -1,6 +1,6 @@
 (function () {
-    const canvas = document.getElementById('tetrisCanvas');
-    const ctx = canvas.getContext('2d');
+    // Canvas removed, running headless
+
     const statusText = document.getElementById('tetrisStatusText');
     const scoreText = document.getElementById('tetrisScore');
     const startBtn = document.getElementById('startTetrisBtn');
@@ -161,44 +161,7 @@
         alert('Game Over! Score: ' + score);
     }
 
-    function draw() {
-        // Clear canvas
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const w = canvas.width / COLS;
-        const h = canvas.height / ROWS;
-
-        // Draw board
-        for (let r = 0; r < ROWS; r++) {
-            for (let c = 0; c < COLS; c++) {
-                if (board[r][c]) {
-                    drawCell(c, r, w, h, board[r][c]);
-                }
-            }
-        }
-
-        // Draw current piece
-        if (currentPiece) {
-            for (let r = 0; r < currentPiece.shape.length; r++) {
-                for (let c = 0; c < currentPiece.shape[r].length; c++) {
-                    if (currentPiece.shape[r][c]) {
-                        drawCell(currentPiece.x + c, currentPiece.y + r, w, h, currentPiece.color);
-                    }
-                }
-            }
-        }
-    }
-
-    function drawCell(x, y, w, h, colorIdx) {
-        const hexColors = [
-            '#000000', '#00ffff', '#0000ff', '#ffa500',
-            '#ffff00', '#00ff00', '#800080', '#ff0000',
-            '#333333', '#ffffff', '#666666'
-        ];
-        ctx.fillStyle = hexColors[colorIdx] || '#fff';
-        ctx.fillRect(x * w, y * h, w - 1, h - 1);
-    }
 
     function packBoard() {
         // Create 128 bytes buffer (16x16 pixels, 4 bits each)
@@ -268,7 +231,7 @@
             lastDropTime = time;
         }
 
-        draw();
+
         sendFrame(); // Send every frame (or could limit FPS)
 
         gameLoopId = requestAnimationFrame(gameLoop);

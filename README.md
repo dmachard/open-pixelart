@@ -1,6 +1,10 @@
-# Open PixelArt
+# PixelBox
 
-A Bluetooth-controlled LED matrix project powered by ESP32. Draw pixel art, play animations, or just display a clock.
+A Bluetooth-controlled PixelBox project powered by ESP32.
+- Draw pixel art
+- Play animations
+- Display a clock
+- Tetris
 
 <img src="imgs/clock.png" title="demo" width="400">
 
