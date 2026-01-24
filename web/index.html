@@ -70,11 +70,7 @@
                     <div class="mode-description">Classic Snake game</div>
                 </div>
 
-                <div class="mode-card" data-mode="flappy">
-                    <span class="mode-icon">🐦</span>
-                    <div class="mode-name">Flappy</div>
-                    <div class="mode-description">Fly through pipes</div>
-                </div>
+
 
                 <div class="mode-card" data-mode="simon">
                     <span class="mode-icon">🧠</span>
@@ -82,11 +78,7 @@
                     <div class="mode-description">Memory Game</div>
                 </div>
 
-                <div class="mode-card" data-mode="arkanoid">
-                    <span class="mode-icon">🧱</span>
-                    <div class="mode-name">Arkanoid</div>
-                    <div class="mode-description">Break all bricks</div>
-                </div>
+
 
                 <div class="mode-card" data-mode="game">
                     <span class="mode-icon">🕹️</span>
@@ -420,78 +412,9 @@
         </div>
     </div>
 
-    <!-- PAGE: FLAPPY BIRD MODE -->
-    <div id="flappyPage" class="page game-page">
-        <div class="game-header">
-            <h1
-                style="background: linear-gradient(to right, #ffff00, #ff9900); -webkit-background-clip: text; background-clip: text;">
-                Flappy
-            </h1>
-        </div>
 
-        <div class="top-controls">
-            <div class="control-btn" id="backFromFlappy">
-                <span class="icon">←</span>
-                <span>Back</span>
-            </div>
-            <div class="control-btn" id="startFlappyBtn">
-                <span class="icon">▶️</span>
-                <span id="flappyStatusText">Start</span>
-            </div>
-        </div>
 
-        <div class="score-container"
-            style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
-            <div class="score-display" style="flex-direction: column;">
-                <span class="score-label">SCORE</span>
-                <span id="flappyScore" class="score-value">0</span>
-            </div>
-        </div>
 
-        <div class="game-controls">
-            <div class="dpad-row">
-                <button id="btnFlappyJump" class="game-btn wide-btn"
-                    style="width: 200px; border-radius: 40px;">JUMP</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- PAGE: ARKANOID MODE -->
-    <div id="arkanoidPage" class="page game-page">
-        <div class="game-header">
-            <h1
-                style="background: linear-gradient(to right, #00ffff, #0000ff); -webkit-background-clip: text; background-clip: text;">
-                Arkanoid
-            </h1>
-        </div>
-
-        <div class="top-controls">
-            <div class="control-btn" id="backFromArkanoid">
-                <span class="icon">←</span>
-                <span>Back</span>
-            </div>
-            <div class="control-btn" id="startArkanoidBtn">
-                <span class="icon">▶️</span>
-                <span id="arkanoidStatusText">Start</span>
-            </div>
-        </div>
-
-        <div class="score-container"
-            style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
-            <div class="score-display" style="flex-direction: column;">
-                <span class="score-label">SCORE</span>
-                <span id="arkanoidScore" class="score-value">0</span>
-            </div>
-        </div>
-
-        <div class="game-controls">
-            <div class="dpad-row">
-                <button id="btnArkanoidLeft" class="game-btn">←</button>
-                <div style="width: 20px;"></div> <!-- Spacer -->
-                <button id="btnArkanoidRight" class="game-btn">→</button>
-            </div>
-        </div>
-    </div>
 
     <!-- PAGE: SIMON MODE -->
     <div id="simonPage" class="page game-page">
@@ -543,8 +466,7 @@
     <script src="./js/tetris.js?v=4"></script>
     <script src="./js/snake.js?v=1"></script>
     <script src="./js/simon.js?v=1"></script>
-    <script src="./js/flappy.js?v=2"></script>
-    <script src="./js/arkanoid.js?v=2"></script>
+
     <script src="./js/app.js?v=77"></script>
 </body>
 

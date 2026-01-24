@@ -190,10 +190,6 @@ document.querySelectorAll('.mode-card').forEach(card => {
             initSnakeMode();
         } else if (mode === 'simon') {
             initSimonMode();
-        } else if (mode === 'flappy') {
-            initFlappyMode();
-        } else if (mode === 'arkanoid') {
-            initArkanoidMode();
         }
     });
 });
