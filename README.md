@@ -6,6 +6,8 @@ A Bluetooth-controlled PixelBox project powered by ESP32.
 - Display a clock
 - Tetris
 - Snake
+- Flappy Bird
+- Arkanoid
 
 <img src="imgs/clock.png" title="demo" width="400">
 
