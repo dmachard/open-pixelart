@@ -4,9 +4,8 @@ A Bluetooth-controlled PixelBox project powered by ESP32.
 - Draw pixel art instantly (16x16)
 - Play animations
 - Display a clock
-- Tetris
-- Snake
-- Simon
+- Display text messages
+- Games: Tetris, Snake and Simon
 
 <img src="imgs/clock.png" title="demo" width="400">
 

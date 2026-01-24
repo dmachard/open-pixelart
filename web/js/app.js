@@ -190,6 +190,9 @@ document.querySelectorAll('.mode-card').forEach(card => {
             initSnakeMode();
         } else if (mode === 'simon') {
             initSimonMode();
+        } else if (mode === 'text') {
+            initTextMode();
+            showPage('textPage');
         }
     });
 });
