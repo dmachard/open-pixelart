@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./css/draw.css?v=5">
     <link rel="stylesheet" href="./css/gallery.css?v=3">
     <link rel="stylesheet" href="./css/settings.css?v=1">
-    <link rel="stylesheet" href="./css/game.css?v=2">
+    <link rel="stylesheet" href="./css/game.css?v=3">
 </head>
 
 <body>
@@ -318,7 +318,6 @@
     <div id="gamePage" class="page game-page">
         <div class="game-header">
             <h1>Tetris</h1>
-            <div class="score-display">Score: <span id="tetrisScore">0</span></div>
         </div>
 
         <!-- Top Controls: Back & Restart -->
@@ -333,8 +332,14 @@
             </div>
         </div>
 
-        <!-- Spacer to push D-pad to bottom -->
-        <div style="flex: 1;"></div>
+        <!-- Score Display (Central) -->
+        <div class="score-container"
+            style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+            <div class="score-display" style="flex-direction: column;">
+                <span class="score-label">SCORE</span>
+                <span id="tetrisScore" class="score-value">0</span>
+            </div>
+        </div>
 
         <!-- Bottom Controls: D-Pad -->
         <div class="game-controls">

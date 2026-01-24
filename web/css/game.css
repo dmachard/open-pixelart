@@ -33,15 +33,35 @@
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
 }
 
+/* === SCORE DISPLAY (CENTRAL) === */
 .score-display {
     font-family: 'Courier New', monospace;
-    font-size: 1.2rem;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 5px 15px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    /* Softer bg */
+    padding: 20px 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
+
+.score-label {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 2px;
+}
+
+.score-value {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
 
 /* === TOP CONTROLS (Back / Start) === */
 .top-controls {
@@ -84,14 +104,17 @@
 
 /* === GAME BUTTONS === */
 .game-btn {
-    width: 65px;
-    height: 65px;
+    width: 80px;
+    /* Increased from 65px */
+    height: 80px;
+    /* Increased from 65px */
     border-radius: 50%;
     border: none;
     background: linear-gradient(145deg, #2a2a3a, #1a1a1a);
-    box-shadow: 5px 5px 10px #0f0f15, -5px -5px 10px #35354f;
+    box-shadow: 6px 6px 12px #0f0f15, -6px -6px 12px #35354f;
     color: #fff;
-    font-size: 1.8rem;
+    font-size: 2.2rem;
+    /* Increased font size */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -128,18 +151,17 @@
         margin-bottom: 5px;
     }
 
-    .game-container {
+    .top-controls {
         margin-bottom: 10px;
     }
 
-    #tetrisCanvas {
-        width: 220px;
-        height: 220px;
+    .game-btn {
+        width: 65px;
+        height: 65px;
+        font-size: 1.8rem;
     }
 
-    .game-btn {
-        width: 55px;
-        height: 55px;
-        font-size: 1.5rem;
+    .score-value {
+        font-size: 2.5rem;
     }
 }
