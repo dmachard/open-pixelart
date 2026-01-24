@@ -91,8 +91,8 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    padding-bottom: 50px;
-    /* Lift buttons higher */
+    padding-bottom: 100px;
+    /* Lift buttons even higher */
 }
 
 /* === D-PAD LAYOUT === */
@@ -105,10 +105,10 @@
 
 /* === GAME BUTTONS === */
 .game-btn {
-    width: 80px;
-    /* Increased from 65px */
-    height: 80px;
-    /* Increased from 65px */
+    width: 95px;
+    /* Increased from 80px */
+    height: 95px;
+    /* Increased from 80px */
     border-radius: 50%;
     border: none;
     background: linear-gradient(145deg, #2a2a3a, #1a1a1a);
