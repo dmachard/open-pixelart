@@ -295,6 +295,44 @@
         </div>
     </div>
 
+    <!-- PAGE: TEXT MODE -->
+    <div id="textPage" class="page text-page">
+        <div class="text-header">
+            <h1>Message</h1>
+            <p>Send scrolling text to the device</p>
+        </div>
+
+        <div class="text-container">
+            <div class="input-group">
+                <label>Text</label>
+                <input type="text" id="textInput" placeholder="HELLO WORLD" maxlength="30">
+            </div>
+
+            <div class="input-group">
+                <label>Color</label>
+                <div class="color-select-wrapper">
+                    <input type="color" id="textColorPicker" value="#00FF00">
+                    <span id="textColorValue">#00FF00</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Speed: <span id="textSpeedValue">Fast</span></label>
+                <input type="range" id="textSpeedInput" min="20" max="250" value="80" step="10" style="direction: rtl">
+            </div>
+
+            <button id="sendTextBtn" class="control-btn" style="width: 100%; flex-direction: row; gap: 10px;">
+                <span class="icon">🚀</span>
+                <span>SEND MESSAGE</span>
+            </button>
+        </div>
+
+        <div class="control-btn" id="backFromText" style="margin-top: 20px;">
+            <span class="icon">←</span>
+            <span>Back</span>
+        </div>
+    </div>
+
     <!-- PAGE: AUDIO MODE -->
     <div id="audioPage" class="page audio-page">
         <div class="audio-header">
