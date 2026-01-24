@@ -181,13 +181,16 @@
         cancelAnimationFrame(gameLoopId);
     }
 
-    startBtn.addEventListener('click', () => {
+    const toggleGame = (e) => {
+        if (e) e.preventDefault();
         if (statusText.textContent === 'GAME OVER') {
             initGame();
         } else {
             isActive ? stopGame() : initGame();
         }
-    });
+    };
+    startBtn.addEventListener('click', toggleGame);
+    startBtn.addEventListener('touchend', toggleGame);
 
     backBtn.addEventListener('click', () => {
         stopGame();

@@ -9,7 +9,7 @@
 
     const ROWS = 16;
     const COLS = 16;
-    const FPS = 20;
+    const FPS = 10;
 
     // Game state
     let paddleX = 6;

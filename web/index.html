@@ -76,6 +76,12 @@
                     <div class="mode-description">Fly through pipes</div>
                 </div>
 
+                <div class="mode-card" data-mode="simon">
+                    <span class="mode-icon">🧠</span>
+                    <div class="mode-name">Simon</div>
+                    <div class="mode-description">Memory Game</div>
+                </div>
+
                 <div class="mode-card" data-mode="arkanoid">
                     <span class="mode-icon">🧱</span>
                     <div class="mode-name">Arkanoid</div>
@@ -487,6 +493,48 @@
         </div>
     </div>
 
+    <!-- PAGE: SIMON MODE -->
+    <div id="simonPage" class="page game-page">
+        <div class="game-header">
+            <h1
+                style="background: linear-gradient(to right, #ff0000, #00ff00, #0000ff); -webkit-background-clip: text; background-clip: text;">
+                Simon</h1>
+        </div>
+
+        <div class="top-controls">
+            <div class="control-btn" id="backFromSimon">
+                <span class="icon">←</span>
+                <span>Back</span>
+            </div>
+            <div class="control-btn" id="startSimonBtn">
+                <span class="icon">▶️</span>
+                <span id="simonStatusText">Start</span>
+            </div>
+        </div>
+
+        <div class="score-container"
+            style="flex: 0.5; display: flex; align-items: center; justify-content: center; width: 100%;">
+            <div class="score-display" style="flex-direction: column;">
+                <span class="score-label">LEVEL</span>
+                <span id="simonScore" class="score-value">1</span>
+            </div>
+        </div>
+
+        <div class="game-controls" style="flex: 2; justify-content: center;">
+            <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 300px; padding: 20px;">
+                <button id="btnSimonGreen" class="game-btn"
+                    style="width: 100%; height: 120px; border-radius: 20px; background: #00ff00; border: 4px solid #00aa00;"></button>
+                <button id="btnSimonRed" class="game-btn"
+                    style="width: 100%; height: 120px; border-radius: 20px; background: #ff0000; border: 4px solid #aa0000;"></button>
+                <button id="btnSimonYellow" class="game-btn"
+                    style="width: 100%; height: 120px; border-radius: 20px; background: #ffff00; border: 4px solid #aaaa00;"></button>
+                <button id="btnSimonBlue" class="game-btn"
+                    style="width: 100%; height: 120px; border-radius: 20px; background: #0000ff; border: 4px solid #0000aa;"></button>
+            </div>
+        </div>
+    </div>
+
     <script src="./js/ble.js?v=7" defer></script>
     <script src="./js/esp32.js?v=13" defer></script>
     <script src="./js/draw.js?v=5"></script>
@@ -494,9 +542,10 @@
     <script src="./js/audio.js?v=5"></script>
     <script src="./js/tetris.js?v=4"></script>
     <script src="./js/snake.js?v=1"></script>
-    <script src="./js/flappy.js?v=1"></script>
-    <script src="./js/arkanoid.js?v=1"></script>
-    <script src="./js/app.js?v=76"></script>
+    <script src="./js/simon.js?v=1"></script>
+    <script src="./js/flappy.js?v=2"></script>
+    <script src="./js/arkanoid.js?v=2"></script>
+    <script src="./js/app.js?v=77"></script>
 </body>
 
 </html>

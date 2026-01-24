@@ -188,6 +188,8 @@ document.querySelectorAll('.mode-card').forEach(card => {
             initTetrisMode();
         } else if (mode === 'snake') {
             initSnakeMode();
+        } else if (mode === 'simon') {
+            initSimonMode();
         } else if (mode === 'flappy') {
             initFlappyMode();
         } else if (mode === 'arkanoid') {
