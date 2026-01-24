@@ -157,8 +157,8 @@
 
     function gameOver() {
         isActive = false;
-        statusText.textContent = 'Restart';
-        alert('Game Over! Score: ' + score);
+        statusText.textContent = 'GAME OVER';
+        // alert('Game Over! Score: ' + score);
     }
 
 
