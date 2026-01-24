@@ -262,10 +262,49 @@
     const moveDown = () => { if (isActive && !checkCollision(0, 1, currentPiece.shape)) currentPiece.y++; };
     const rotatePiece = () => { if (isActive) tryRotate(); };
 
-    document.getElementById('btnLeft').addEventListener('mousedown', moveLeft);
-    document.getElementById('btnRight').addEventListener('mousedown', moveRight);
-    document.getElementById('btnDown').addEventListener('mousedown', moveDown);
-    document.getElementById('btnRotate').addEventListener('mousedown', rotatePiece);
+    // Input repeat helpers
+    let repeatTimer = null;
+
+    const startRepeat = (action, delay = 50) => {
+        if (!isActive) return;
+        action();
+        stopRepeat(); // clear any existing
+        repeatTimer = setInterval(() => {
+            if (isActive) action();
+        }, delay);
+    };
+
+    const stopRepeat = () => {
+        if (repeatTimer) {
+            clearInterval(repeatTimer);
+            repeatTimer = null;
+        }
+    };
+
+    const setupBtn = (id, action, repeat = false) => {
+        const btn = document.getElementById(id);
+        const start = (e) => {
+            e.preventDefault(); // prevent mouse emulation
+            if (repeat) startRepeat(action);
+            else action();
+        };
+        const end = (e) => {
+            e.preventDefault();
+            if (repeat) stopRepeat();
+        };
+
+        btn.addEventListener('touchstart', start, { passive: false });
+        btn.addEventListener('touchend', end);
+        btn.addEventListener('mousedown', start);
+        btn.addEventListener('mouseup', end);
+        btn.addEventListener('mouseleave', end);
+    };
+
+    setupBtn('btnLeft', moveLeft);
+    setupBtn('btnRight', moveRight);
+    setupBtn('btnDown', moveDown, true); // True for repeat
+    setupBtn('btnRotate', rotatePiece);
+
     startBtn.addEventListener('click', () => isActive ? stopGame() : startGame());
 
     // Keyboard support
