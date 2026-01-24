@@ -186,6 +186,8 @@ document.querySelectorAll('.mode-card').forEach(card => {
             initAudioMode();
         } else if (mode === 'game') {
             initTetrisMode();
+        } else if (mode === 'snake') {
+            initSnakeMode();
         }
     });
 });

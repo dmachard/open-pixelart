@@ -135,7 +135,8 @@
 
 /* Specific styling for bigger rotate button if needed, 
    or keep uniform. Let's make the rotate button distinct. */
-#btnRotate {
+#btnRotate,
+#btnSnakeUp {
     background: linear-gradient(145deg, #3a3a4a, #2a2a3a);
     color: #FFD700;
     font-size: 2rem;

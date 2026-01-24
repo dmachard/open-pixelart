@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./css/draw.css?v=5">
     <link rel="stylesheet" href="./css/gallery.css?v=3">
     <link rel="stylesheet" href="./css/settings.css?v=1">
-    <link rel="stylesheet" href="./css/game.css?v=4">
+    <link rel="stylesheet" href="./css/game.css?v=5">
 </head>
 
 <body>
@@ -62,6 +62,12 @@
                     <span class="mode-icon">🎵</span>
                     <div class="mode-name">Audio</div>
                     <div class="mode-description">Real-time audio visualizer</div>
+                </div>
+
+                <div class="mode-card" data-mode="snake">
+                    <span class="mode-icon">🐍</span>
+                    <div class="mode-name">Snake</div>
+                    <div class="mode-description">Classic Snake game</div>
                 </div>
 
                 <div class="mode-card" data-mode="game">
@@ -315,6 +321,7 @@
         </div>
     </div>
 
+    <!-- PAGE: TETRIS MODE -->
     <div id="gamePage" class="page game-page">
         <div class="game-header">
             <h1>Tetris</h1>
@@ -354,13 +361,53 @@
         </div>
     </div>
 
+    <!-- PAGE: SNAKE MODE -->
+    <div id="snakePage" class="page game-page">
+        <div class="game-header">
+            <h1 style="background: linear-gradient(to right, #00ff00, #ffff00); -webkit-background-clip: text;">Snake
+            </h1>
+        </div>
+
+        <div class="top-controls">
+            <div class="control-btn" id="backFromSnake">
+                <span class="icon">←</span>
+                <span>Back</span>
+            </div>
+            <div class="control-btn" id="startSnakeBtn">
+                <span class="icon">▶️</span>
+                <span id="snakeStatusText">Start</span>
+            </div>
+        </div>
+
+        <div class="score-container"
+            style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+            <div class="score-display" style="flex-direction: column;">
+                <span class="score-label">SCORE</span>
+                <span id="snakeScore" class="score-value">0</span>
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <!-- Snake doesn't need rotate, but we keep d-pad structure -->
+            <div class="dpad-row">
+                <button id="btnSnakeUp" class="game-btn">↑</button>
+            </div>
+            <div class="dpad-row">
+                <button id="btnSnakeLeft" class="game-btn">←</button>
+                <button id="btnSnakeDown" class="game-btn">↓</button>
+                <button id="btnSnakeRight" class="game-btn">→</button>
+            </div>
+        </div>
+    </div>
+
     <script src="./js/ble.js?v=7" defer></script>
     <script src="./js/esp32.js?v=13" defer></script>
     <script src="./js/draw.js?v=5"></script>
     <script src="./js/gallery.js?v=27"></script>
     <script src="./js/audio.js?v=5"></script>
     <script src="./js/tetris.js?v=4"></script>
-    <script src="./js/app.js?v=74"></script>
+    <script src="./js/snake.js?v=1"></script>
+    <script src="./js/app.js?v=75"></script>
 </body>
 
 </html>
