@@ -63,6 +63,12 @@
                     <div class="mode-description">Real-time audio visualizer</div>
                 </div>
 
+                <div class="mode-card" data-mode="game">
+                    <span class="mode-icon">🕹️</span>
+                    <div class="mode-name">Tetris</div>
+                    <div class="mode-description">Play Tetris on your matrix</div>
+                </div>
+
                 <div class="mode-card" data-mode="settings">
                     <span class="mode-icon">⚙️</span>
                     <div class="mode-name">Settings</div>
@@ -308,12 +314,46 @@
         </div>
     </div>
 
+    <!-- PAGE: GAME MODE -->
+    <div id="gamePage" class="page game-page">
+        <div class="game-header">
+            <h1>Tetris</h1>
+            <div class="score-display">Score: <span id="tetrisScore">0</span></div>
+        </div>
+
+        <div class="game-container">
+            <canvas id="tetrisCanvas" width="160" height="160"></canvas>
+        </div>
+
+        <div class="game-controls">
+            <div class="dpad-row">
+                <button id="btnRotate" class="game-btn action-btn">↻</button>
+            </div>
+            <div class="dpad-row">
+                <button id="btnLeft" class="game-btn">←</button>
+                <button id="btnDown" class="game-btn">↓</button>
+                <button id="btnRight" class="game-btn">→</button>
+            </div>
+            <div class="control-row">
+                <div class="control-btn" id="backFromGame">
+                    <span class="icon">←</span>
+                    <span>Back</span>
+                </div>
+                <div class="control-btn" id="startTetrisBtn">
+                    <span class="icon">▶️</span>
+                    <span id="tetrisStatusText">Start</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="./js/ble.js?v=7" defer></script>
     <script src="./js/esp32.js?v=13" defer></script>
     <script src="./js/draw.js?v=5"></script>
     <script src="./js/gallery.js?v=27"></script>
-    <script src="./js/audio.js?v=4"></script>
-    <script src="./js/app.js?v=73"></script>
+    <script src="./js/audio.js?v=5"></script>
+    <script src="./js/tetris.js?v=1"></script>
+    <script src="./js/app.js?v=74"></script>
 </body>
 
 </html>

@@ -184,6 +184,8 @@ document.querySelectorAll('.mode-card').forEach(card => {
             showPage('modePage'); // No dedicated page, just send command
         } else if (mode === 'audio') {
             initAudioMode();
+        } else if (mode === 'game') {
+            initTetrisMode();
         }
     });
 });
