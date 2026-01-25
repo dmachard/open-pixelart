@@ -5,7 +5,9 @@ help:
 	@echo "  make build   - Compile the ESP32 firmware"
 	@echo "  make flash   - Compile and flash the firmware to the device"
 	@echo "  make clean   - Clean the build artifacts"
-	@echo "  make monitor - Open the serial monitor"
+	@echo "  make monitor   - Open the serial monitor"
+	@echo "  make build-web - Build the static web application"
+	@echo "  make run-web   - Run the web application locally (Docker)"
 
 build:
 	cd firmware && pio run
@@ -18,3 +20,9 @@ clean:
 
 monitor:
 	cd firmware && pio device monitor
+
+build-web:
+	python3 build_web.py
+
+run-web: build-web
+	cd web && docker compose up

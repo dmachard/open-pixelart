@@ -1,0 +1,41 @@
+<!-- PAGE: SIMON MODE -->
+<div id="simonPage" class="page game-page">
+    <div class="game-header">
+        <h1
+            style="background: linear-gradient(to right, #ff0000, #00ff00, #0000ff); -webkit-background-clip: text; background-clip: text;">
+            Simon</h1>
+    </div>
+
+    <div class="top-controls">
+        <div class="control-btn" id="backFromSimon">
+            <span class="icon">←</span>
+            <span>Back</span>
+        </div>
+        <div class="control-btn" id="startSimonBtn">
+            <span class="icon">▶️</span>
+            <span id="simonStatusText">Start</span>
+        </div>
+    </div>
+
+    <div class="score-container"
+        style="flex: 0.5; display: flex; align-items: center; justify-content: center; width: 100%;">
+        <div class="score-display" style="flex-direction: column;">
+            <span class="score-label">LEVEL</span>
+            <span id="simonScore" class="score-value">1</span>
+        </div>
+    </div>
+
+    <div class="game-controls" style="flex: 2; justify-content: center;">
+        <div
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 300px; padding: 20px;">
+            <button id="btnSimonGreen" class="game-btn"
+                style="width: 100%; height: 120px; border-radius: 20px; background: #00ff00; border: 4px solid #00aa00;"></button>
+            <button id="btnSimonRed" class="game-btn"
+                style="width: 100%; height: 120px; border-radius: 20px; background: #ff0000; border: 4px solid #aa0000;"></button>
+            <button id="btnSimonYellow" class="game-btn"
+                style="width: 100%; height: 120px; border-radius: 20px; background: #ffff00; border: 4px solid #aaaa00;"></button>
+            <button id="btnSimonBlue" class="game-btn"
+                style="width: 100%; height: 120px; border-radius: 20px; background: #0000ff; border: 4px solid #0000aa;"></button>
+        </div>
+    </div>
+</div>

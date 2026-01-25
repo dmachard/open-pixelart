@@ -1,0 +1,52 @@
+<!-- PAGE: GALLERY MODE -->
+<div id="galleryPage" class="page gallery-page">
+    <div class="gallery-header">
+        <h1>Gallery</h1>
+    </div>
+
+    <div class="slideshow-controls">
+        <div class="control-btn" id="backFromSlideshow">
+            <span class="icon">←</span>
+            <span>Back</span>
+        </div>
+
+        <div class="control-btn" id="sendSlideshowBtn">
+            <span class="icon">🎞️</span>
+            <span>Slideshow</span>
+        </div>
+
+
+        <div class="brightness-card" title="Frame duration">
+            <span class="icon">⏱️</span>
+            <select id="frameDurationSelect">
+                <option value="1">1s</option>
+                <option value="3">3s</option>
+                <option value="5">5s</option>
+                <option value="10">10s</option>
+                <option value="15" selected>15s</option>
+                <option value="20">20s</option>
+                <option value="30">30s</option>
+                <option value="60">60s</option>
+            </select>
+        </div>
+
+        <div class="control-btn hidden" id="sendSelectedBtn">
+            <span class="icon">📤</span>
+            <span>Send</span>
+        </div>
+
+    </div>
+
+    <!-- Progress bar -->
+    <div id="progressBar" class="progress-bar hidden">
+        <div class="progress-info">
+            <span id="progressText">Sending...</span>
+            <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-track">
+            <div id="progressFill" class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div id="gallery" class="gallery-container"></div>
+</div>
