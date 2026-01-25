@@ -6,8 +6,12 @@ class SwipeHandler {
         this.touchStartX = 0;
         this.touchStartY = 0;
         this.minSwipeDistance = 20; // Lower threshold often feels faster
-        this.hasSwiped = false; // Flag to prevent multiple triggers per swipe
+        this.hasSwiped = false; // For tap detection
         this.lastTapTime = 0;
+
+        // For continuous swipe
+        this.lastTriggerX = 0;
+        this.lastTriggerY = 0;
 
         this.handleTouchStart = this.handleTouchStart.bind(this);
         this.handleTouchMove = this.handleTouchMove.bind(this);
@@ -31,6 +35,10 @@ class SwipeHandler {
     handleTouchStart(e) {
         this.touchStartX = e.changedTouches[0].screenX;
         this.touchStartY = e.changedTouches[0].screenY;
+
+        this.lastTriggerX = this.touchStartX;
+        this.lastTriggerY = this.touchStartY;
+
         this.hasSwiped = false; // Reset flag
     }
 
@@ -38,20 +46,23 @@ class SwipeHandler {
         // Prevent scrolling while swiping on the game area
         if (e.cancelable) e.preventDefault();
 
-        if (this.hasSwiped) return; // Already triggered for this gesture
-
         const touchCurrentX = e.changedTouches[0].screenX;
         const touchCurrentY = e.changedTouches[0].screenY;
 
-        const deltaX = touchCurrentX - this.touchStartX;
-        const deltaY = touchCurrentY - this.touchStartY;
+        // Calculate distance from LAST TRIGGER (not start)
+        const deltaX = touchCurrentX - this.lastTriggerX;
+        const deltaY = touchCurrentY - this.lastTriggerY;
 
         // Check horizontal
         if (Math.abs(deltaX) > this.minSwipeDistance) {
             if (Math.abs(deltaX) > Math.abs(deltaY)) { // Ensure it's mostly horizontal
                 if (deltaX > 0) this.onSwipe('RIGHT');
                 else this.onSwipe('LEFT');
-                this.hasSwiped = true;
+
+                // Reset origin for next step (Continuous Swipe)
+                this.lastTriggerX = touchCurrentX;
+                this.lastTriggerY = touchCurrentY;
+                this.hasSwiped = true; // Mark as swiped effectively (for tap detection)
                 return;
             }
         }
@@ -61,6 +72,10 @@ class SwipeHandler {
             if (Math.abs(deltaY) > Math.abs(deltaX)) { // Ensure it's mostly vertical
                 if (deltaY > 0) this.onSwipe('DOWN');
                 else this.onSwipe('UP');
+
+                // Reset origin for next step
+                this.lastTriggerX = touchCurrentX;
+                this.lastTriggerY = touchCurrentY;
                 this.hasSwiped = true;
                 return;
             }
