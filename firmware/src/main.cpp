@@ -6,12 +6,12 @@
 #include "decoder.h"
 #include "display.h"
 #include "storage.h"
+#include "text.h"
 
 #define MAX_FRAMES 15
-#define MODE_DRAW 0
-#define MODE_GALLERY 1
-#define MODE_SETTINGS 2
-#define MODE_CLOCK 3
+
+#include "audio.h"
+#include "game.h"
 
 FrameDecoder decoder;
 Frame decodedFrame;
@@ -32,6 +32,12 @@ void updateDisplay() {
   if (isUpdatingDisplay)
     return;
   isUpdatingDisplay = true;
+
+  if (currentMode == MODE_TEXT) {
+    updateText();
+    isUpdatingDisplay = false;
+    return;
+  }
 
   if (currentMode == MODE_CLOCK) {
     updateClock();
@@ -56,7 +62,6 @@ void updateDisplay() {
 }
 
 void onIncomingData(uint8_t *data, size_t len) {
-
   if (!decoder.decode(decodedFrame, data, len)) {
     Serial.println("Failed to decode frame");
     return;
@@ -67,6 +72,28 @@ void onIncomingData(uint8_t *data, size_t len) {
   isUpdatingDisplay = true;
 
   switch (decodedFrame.deviceMode) {
+  case MODE_TEXT:
+    currentMode = MODE_TEXT;
+    setText(decodedFrame.textMsg, decodedFrame.textColor,
+            decodedFrame.textSpeed);
+
+    // Update brightness if needed
+    if (decodedFrame.brightness != storedBrightness) {
+      storedBrightness = decodedFrame.brightness;
+      setDisplayBrightness(storedBrightness);
+      saveBrightness(storedBrightness);
+    }
+    Serial.printf("Text Mode: %s (Speed: %d)\n", decodedFrame.textMsg,
+                  decodedFrame.textSpeed);
+    break;
+
+  case MODE_AUDIO:
+    currentMode = MODE_AUDIO;
+    setAudioStyle(decodedFrame.audioStyle);
+    updateAudioSpectrum(decodedFrame.spectrum, 16);
+    drawAudioVisualizer();
+    break;
+
   case MODE_DRAW:
     currentMode = MODE_DRAW;
     frameCount = 1;
@@ -163,6 +190,11 @@ void onIncomingData(uint8_t *data, size_t len) {
     syncClockWithRTC();
     drawClock();
     showDisplay();
+    showDisplay();
+    break;
+  case MODE_GAME:
+    currentMode = MODE_GAME;
+    drawGameFrame(decodedFrame.gameData);
     break;
   default:
     Serial.printf("Unknown Mode received: %d\n", decodedFrame.deviceMode);
@@ -172,6 +204,8 @@ void onIncomingData(uint8_t *data, size_t len) {
   isUpdatingDisplay = false;
 }
 
+// remove the rest of the file
+
 void onClientDisconnect() {
   // Clear slideshow state but keep the last frame on screen
   frameCount = 0;
@@ -180,11 +214,20 @@ void onClientDisconnect() {
 }
 
 void setup() {
- // Initialize serial for debugging
+  // Initialize serial for debugging
   Serial.begin(115200);
 
   // Initialize clock
   initClock();
+
+  // Initialize text
+  initText();
+
+  // Initialize audio
+  initAudio();
+
+  // Initialize game
+  initGame();
 
   // Initialize storage
   initStorage();

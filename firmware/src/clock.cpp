@@ -69,6 +69,7 @@ void syncClockWithRTC() {
   minutes = now.minute();
   seconds = now.second();
   lastSync = millis();
+  lastTick = millis(); // Reset animation timer to prevent "catch-up" effect
   needsSync = false;
   Serial.printf("RTC Synced: %02d:%02d:%02d\n", hours, minutes, seconds);
 }

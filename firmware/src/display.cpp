@@ -62,3 +62,9 @@ void clearDisplay() {
   FastLED.show();
 #endif
 }
+
+void clearBuffer() {
+#ifdef USE_WS2812
+  FastLED.clear();
+#endif
+}

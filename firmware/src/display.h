@@ -16,6 +16,7 @@ void displayFrame(const Frame &f);
 void drawPixel(int x, int y, Pixel p);
 void setDisplayBrightness(uint8_t b);
 void clearDisplay();
+void clearBuffer(); // Just clears memory, no show()
 void showDisplay();
 
 #endif
