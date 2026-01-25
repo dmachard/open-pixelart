@@ -3,8 +3,8 @@ function hexToRgb(hex) {
     if (Array.isArray(hex)) return hex;
     const v = hex.replace('#', '');
     return [
-        parseInt(v.slice(0, 2), 16), 
-        parseInt(v.slice(2, 4), 16), 
+        parseInt(v.slice(0, 2), 16),
+        parseInt(v.slice(2, 4), 16),
         parseInt(v.slice(4, 6), 16)
     ];
 }
@@ -13,6 +13,7 @@ function hexToRgb(hex) {
 (function () {
     let _isWriting = false;
     let _mtu = 512; // MTU size (default 512 bytes)
+    const _queue = [];
 
     // Set MTU size for BLE communication
     function setMTU(mtu) {
@@ -20,27 +21,51 @@ function hexToRgb(hex) {
         console.log(`MTU configured: ${mtu} bytes`);
     }
 
-    // Send pixel data with fragmentation if needed
-    async function send({ 
-        pixels, 
-        palette, 
-        brightness = 25, 
-        mode = 0, 
-        frameIndex=0,
-        totalFrames=0, 
-        transition=0,
+    async function _processQueue() {
+        if (_isWriting || _queue.length === 0) return;
+        _isWriting = true;
+        const { task, resolve, reject } = _queue.shift();
+        try {
+            await task();
+            resolve();
+        } catch (e) {
+            console.error('Queue error:', e);
+            reject(e);
+        } finally {
+            _isWriting = false;
+            if (_queue.length > 0) setTimeout(_processQueue, 10);
+        }
+    }
+
+    async function send(params) {
+        return new Promise((resolve, reject) => {
+            _queue.push({
+                task: () => _doSend(params),
+                resolve,
+                reject
+            });
+            _processQueue();
+        });
+    }
+
+    // Internal send function (no lock checks logic here, handled by queue)
+    async function _doSend({
+        pixels,
+        palette,
+        brightness = 25,
+        mode = 0,
+        frameIndex = 0,
+        totalFrames = 0,
+        transition = 0,
         frameDuration = 15
     } = {}) {
         const char = window.ledmatrix?.ble?.getCharacteristic?.();
         if (!char) throw new Error('BLE is not connected.');
-        if (_isWriting) return; // skip this update
-
-        _isWriting = true;
 
         try {
             // Prepare palette (max 16 colors)
             const finalPalette = palette.slice(0, 16).map(hexToRgb);
-                
+
             // Buffer format (bytes):
             // [0] mode (1 byte)
             // [1] brightness (1 byte)
@@ -58,7 +83,7 @@ function hexToRgb(hex) {
             data.push(frameIndex);
             data.push(totalFrames);
             data.push(transition);
-            
+
             // Frame duration as uint16_t (little-endian)
             const durationClamped = Math.max(1, Math.min(frameDuration, 65535));
             data.push(durationClamped & 0xFF);        // Low byte
@@ -87,42 +112,40 @@ function hexToRgb(hex) {
                 await sendFragmented(char, buffer);
             }
 
-            } catch (e) {
-                console.error('Send error:', e);
-            } finally {
-                _isWriting = false;
-            }
+        } catch (e) {
+            throw e; // Propagate to queue handler
         }
+    }
 
     // Send fragmented data
     async function sendFragmented(char, data) {
         // 3 bytes reserved for: [0xFF][fragIndex][fragTotal]
         const fragmentPayloadSize = _mtu - 3 - 3; // -3 BLE header, -3 fragment header
         const totalFragments = Math.ceil(data.length / fragmentPayloadSize);
-        
+
         console.log(`Fragmenting: ${data.length} bytes → ${totalFragments} fragments`);
-        
+
         for (let i = 0; i < totalFragments; i++) {
             const start = i * fragmentPayloadSize;
             const end = Math.min(start + fragmentPayloadSize, data.length);
             const fragmentData = data.slice(start, end);
-            
+
             // Format: [0xFF][fragIndex][fragTotal][...data...]
             const fragment = new Uint8Array(3 + fragmentData.length);
             fragment[0] = 0xFF;              // Fragment identifier
             fragment[1] = i;                 // Fragment index
             fragment[2] = totalFragments;    // Total fragments
             fragment.set(fragmentData, 3);   // Data 
-            
+
             await char.writeValue(fragment);
             console.log(`Fragment ${i + 1}/${totalFragments} (${fragmentData.length} bytes)`);
-            
+
             // Small delay between fragments
             if (i < totalFragments - 1) {
                 await new Promise(resolve => setTimeout(resolve, 10));
             }
         }
-        
+
         console.log(`Fragmented frame complete!`);
     }
 

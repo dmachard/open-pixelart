@@ -355,54 +355,62 @@ if (modeGrid) {
 }
 
 // ========== SETTINGS MODE ==========
+// ========== SETTINGS MODE ==========
 function initSettingsMode() {
     const brightnessSelect = document.getElementById('brightnessSettingsSelect');
     const backBtn = document.getElementById('backFromSettings');
-
-    // Remove existing listeners to avoid duplicates
-    const newBrightnessSelect = brightnessSelect.cloneNode(true);
-    brightnessSelect.parentNode.replaceChild(newBrightnessSelect, brightnessSelect);
-
-    const newBackBtn = backBtn.cloneNode(true);
-    backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-
-    newBackBtn.addEventListener('click', () => showPage('modePage'));
-
-    newBrightnessSelect.value = window.globalBrightness;
-
-    newBrightnessSelect.addEventListener('change', async (e) => {
-        window.globalBrightness = parseInt(e.target.value);
-        console.log('Changing global brightness to:', window.globalBrightness);
-
-        try {
-            // Send a dummy frame with MODE_SETTINGS (2)
-            // frameIndex is 255 to indicate no change to default_mode
-            await window.ledmatrix.esp32.send({
-                pixels: new Array(16 * 16).fill(0),
-                palette: ['#000000'],
-                brightness: window.globalBrightness,
-                mode: 2, // MODE_SETTINGS
-                frameIndex: 255,
-                totalFrames: 1
-            });
-            showNotification('✓ Brightness saved');
-        } catch (err) {
-            console.error('Error saving brightness:', err);
-            showNotification('✗ Error saving brightness', true);
-        }
-    });
-
     const defaultModeSelect = document.getElementById('defaultModeSettingsSelect');
-    if (defaultModeSelect) {
-        // We don't have the current defaultMode from device info yet, 
-        // but we can set it via MODE_SETTINGS.
+    const clockColorSelect = document.getElementById('clockColorSettingsSelect');
+    const clockGradientSelect = document.getElementById('clockGradientSettingsSelect');
 
-        defaultModeSelect.addEventListener('change', async (e) => {
+    // Helper to replace element to strip listeners
+    const replaceElement = (el) => {
+        if (!el) return null;
+        const newEl = el.cloneNode(true);
+        el.parentNode.replaceChild(newEl, el);
+        return newEl;
+    };
+
+    // 1. Back Button
+    const newBackBtn = replaceElement(backBtn);
+    if (newBackBtn) {
+        newBackBtn.addEventListener('click', () => showPage('modePage'));
+    }
+
+    // 2. Brightness
+    const newBrightnessSelect = replaceElement(brightnessSelect);
+    if (newBrightnessSelect) {
+        newBrightnessSelect.value = window.globalBrightness;
+        newBrightnessSelect.addEventListener('change', async (e) => {
+            window.globalBrightness = parseInt(e.target.value);
+            console.log('Changing global brightness to:', window.globalBrightness);
+
+            try {
+                // Send a dummy frame with MODE_SETTINGS (2)
+                await window.ledmatrix.esp32.send({
+                    pixels: new Array(16 * 16).fill(0),
+                    palette: ['#000000'],
+                    brightness: window.globalBrightness,
+                    mode: 2, // MODE_SETTINGS
+                    frameIndex: 255, // 255 = no change to default mode
+                    totalFrames: 1
+                });
+                showNotification('✓ Brightness saved');
+            } catch (err) {
+                console.error('Error saving brightness:', err);
+                showNotification('✗ Error saving brightness', true);
+            }
+        });
+    }
+
+    // 3. Default Mode
+    const newDefaultModeSelect = replaceElement(defaultModeSelect);
+    if (newDefaultModeSelect) {
+        newDefaultModeSelect.addEventListener('change', async (e) => {
             const newDefaultMode = parseInt(e.target.value);
             console.log('Changing default mode to:', newDefaultMode);
 
             try {
-                // Send MODE_SETTINGS (2) with default_mode in frameIndex (byte 3)
                 await window.ledmatrix.esp32.send({
                     pixels: new Array(16 * 16).fill(0),
                     palette: ['#000000'],
@@ -419,21 +427,20 @@ function initSettingsMode() {
         });
     }
 
-    const clockColorSelect = document.getElementById('clockColorSettingsSelect');
-    if (clockColorSelect) {
-        clockColorSelect.value = window.clockColorIndex;
-        clockColorSelect.addEventListener('change', async (e) => {
+    // 4. Clock Color
+    const newClockColorSelect = replaceElement(clockColorSelect);
+    if (newClockColorSelect) {
+        newClockColorSelect.value = window.clockColorIndex;
+        newClockColorSelect.addEventListener('change', async (e) => {
             window.clockColorIndex = parseInt(e.target.value);
             console.log('Changing clock color to:', window.clockColorIndex);
 
             try {
-                // Send MODE_CLOCK (3) with clock color index in frameIndex
                 await window.ledmatrix.esp32.send({
                     pixels: new Array(16 * 16).fill(0),
                     palette: ['#000000'],
                     brightness: window.globalBrightness,
                     mode: 3, // MODE_CLOCK
-                    frameIndex: window.clockColorIndex,
                     frameIndex: window.clockColorIndex,
                     totalFrames: window.clockGradientIndex
                 });
@@ -445,15 +452,15 @@ function initSettingsMode() {
         });
     }
 
-    const clockGradientSelect = document.getElementById('clockGradientSettingsSelect');
-    if (clockGradientSelect) {
-        clockGradientSelect.value = window.clockGradientIndex;
-        clockGradientSelect.addEventListener('change', async (e) => {
+    // 5. Clock Gradient
+    const newClockGradientSelect = replaceElement(clockGradientSelect);
+    if (newClockGradientSelect) {
+        newClockGradientSelect.value = window.clockGradientIndex;
+        newClockGradientSelect.addEventListener('change', async (e) => {
             window.clockGradientIndex = parseInt(e.target.value);
             console.log('Changing clock gradient to:', window.clockGradientIndex);
 
             try {
-                // Send MODE_CLOCK (3) with clock gradient index in totalFrames (byte 4)
                 await window.ledmatrix.esp32.send({
                     pixels: new Array(16 * 16).fill(0),
                     palette: ['#000000'],
