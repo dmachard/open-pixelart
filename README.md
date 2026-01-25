@@ -20,6 +20,7 @@ A Bluetooth-controlled PixelArt display (16x16 pixels) powered by **ESP32** and 
 </p>
 
 ▶️ [See video for pixel art mode](https://github.com/user-attachments/assets/048136df-9e7c-436d-b4ce-061c26e4e01e)
+
 ▶️ [See video for clock mode](https://github.com/user-attachments/assets/048136df-9e7c-436d-b4ce-061c26e4e01e)
 
 ## Documentation
