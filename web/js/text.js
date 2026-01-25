@@ -47,37 +47,16 @@ function initTextMode() {
             // Default to 0 if element missing or value invalid
             const effect = parseInt(effectSelect ? effectSelect.value : 0);
 
+
             console.log(`Sending text: "${text}", Speed: ${speed}, Effect: ${effect}`);
 
-            const rgb = hexToRgb(colorHex);
+            await window.sendTextToDevice(text, {
+                color: colorHex,
+                speed: speed,
+                effect: effect
+            });
 
-            try {
-                // Protocol: [MODE_TEXT (6), Brightness, R, G, B, Speed, Effect, ...ASCII]
-                const payload = [
-                    6, // MODE_TEXT
-                    window.globalBrightness,
-                    rgb[0], rgb[1], rgb[2],
-                    speed,
-                    effect
-                ];
-
-                // Append text characters
-                for (let i = 0; i < text.length; i++) {
-                    payload.push(text.charCodeAt(i));
-                }
-
-                // Send 
-                const char = window.ledmatrix?.ble?.getCharacteristic?.();
-                if (char) {
-                    await char.writeValue(new Uint8Array(payload));
-                    showNotification('✓ Message sent');
-                } else {
-                    throw new Error("BLE not connected");
-                }
-            } catch (err) {
-                console.error('Error sending text:', err);
-                showNotification('✗ Failed to send', true);
-            }
+            showNotification('✓ Message sent');
         };
     }
 }

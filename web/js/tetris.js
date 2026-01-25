@@ -159,6 +159,7 @@
         isActive = false;
         statusText.textContent = 'GAME OVER';
         // alert('Game Over! Score: ' + score);
+        window?.showGameOver?.();
     }
 
 
@@ -238,6 +239,7 @@
     }
 
     function startGame() {
+        window?.stopGameOver?.();
         if (isActive) return;
         initBoard();
         score = 0;
@@ -251,6 +253,7 @@
     }
 
     function stopGame() {
+        window?.stopGameOver?.();
         isActive = false;
         statusText.textContent = 'Resume';
         cancelAnimationFrame(gameLoopId);

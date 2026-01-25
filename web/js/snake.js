@@ -24,6 +24,7 @@
     const COLOR_BG = 0;
 
     function initGame() {
+        window?.stopGameOver?.();
         snake = [
             { x: 3, y: 8 },
             { x: 2, y: 8 },
@@ -107,9 +108,11 @@
     function gameOver() {
         isActive = false;
         statusText.textContent = 'GAME OVER';
+        window?.showGameOver?.();
     }
 
     function stopGame() {
+        window?.stopGameOver?.();
         isActive = false;
         statusText.textContent = 'Resume';
         cancelAnimationFrame(gameLoopId);
