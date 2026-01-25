@@ -45,18 +45,15 @@ void updateDisplay() {
     return;
   }
 
-  if (frameCount == 0) {
-    isUpdatingDisplay = false;
-    return;
-  }
+  if (currentMode == MODE_GALLERY && frameCount > 0) {
+    unsigned long now = millis();
+    Frame &f = frames[currentFrameIndex];
 
-  unsigned long now = millis();
-  Frame &f = frames[currentFrameIndex];
-
-  if (now - lastFrameChange >= f.duration_ms) {
-    currentFrameIndex = (currentFrameIndex + 1) % frameCount;
-    lastFrameChange = now;
-    displayFrame(frames[currentFrameIndex]);
+    if (now - lastFrameChange >= f.duration_ms) {
+      currentFrameIndex = (currentFrameIndex + 1) % frameCount;
+      lastFrameChange = now;
+      displayFrame(frames[currentFrameIndex]);
+    }
   }
   isUpdatingDisplay = false;
 }

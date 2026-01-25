@@ -132,6 +132,10 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
             showNotification('Disconnected');
             showPage('connectionPage');
             hideConnectionStatus();
+
+            // Re-enable connect button
+            btn.disabled = false;
+            btn.classList.remove("btn-hide");
         });
     } catch (error) {
         console.error('Connection failed:', error);

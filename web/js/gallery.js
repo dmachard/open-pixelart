@@ -79,6 +79,12 @@ const TRANSITIONS = {
 };
 
 let selectedGalleryItems = new Set();
+let isSlideshowActive = false;
+
+function stopSlideshow() {
+    isSlideshowActive = false;
+    hideProgress();
+}
 
 // Progress bar functions
 function showProgress(current, total, text = 'Sending') {
@@ -149,6 +155,7 @@ function renderGallery() {
 
 function initSlideshowControls() {
     document.getElementById('backFromSlideshow').addEventListener('click', () => {
+        stopSlideshow();
         selectedGalleryItems.clear();
         showPage('modePage');
     });
@@ -180,9 +187,11 @@ async function sendSlideshow() {
         const framesToSend = shuffled.slice(0, Math.min(10, shuffled.length));
         const totalFrames = framesToSend.length;
 
+        isSlideshowActive = true;
         showProgress(0, totalFrames, 'Sending slideshow');
 
         for (let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
+            if (!isSlideshowActive) break;
             const item = framesToSend[frameIndex];
             try {
                 const res = await fetch(item.file);
@@ -213,10 +222,14 @@ async function sendSlideshow() {
         }
 
         hideProgress();
-        showNotification(`🎞️ Slideshow sent (${totalFrames} frames)`);
+        if (isSlideshowActive) {
+            showNotification(`🎞️ Slideshow sent (${totalFrames} frames)`);
+        }
     } catch (err) {
         hideProgress();
         showNotification('✗ Error sending slideshow', true);
+    } finally {
+        isSlideshowActive = false;
     }
 }
 
@@ -228,8 +241,10 @@ async function sendSelectedDrawings() {
         const totalFrames = selectedIndices.length;
         const frameDuration = parseInt(document.getElementById('frameDurationSelect').value);
 
+        isSlideshowActive = true;
         showProgress(0, totalFrames, 'Sending selection');
         for (let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
+            if (!isSlideshowActive) break;
             const item = galleryData[selectedIndices[frameIndex]];
             try {
                 const res = await fetch(item.file);
@@ -260,13 +275,17 @@ async function sendSelectedDrawings() {
         }
 
         hideProgress();
-        showNotification(`✓ Sent ${totalFrames} drawings`);
+        if (isSlideshowActive) {
+            showNotification(`✓ Sent ${totalFrames} drawings`);
+        }
         selectedGalleryItems.clear();
         document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('selected'));
         updateSlideshowButtons();
     } catch (err) {
         hideProgress();
         showNotification('✗ Error sending drawings', true);
+    } finally {
+        isSlideshowActive = false;
     }
 }
 
