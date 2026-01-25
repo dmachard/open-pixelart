@@ -32,8 +32,37 @@
         const swipeArea = document.getElementById('snakeSwipeArea');
         if (swipeHandler) swipeHandler.detach();
         swipeHandler = new SwipeHandler(swipeArea, (dir) => {
+            console.log('Snake Swipe:', dir);
             handleInput(dir);
         });
+
+        // ... inside handleInput
+        function handleInput(key) {
+            if (!isActive) return;
+            console.log('Snake Input:', key);
+
+            // Map Swipe directions directly OR arrow keys
+            if (['UP', 'DOWN', 'LEFT', 'RIGHT'].includes(key)) {
+                // It's a swipe (already UP/DOWN/etc)
+                var dir = key;
+            } else {
+                const map = {
+                    'ArrowUp': 'UP',
+                    'ArrowDown': 'DOWN',
+                    'ArrowLeft': 'LEFT',
+                    'ArrowRight': 'RIGHT'
+                };
+                var dir = map[key];
+            }
+
+            if (!dir) return;
+
+            // Prevent 180 degree turns
+            if (dir === 'UP' && direction.y === 0) nextDirection = { x: 0, y: -1 };
+            if (dir === 'DOWN' && direction.y === 0) nextDirection = { x: 0, y: 1 };
+            if (dir === 'LEFT' && direction.x === 0) nextDirection = { x: -1, y: 0 };
+            if (dir === 'RIGHT' && direction.x === 0) nextDirection = { x: 1, y: 0 };
+        }
 
         snake = [
             { x: 3, y: 8 },
@@ -184,6 +213,22 @@
         if (y !== 0 && direction.y !== 0) return;
         nextDirection = { x, y };
     };
+
+    function handleInput(key) {
+        if (!isActive) return;
+        console.log('Snake Input:', key);
+
+        if (key === 'UP' || key === 'ArrowUp') setDir(0, -1);
+        else if (key === 'DOWN' || key === 'ArrowDown') setDir(0, 1);
+        else if (key === 'LEFT' || key === 'ArrowLeft') setDir(-1, 0);
+        else if (key === 'RIGHT' || key === 'ArrowRight') setDir(1, 0);
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+        if (!isActive) return;
+        handleInput(e.key);
+    });
 
     // Touch/Mouse handlers with repeat logic are NOT needed for Snake direction changes,
     // just single tap is enough.

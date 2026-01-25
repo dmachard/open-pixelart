@@ -131,6 +131,17 @@
     padding-bottom: 100px;
 }
 
+/* === SIMON CONTROLS (Visible) === */
+.simon-controls {
+    display: flex;
+    /* Override the hidden game-controls */
+    width: 100%;
+    max-width: 320px;
+    flex-direction: column;
+    gap: 15px;
+    padding-bottom: 20px;
+}
+
 /* === D-PAD LAYOUT === */
 .dpad-row {
     display: flex;

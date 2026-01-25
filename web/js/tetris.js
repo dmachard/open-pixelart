@@ -249,9 +249,9 @@
         if (swipeHandler) swipeHandler.detach();
         swipeHandler = new SwipeHandler(swipeArea, (dir) => {
             if (!isActive) return;
-            if (dir === 'LEFT') movePiece(-1, 0);
-            if (dir === 'RIGHT') movePiece(1, 0);
-            if (dir === 'DOWN') dropPiece();
+            if (dir === 'LEFT') moveLeft();
+            if (dir === 'RIGHT') moveRight();
+            if (dir === 'DOWN') moveDown();
             if (dir === 'UP') rotatePiece();
         });
 
