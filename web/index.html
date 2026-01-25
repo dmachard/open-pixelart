@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./css/draw.css?v=5">
     <link rel="stylesheet" href="./css/gallery.css?v=3">
     <link rel="stylesheet" href="./css/settings.css?v=1">
-    <link rel="stylesheet" href="./css/game.css?v=7">
+    <link rel="stylesheet" href="./css/game.css?v=8">
     <link rel="stylesheet" href="./css/text.css?v=1">
 </head>
 
@@ -411,14 +411,16 @@
         </div>
     </div>
 
-    <!-- Score Display (Central) -->
-    <div class="score-container"
-        style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
-        <div class="score-display" style="flex-direction: column;">
+    <!-- Score Display (Now Compact) -->
+    <div class="score-container">
+        <div class="score-display">
             <span class="score-label">SCORE</span>
             <span id="tetrisScore" class="score-value">0</span>
         </div>
     </div>
+
+    <!-- Swipe Zone -->
+    <div id="tetrisSwipeArea" class="swipe-area"></div>
 
     <!-- Bottom Controls: D-Pad -->
     <div class="game-controls">
@@ -452,13 +454,15 @@
         </div>
     </div>
 
-    <div class="score-container"
-        style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
-        <div class="score-display" style="flex-direction: column;">
+    <div class="score-container">
+        <div class="score-display">
             <span class="score-label">SCORE</span>
             <span id="snakeScore" class="score-value">0</span>
         </div>
     </div>
+
+    <!-- Swipe Zone -->
+    <div id="snakeSwipeArea" class="swipe-area"></div>
 
     <div class="game-controls">
         <!-- Snake doesn't need rotate, but we keep d-pad structure -->
@@ -519,8 +523,8 @@
     <script src="./js/draw.js?v=5"></script>
     <script src="./js/gallery.js?v=28"></script>
     <script src="./js/audio.js?v=5"></script>
-    <script src="./js/tetris.js?v=6"></script>
-    <script src="./js/snake.js?v=3"></script>
+    <script src="./js/tetris.js?v=7"></script>
+    <script src="./js/snake.js?v=4"></script>
     <script src="./js/simon.js?v=2"></script>
     <script src="./js/text.js?v=3"></script>
 

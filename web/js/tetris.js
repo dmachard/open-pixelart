@@ -245,9 +245,9 @@
         if (isActive) return;
 
         // Init Swipe
-        const page = document.getElementById('gamePage'); // ID for Tetris page
+        const swipeArea = document.getElementById('tetrisSwipeArea');
         if (swipeHandler) swipeHandler.detach();
-        swipeHandler = new SwipeHandler(page, (dir) => {
+        swipeHandler = new SwipeHandler(swipeArea, (dir) => {
             if (!isActive) return;
             if (dir === 'LEFT') movePiece(-1, 0);
             if (dir === 'RIGHT') movePiece(1, 0);

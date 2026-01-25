@@ -29,9 +29,9 @@
         window?.stopGameOver?.();
 
         // Init Swipe
-        const page = document.getElementById('snakePage');
+        const swipeArea = document.getElementById('snakeSwipeArea');
         if (swipeHandler) swipeHandler.detach();
-        swipeHandler = new SwipeHandler(page, (dir) => {
+        swipeHandler = new SwipeHandler(swipeArea, (dir) => {
             handleInput(dir);
         });
 

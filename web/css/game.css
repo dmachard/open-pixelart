@@ -34,32 +34,69 @@
 }
 
 /* === SCORE DISPLAY (CENTRAL) === */
+/* === SCORE DISPLAY (TOP COMPACT) === */
+.score-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex: 0 0 auto;
+    /* Don't expand */
+}
+
 .score-display {
     font-family: 'Courier New', monospace;
     text-align: center;
     background: rgba(255, 255, 255, 0.05);
-    /* Softer bg */
-    padding: 20px 40px;
+    padding: 10px 30px;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
+    flex-direction: row;
+    /* Horizontal layout */
+    align-items: baseline;
+    gap: 15px;
 }
 
 .score-label {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.5);
     letter-spacing: 2px;
 }
 
 .score-value {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: bold;
     color: #fff;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    margin: 0;
+}
+
+/* === SWIPE AREA (FILLS REMAINING SPACE) === */
+.swipe-area {
+    flex: 1;
+    /* Take all remaining vertical space */
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    touch-action: none;
+    /* Critical for swipe */
+    position: relative;
+}
+
+.swipe-area::after {
+    content: "SWIPE AREA";
+    color: rgba(255, 255, 255, 0.1);
+    font-size: 1.5rem;
+    font-weight: bold;
+    pointer-events: none;
 }
 
 
@@ -85,7 +122,8 @@
 
 /* === CONTROLS WRAPPER === */
 .game-controls {
-    display: none; /* Hidden to favor Swipe gestures */
+    display: none;
+    /* Hidden to favor Swipe gestures */
     width: 100%;
     max-width: 320px;
     flex-direction: column;
