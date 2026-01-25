@@ -8,6 +8,7 @@ DataCallback dataCallback = nullptr;
 DisconnectCallback disconnectCallback = nullptr;
 uint8_t currentBLEBrightness = 25;
 uint8_t currentClockColorIndex = 0;
+uint8_t currentClockGradientIndex = 0;
 
 void ServerCallbacks::onConnect(NimBLEServer *pServer,
                                 NimBLEConnInfo &connInfo) {
@@ -21,6 +22,7 @@ void ServerCallbacks::onConnect(NimBLEServer *pServer,
                       ",\"height\":" + MATRIX_HEIGHT +
                       ",\"brightness\":" + currentBLEBrightness +
                       ",\"clockColorIndex\":" + currentClockColorIndex +
+                      ",\"clockGradientIndex\":" + currentClockGradientIndex +
                       ",\"mtu\":" + connInfo.getMTU() + "}";
   pCharInfo->setValue(deviceInfo.c_str());
   pCharInfo->notify();
@@ -52,6 +54,7 @@ void ServerCallbacks::onMTUChange(uint16_t mtu, NimBLEConnInfo &connInfo) {
                         ",\"height\":" + MATRIX_HEIGHT +
                         ",\"brightness\":" + currentBLEBrightness +
                         ",\"clockColorIndex\":" + currentClockColorIndex +
+                        ",\"clockGradientIndex\":" + currentClockGradientIndex +
                         ",\"mtu\":" + mtu + "}";
     pCharInfo->setValue(deviceInfo.c_str());
     pCharInfo->notify();
@@ -70,11 +73,13 @@ void DataCallbacks::onWrite(NimBLECharacteristic *pChar,
 }
 
 void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
-             uint8_t initialBrightness, uint8_t initialClockColor) {
+             uint8_t initialBrightness, uint8_t initialClockColor,
+             uint8_t initialClockGradient) {
   dataCallback = callback;
   disconnectCallback = onDisconnect;
   currentBLEBrightness = initialBrightness;
   currentClockColorIndex = initialClockColor;
+  currentClockGradientIndex = initialClockGradient;
 
   Serial.println("Initializing NimBLE...");
 
@@ -100,11 +105,12 @@ void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
       CHAR_INFO_UUID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
 
   // Define device info
-  String deviceInfo = String("{\"model\":\"") + DEVICE_MODEL +
-                      "\",\"width\":" + MATRIX_WIDTH +
-                      ",\"height\":" + MATRIX_HEIGHT +
-                      ",\"brightness\":" + currentBLEBrightness +
-                      ",\"clockColorIndex\":" + currentClockColorIndex + "}";
+  String deviceInfo =
+      String("{\"model\":\"") + DEVICE_MODEL + "\",\"width\":" + MATRIX_WIDTH +
+      ",\"height\":" + MATRIX_HEIGHT +
+      ",\"brightness\":" + currentBLEBrightness +
+      ",\"clockColorIndex\":" + currentClockColorIndex +
+      ",\"clockGradientIndex\":" + currentClockGradientIndex + "}";
   pCharInfo->setValue(deviceInfo.c_str());
 
   pService->start();

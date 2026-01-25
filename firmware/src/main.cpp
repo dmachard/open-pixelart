@@ -22,7 +22,8 @@ uint8_t currentFrameIndex = 0;
 unsigned long lastFrameChange = 0;
 
 uint8_t storedBrightness = 25;
-uint8_t storedClockColorIndex = 2; // Cyan by default
+uint8_t storedClockColorIndex = 2;    // Cyan by default
+uint8_t storedClockGradientIndex = 0; // Rainbow by default
 uint8_t defaultMode = MODE_CLOCK;
 uint8_t currentMode = MODE_CLOCK;
 
@@ -171,15 +172,31 @@ void onIncomingData(uint8_t *data, size_t len) {
   case MODE_CLOCK:
     currentMode = MODE_CLOCK;
     Serial.println("Switched to CLOCK Mode.");
+    Serial.printf("Clock update: Idx=%d, Total=%d\n", decodedFrame.frameIndex,
+                  decodedFrame.frameTotal);
 
     // Check if a color index was provided in frameIndex
     if (decodedFrame.frameIndex < CLOCK_PALETTE_SIZE) {
       if (storedClockColorIndex != decodedFrame.frameIndex) {
         storedClockColorIndex = decodedFrame.frameIndex;
         currentClockColorIndex = storedClockColorIndex; // Sync BLE manager
-        saveClockColor(storedClockColorIndex);
         setClockColorIndex(storedClockColorIndex);
         Serial.printf("Clock color saved to NVS: %d\n", storedClockColorIndex);
+      }
+    }
+
+    // Check if a gradient index was provided in frameTotal (repurposed)
+    // frameTotal is typically 0 or 1 for single frame modes, but we can usage
+    // it here.
+    if (decodedFrame.frameTotal < 4) { // We have 4 gradients (0-3)
+      if (storedClockGradientIndex != decodedFrame.frameTotal) {
+        storedClockGradientIndex = decodedFrame.frameTotal;
+        currentClockGradientIndex =
+            storedClockGradientIndex; // Sync BLE manager
+        saveClockGradient(storedClockGradientIndex);
+        setClockGradientIndex(storedClockGradientIndex);
+        Serial.printf("Clock gradient saved to NVS: %d\n",
+                      storedClockGradientIndex);
       }
     }
 
@@ -230,12 +247,17 @@ void setup() {
   initStorage();
   storedBrightness = loadBrightness(25);
   storedClockColorIndex = loadClockColor(2);
-  currentClockColorIndex = storedClockColorIndex; // Sync BLE manager
+  storedClockGradientIndex = loadClockGradient(0);
+  currentClockColorIndex = storedClockColorIndex;       // Sync BLE manager
+  currentClockGradientIndex = storedClockGradientIndex; // Sync BLE manager
   setClockColorIndex(storedClockColorIndex);
+  setClockGradientIndex(storedClockGradientIndex);
   defaultMode = loadDefaultMode(MODE_CLOCK);
   currentMode = defaultMode;
   Serial.printf("Loaded brightness from NVS: %d\n", storedBrightness);
   Serial.printf("Loaded clock color from NVS: %d\n", storedClockColorIndex);
+  Serial.printf("Loaded clock gradient from NVS: %d\n",
+                storedClockGradientIndex);
   Serial.printf("Loaded default mode from NVS: %d\n", defaultMode);
 
   // Initialize display
@@ -253,7 +275,7 @@ void setup() {
 
   // Initialize BLE with callbacks
   initBLE(onIncomingData, onClientDisconnect, storedBrightness,
-          storedClockColorIndex);
+          storedClockColorIndex, storedClockGradientIndex);
 }
 
 void loop() {

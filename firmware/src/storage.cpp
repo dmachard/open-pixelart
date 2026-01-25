@@ -23,6 +23,14 @@ uint8_t loadClockColor(uint8_t defaultVal) {
   return preferences.getUChar("clock_color", defaultVal);
 }
 
+void saveClockGradient(uint8_t gradientIndex) {
+  preferences.putUChar("clock_grad", gradientIndex);
+}
+
+uint8_t loadClockGradient(uint8_t defaultVal) {
+  return preferences.getUChar("clock_grad", defaultVal);
+}
+
 void saveDefaultMode(uint8_t mode) {
   preferences.putUChar("default_mode", mode);
 }

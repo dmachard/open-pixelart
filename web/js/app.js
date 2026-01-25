@@ -26,6 +26,7 @@ let currentDevice = null;
 let currentDeviceInfo = null;
 window.globalBrightness = 25; // Default brightness
 window.clockColorIndex = 2;   // Default color (Cyan)
+window.clockGradientIndex = 0; // Default gradient (Rainbow)
 
 const SERVICE_UUID = '12345678-1234-1234-1234-123456789012';
 const CHAR_UUID = '87654321-4321-4321-4321-210987654321';
@@ -115,6 +116,11 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
             // Update clock color if available
             if (currentDeviceInfo.clockColorIndex !== undefined) {
                 window.clockColorIndex = currentDeviceInfo.clockColorIndex;
+            }
+
+            // Update clock gradient if available
+            if (currentDeviceInfo.clockGradientIndex !== undefined) {
+                window.clockGradientIndex = currentDeviceInfo.clockGradientIndex;
             }
         } else {
             deviceNameEl.textContent = deviceLabel;
@@ -286,12 +292,38 @@ function initSettingsMode() {
                     brightness: window.globalBrightness,
                     mode: 3, // MODE_CLOCK
                     frameIndex: window.clockColorIndex,
-                    totalFrames: 1
+                    frameIndex: window.clockColorIndex,
+                    totalFrames: window.clockGradientIndex
                 });
                 showNotification('✓ Clock color saved');
             } catch (err) {
                 console.error('Error saving clock color:', err);
                 showNotification('✗ Error saving clock color', true);
+            }
+        });
+    }
+
+    const clockGradientSelect = document.getElementById('clockGradientSettingsSelect');
+    if (clockGradientSelect) {
+        clockGradientSelect.value = window.clockGradientIndex;
+        clockGradientSelect.addEventListener('change', async (e) => {
+            window.clockGradientIndex = parseInt(e.target.value);
+            console.log('Changing clock gradient to:', window.clockGradientIndex);
+
+            try {
+                // Send MODE_CLOCK (3) with clock gradient index in totalFrames (byte 4)
+                await window.ledmatrix.esp32.send({
+                    pixels: new Array(16 * 16).fill(0),
+                    palette: ['#000000'],
+                    brightness: window.globalBrightness,
+                    mode: 3, // MODE_CLOCK
+                    frameIndex: window.clockColorIndex,
+                    totalFrames: window.clockGradientIndex
+                });
+                showNotification('✓ Clock gradient saved');
+            } catch (err) {
+                console.error('Error saving clock gradient:', err);
+                showNotification('✗ Error saving clock gradient', true);
             }
         });
     }
@@ -307,7 +339,8 @@ async function initClockMode() {
             brightness: window.globalBrightness,
             mode: 3, // MODE_CLOCK
             frameIndex: window.clockColorIndex,
-            totalFrames: 1
+            totalFrames: window.clockGradientIndex,
+            frameDuration: 0
         });
         showNotification('🕒 Clock mode activated');
     } catch (err) {
