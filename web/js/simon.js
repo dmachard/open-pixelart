@@ -27,6 +27,7 @@
     // TL: Green, TR: Red, BL: Yellow, BR: Blue
 
     function initGame() {
+        window?.stopGameOver?.();
         sequence = [];
         isActive = true;
         statusText.textContent = 'Watch...';
@@ -147,9 +148,11 @@
     function gameOver() {
         isActive = false;
         statusText.textContent = 'GAME OVER';
+        window?.showGameOver?.();
     }
 
     function stopGame() {
+        window?.stopGameOver?.();
         isActive = false;
         statusText.textContent = 'Start';
     }

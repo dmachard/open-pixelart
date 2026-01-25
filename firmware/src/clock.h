@@ -7,6 +7,7 @@
 void initClock();
 void updateClock();
 void setClockColorIndex(uint8_t index);
+void setClockGradientIndex(uint8_t index);
 void syncClockWithRTC();
 void drawClock();
 

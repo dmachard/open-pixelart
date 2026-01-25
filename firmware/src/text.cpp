@@ -48,6 +48,7 @@ static const uint8_t font5x7[][5] = {{0x3E, 0x51, 0x49, 0x45, 0x3E}, // 0
 static char currentMessage[128] = "HELLO";
 static Pixel currentColor = {0, 255, 0};
 static uint8_t currentSpeed = 100; // ms per shift
+static uint8_t currentEffect = 0;  // 0 = Normal, 1 = Shadow
 static int scrollX = 0;
 static unsigned long lastUpdate = 0;
 static int messagePixelWidth = 0;
@@ -64,7 +65,10 @@ int getCharIndex(char c) {
 
 void calculateWidth() {
   int len = strlen(currentMessage);
-  messagePixelWidth = len * 6; // 5px width + 1px space
+  // Normal: 5px char + 1px space = 6
+  // Shadow: 5px char + 1px shadow + 1px gap = 7
+  int charStride = (currentEffect == 1) ? 7 : 6;
+  messagePixelWidth = len * charStride;
 }
 
 void initText() {
@@ -72,11 +76,13 @@ void initText() {
   calculateWidth();
 }
 
-void setText(const char *msg, Pixel color, uint8_t speed) {
+void setText(const char *msg, Pixel color, uint8_t speed, uint8_t effectIndex) {
   strncpy(currentMessage, msg, 127);
   currentMessage[127] = '\0';
   currentColor = color;
-  currentSpeed = speed; // Ensure speed is reasonable
+  currentSpeed = speed;        // Ensure speed is reasonable
+  currentEffect = effectIndex; // 0=None, 1=Shadow
+
   if (currentSpeed < 20)
     currentSpeed = 20;
 
@@ -94,25 +100,46 @@ void drawText() {
   }
 
   int cursorX = scrollX;
-  int yOffset = 4; // Center vertically (16 - 7) / 2 = 4.5 -> 4
+  int yOffset = 4; // Center vertically for 5x7
+  int charWidth = 5;
+  int fontHeight = 7;
 
   for (int i = 0; i < (int)strlen(currentMessage); i++) {
     int charIdx = getCharIndex(currentMessage[i]);
 
-    // Draw char (5 columns)
-    for (int col = 0; col < 5; col++) {
+    // Draw char columns
+    for (int col = 0; col < charWidth; col++) {
       int drawX = cursorX + col;
-      if (drawX >= 0 && drawX < 16) {
-        uint8_t columnByte = font5x7[charIdx][col];
-        for (int row = 0; row < 7; row++) { // 7 pixels high
-          if (columnByte & (1 << row)) {
-            // LSB is top
-            drawPixel(drawX, yOffset + row, currentColor);
+
+      uint8_t columnByte = font5x7[charIdx][col];
+      for (int row = 0; row < fontHeight; row++) {
+        if (columnByte & (1 << row)) {
+          // LSB is top
+          int px = drawX;
+          int py = yOffset + row;
+
+          // Shadow first (bottom-right)
+          if (currentEffect == 1) {
+            // Darker color for shadow
+            Pixel shadowColor = {(uint8_t)(currentColor.r / 4),
+                                 (uint8_t)(currentColor.g / 4),
+                                 (uint8_t)(currentColor.b / 4)};
+            if (px + 1 >= 0 && px + 1 < 16 && py + 1 < 16) {
+              drawPixel(px + 1, py + 1, shadowColor);
+            }
+          }
+
+          // Main text
+          if (px >= 0 && px < 16 && py < 16) {
+            drawPixel(px, py, currentColor);
           }
         }
       }
     }
-    cursorX += 6; // 5 width + 1 space
+    cursorX += (charWidth + 1); // Width + 1px space
+    if (currentEffect == 1) {
+      cursorX += 1; // Extra space for shadow
+    }
   }
 }
 

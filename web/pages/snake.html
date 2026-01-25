@@ -1,0 +1,40 @@
+<!-- PAGE: SNAKE MODE -->
+<div id="snakePage" class="page game-page">
+    <div class="game-header">
+        <h1
+            style="background: linear-gradient(to right, #00ff00, #ffff00); -webkit-background-clip: text; background-clip: text;">
+            Snake
+        </h1>
+    </div>
+
+    <div class="top-controls">
+        <div class="control-btn" id="backFromSnake">
+            <span class="icon">←</span>
+            <span>Back</span>
+        </div>
+        <div class="control-btn" id="startSnakeBtn">
+            <span class="icon">▶️</span>
+            <span id="snakeStatusText">Start</span>
+        </div>
+    </div>
+
+    <div class="score-container"
+        style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+        <div class="score-display" style="flex-direction: column;">
+            <span class="score-label">SCORE</span>
+            <span id="snakeScore" class="score-value">0</span>
+        </div>
+    </div>
+
+    <div class="game-controls">
+        <!-- Snake doesn't need rotate, but we keep d-pad structure -->
+        <div class="dpad-row">
+            <button id="btnSnakeUp" class="game-btn">↑</button>
+        </div>
+        <div class="dpad-row">
+            <button id="btnSnakeLeft" class="game-btn">←</button>
+            <button id="btnSnakeDown" class="game-btn">↓</button>
+            <button id="btnSnakeRight" class="game-btn">→</button>
+        </div>
+    </div>
+</div>

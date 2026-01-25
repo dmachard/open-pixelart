@@ -111,9 +111,10 @@ bool FrameDecoder::decode(Frame &out, const uint8_t *data, size_t len) {
   uint8_t deviceMode = data[0];
 
   // Special handling for Text Mode (6)
-  // [0: Mode] [1: Bright] [2: R] [3: G] [4: B] [5: Speed] [6...: Text]
+  // [0: Mode] [1: Bright] [2: R] [3: G] [4: B] [5: Speed] [6: Font] [7...:
+  // Text]
   if (deviceMode == MODE_TEXT) {
-    if (len < 7) {
+    if (len < 8) {
       Serial.printf("Text frame too small: %d bytes\n", len);
       return false;
     }
@@ -121,11 +122,12 @@ bool FrameDecoder::decode(Frame &out, const uint8_t *data, size_t len) {
     out.brightness = data[1];
     out.textColor = {data[2], data[3], data[4]};
     out.textSpeed = data[5];
+    out.fontIndex = data[6];
 
-    size_t msgLen = len - 6;
+    size_t msgLen = len - 7;
     if (msgLen > 127)
       msgLen = 127;
-    memcpy(out.textMsg, data + 6, msgLen);
+    memcpy(out.textMsg, data + 7, msgLen);
     out.textMsg[msgLen] = '\0';
 
     return true;

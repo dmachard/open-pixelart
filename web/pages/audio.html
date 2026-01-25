@@ -1,0 +1,42 @@
+<!-- PAGE: AUDIO MODE -->
+<div id="audioPage" class="page audio-page">
+    <div class="audio-header">
+        <h1>Audio Visualizer</h1>
+        <p>Make your matrix dance to the music</p>
+    </div>
+
+    <div class="audio-container"
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+
+        <div class="settings-card" style="width: 100%; max-width: 300px; margin-bottom: 20px;">
+            <div class="settings-label">
+                <span class="icon">📊</span>
+                <span>Style</span>
+            </div>
+            <div class="settings-control">
+                <select id="audioStyleSelect">
+                    <option value="0">Bars (Classic)</option>
+                    <option value="1">Radial (Pulse)</option>
+                </select>
+            </div>
+        </div>
+
+
+
+        <p class="settings-help" style="text-align: center; margin-top: 10px;">
+            Grant microphone access to start the visualization.
+        </p>
+    </div>
+
+    <div class="slideshow-controls"
+        style="margin-top: 20px; width: 100%; justify-content: center; gap: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px;">
+        <div class="control-btn" id="backFromAudio">
+            <span class="icon">←</span>
+            <span>Back</span>
+        </div>
+        <div class="control-btn" id="toggleAudioBtn">
+            <span class="icon">▶️</span>
+            <span id="audioStatusText">Start</span>
+        </div>
+    </div>
+</div>

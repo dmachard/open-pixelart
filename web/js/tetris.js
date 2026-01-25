@@ -159,6 +159,7 @@
         isActive = false;
         statusText.textContent = 'GAME OVER';
         // alert('Game Over! Score: ' + score);
+        window?.showGameOver?.();
     }
 
 
@@ -237,8 +238,23 @@
         gameLoopId = requestAnimationFrame(gameLoop);
     }
 
+    let swipeHandler = null; // Swipe Handler
+
     function startGame() {
+        window?.stopGameOver?.();
         if (isActive) return;
+
+        // Init Swipe
+        const page = document.getElementById('gamePage'); // ID for Tetris page
+        if (swipeHandler) swipeHandler.detach();
+        swipeHandler = new SwipeHandler(page, (dir) => {
+            if (!isActive) return;
+            if (dir === 'LEFT') movePiece(-1, 0);
+            if (dir === 'RIGHT') movePiece(1, 0);
+            if (dir === 'DOWN') dropPiece();
+            if (dir === 'UP') rotatePiece();
+        });
+
         initBoard();
         score = 0;
         updateScore();
@@ -251,6 +267,11 @@
     }
 
     function stopGame() {
+        window?.stopGameOver?.();
+        if (swipeHandler) {
+            swipeHandler.detach();
+            swipeHandler = null;
+        }
         isActive = false;
         statusText.textContent = 'Resume';
         cancelAnimationFrame(gameLoopId);

@@ -1,0 +1,94 @@
+<!-- PAGE: SETTINGS MODE -->
+<div id="settingsPage" class="page settings-page">
+    <div class="settings-header">
+        <h1>Settings</h1>
+        <p>Customize your PixelBox experience</p>
+    </div>
+
+    <div class="settings-container">
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">💡</span>
+                <span>Global brightness</span>
+            </div>
+            <div class="settings-control">
+                <select id="brightnessSettingsSelect">
+                    <option value="10">10 - Dark</option>
+                    <option value="20">20 - Soft</option>
+                    <option value="25">25 - Default</option>
+                    <option value="50">50 - Medium</option>
+                    <option value="75">75 - Bright</option>
+                    <option value="100">100 - Maximum</option>
+                </select>
+            </div>
+            <p class="settings-help">The brightness is automatically saved in the device's memory.
+            </p>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">🚀</span>
+                <span>Default mode at startup</span>
+            </div>
+            <div class="settings-control">
+                <select id="defaultModeSettingsSelect">
+                    <option value="0">Drawing (Last image)</option>
+                    <option value="1">Gallery (Disabled)</option>
+                    <option value="3">Clock</option>
+                </select>
+            </div>
+            <p class="settings-help">The selected mode will be activated automatically when the device is powered
+                on.
+            </p>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">🎨</span>
+                <span>Clock Digit Color</span>
+            </div>
+            <div class="settings-control">
+                <select id="clockColorSettingsSelect">
+                    <option value="0">Lime</option>
+                    <option value="1">White</option>
+                    <option value="2">Cyan (Default)</option>
+                    <option value="3">Orange</option>
+                </select>
+            </div>
+            <p class="settings-help">Select the color of the digits in Clock mode.</p>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">🌈</span>
+                <span>Clock Gradient</span>
+            </div>
+            <div class="settings-control">
+                <select id="clockGradientSettingsSelect">
+                    <option value="0">Rainbow (Default)</option>
+                    <option value="1">White</option>
+                    <option value="2">Cool (Blue-Cyan-Purple)</option>
+                    <option value="3">Warm (Red-Orange-Yellow)</option>
+                </select>
+            </div>
+            <p class="settings-help">Select the color style for the seconds ring.</p>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">ℹ️</span>
+                <span>Device information</span>
+            </div>
+            <div class="settings-help">
+                Model: <strong id="infoModel">-</strong><br>
+                Resolution: <strong id="infoResolution">-</strong><br>
+                Connection: <strong>Bluetooth Low Energy</strong>
+            </div>
+        </div>
+
+        <div class="control-btn" id="backFromSettings">
+            <span class="icon">←</span>
+            <span>Retour au Menu</span>
+        </div>
+    </div>
+</div>

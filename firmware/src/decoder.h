@@ -39,6 +39,7 @@ struct Frame {
   uint8_t deviceMode;
   uint8_t frameIndex;
   uint8_t frameTotal;
+  uint8_t fontIndex;
 };
 
 class FrameDecoder {

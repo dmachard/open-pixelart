@@ -30,6 +30,7 @@ static uint8_t hours = 0;
 static uint8_t minutes = 0;
 static uint8_t seconds = 0;
 static uint8_t storedColorIndex = 2;
+static uint8_t storedGradientIndex = 0;
 static unsigned long lastTick = 0;
 static unsigned long lastSync = 0;
 static bool needsSync = true;
@@ -80,6 +81,8 @@ void setClockColorIndex(uint8_t index) {
   }
 }
 
+void setClockGradientIndex(uint8_t index) { storedGradientIndex = index; }
+
 void drawClock() {
   // Clear border
   for (int x = 0; x < 16; x++) {
@@ -110,14 +113,37 @@ void drawClock() {
     }
 
     Pixel color;
-    if (s < 15)
-      color = Pixel{255, 255, 0};
-    else if (s < 30)
-      color = Pixel{0, 255, 0};
-    else if (s < 45)
-      color = Pixel{0, 0, 255};
-    else
-      color = Pixel{255, 0, 0};
+    if (storedGradientIndex == 0) {
+      // Classic Rainbow
+      if (s < 15)
+        color = Pixel{255, 255, 0};
+      else if (s < 30)
+        color = Pixel{0, 255, 0};
+      else if (s < 45)
+        color = Pixel{0, 0, 255};
+      else
+        color = Pixel{255, 0, 0};
+    } else if (storedGradientIndex == 1) {
+      // White
+      color = Pixel{255, 255, 255};
+    } else if (storedGradientIndex == 2) {
+      // Cool (Blue -> Cyan -> Purple)
+      if (s < 20)
+        color = Pixel{0, 0, 255}; // Blue
+      else if (s < 40)
+        color = Pixel{0, 255, 255}; // Cyan
+      else
+        color = Pixel{128, 0, 255}; // Purple
+    } else if (storedGradientIndex == 3) {
+      // Warm (Red -> Orange -> Yellow)
+      if (s < 20)
+        color = Pixel{255, 0, 0}; // Red
+      else if (s < 40)
+        color = Pixel{255, 165, 0}; // Orange
+      else
+        color = Pixel{255, 255, 0}; // Yellow
+    }
+
     drawPixel(bx, by, color);
   }
 

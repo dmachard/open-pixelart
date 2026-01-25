@@ -1,0 +1,54 @@
+<!-- PAGE: DRAW MODE -->
+<div id="drawPage" class="page draw-page">
+    <div class="draw-header">
+        <h1>Draw</h1>
+    </div>
+    <div class="slideshow-controls">
+
+        <div class="control-btn" id="backFromDraw">
+            <span class="icon">←</span>
+            <span>Back</span>
+        </div>
+
+        <div class="control-btn" id="clearBtn">
+            <span class="icon">🗑️</span>
+            <span>Clear</span>
+        </div>
+
+        <div class="control-btn" id="saveBtn">
+            <span class="icon">💾</span>
+            <span>Save</span>
+        </div>
+
+        <div class="control-btn" id="loadBtn">
+            <span class="icon">📁</span>
+            <span>Load</span>
+        </div>
+
+
+        <input type="file" id="fileInput" accept=".json" style="display:none">
+    </div>
+
+    <div class="grid-wrapper">
+        <div id="grid" class="grid"></div>
+    </div>
+
+    <div id="palette" class="palette-container">
+        <div id="eraser" class="swatch eraser" title="Eraser">✕</div>
+        <div class="swatch" data-color="#ffffff" style="background:#ffffff"></div>
+        <div class="swatch" data-color="#ff0000" style="background:#ff0000"></div>
+        <div class="swatch" data-color="#00ff00" style="background:#00ff00"></div>
+        <div class="swatch" data-color="#0000ff" style="background:#0000ff"></div>
+        <div class="swatch" data-color="#ffff00" style="background:#ffff00"></div>
+        <div class="swatch" data-color="#00ffff" style="background:#00ffff"></div>
+        <div class="swatch" data-color="#ffa500" style="background:#ffa500"></div>
+        <div class="swatch" data-color="#ffc0cb" style="background:#ffc0cb"></div>
+        <div class="swatch" data-color="#ff1493" style="background:#ff1493"></div>
+        <div class="swatch" data-color="#1e90ff" style="background:#1e90ff"></div>
+        <div class="swatch" data-color="#8a2be2" style="background:#8a2be2"></div>
+        <div class="swatch" data-color="#adff2f" style="background:#adff2f"></div>
+        <div class="swatch" data-color="#8b4513" style="background:#8b4513"></div>
+        <div class="swatch" data-color="#808080" style="background:#808080"></div>
+        <input id="customColor" class="color-picker" type="color" value="#ffffff" title="Custom">
+    </div>
+</div>

@@ -29,6 +29,9 @@ jobs:
       - name: Disable Jekyll
         run: echo "" > web/.nojekyll
 
+      - name: Build Web App
+        run: python3 build_web.py
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
