@@ -85,14 +85,12 @@
 
 /* === CONTROLS WRAPPER === */
 .game-controls {
+    display: none; /* Hidden to favor Swipe gestures */
     width: 100%;
     max-width: 320px;
-    /* Phone width friendly */
-    display: flex;
     flex-direction: column;
     gap: 15px;
     padding-bottom: 100px;
-    /* Lift buttons even higher */
 }
 
 /* === D-PAD LAYOUT === */
