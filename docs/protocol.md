@@ -1,5 +1,7 @@
 # BLE Frame Format
 
+**Advertised Bluetooth device name:** `PixelBox`
+
 The device receives data via the `CHAR_DATA_UUID` characteristic.
 The protocol supports fragmented frames for large payloads (marker `0xFF`).
 
