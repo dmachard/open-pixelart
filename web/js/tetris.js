@@ -240,6 +240,13 @@
 
     let swipeHandler = null; // Swipe Handler
 
+    function hardDrop() {
+        while (!checkCollision(0, 1, currentPiece.shape)) {
+            currentPiece.y++;
+        }
+        lockPiece();
+    }
+
     function startGame() {
         window?.stopGameOver?.();
         if (isActive) return;
@@ -253,6 +260,7 @@
             if (dir === 'RIGHT') moveRight();
             if (dir === 'DOWN') moveDown();
             if (dir === 'UP') rotatePiece();
+            if (dir === 'DOUBLE_TAP') hardDrop();
         });
 
         initBoard();

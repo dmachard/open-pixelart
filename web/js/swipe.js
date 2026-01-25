@@ -7,6 +7,7 @@ class SwipeHandler {
         this.touchStartY = 0;
         this.minSwipeDistance = 20; // Lower threshold often feels faster
         this.hasSwiped = false; // Flag to prevent multiple triggers per swipe
+        this.lastTapTime = 0;
 
         this.handleTouchStart = this.handleTouchStart.bind(this);
         this.handleTouchMove = this.handleTouchMove.bind(this);
@@ -67,6 +68,19 @@ class SwipeHandler {
     }
 
     handleTouchEnd(e) {
+        if (!this.hasSwiped) {
+            // It was a tap (no significant movement)
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - this.lastTapTime;
+
+            if (tapLength < 300 && tapLength > 0) {
+                // Double Tap detection
+                this.onSwipe('DOUBLE_TAP');
+                this.lastTapTime = 0; // Reset
+            } else {
+                this.lastTapTime = currentTime;
+            }
+        }
         this.hasSwiped = false;
     }
 }
