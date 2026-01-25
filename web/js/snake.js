@@ -18,6 +18,8 @@
     let lastMoveTime = 0;
     let moveInterval = 200; // ms
 
+    let swipeHandler = null; // Swipe Handler Instance
+
     // Colors
     const COLOR_SNAKE = 5; // Green
     const COLOR_FOOD = 7;  // Red
@@ -25,6 +27,14 @@
 
     function initGame() {
         window?.stopGameOver?.();
+
+        // Init Swipe
+        const page = document.getElementById('snakePage');
+        if (swipeHandler) swipeHandler.detach();
+        swipeHandler = new SwipeHandler(page, (dir) => {
+            handleInput(dir);
+        });
+
         snake = [
             { x: 3, y: 8 },
             { x: 2, y: 8 },
@@ -113,6 +123,10 @@
 
     function stopGame() {
         window?.stopGameOver?.();
+        if (swipeHandler) {
+            swipeHandler.detach();
+            swipeHandler = null;
+        }
         isActive = false;
         statusText.textContent = 'Resume';
         cancelAnimationFrame(gameLoopId);
