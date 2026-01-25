@@ -348,3 +348,6 @@ async function initClockMode() {
         showNotification('✗ Error clock mode', true);
     }
 }
+
+// ========== TEXT MODE ==========
+

@@ -73,7 +73,7 @@ void onIncomingData(uint8_t *data, size_t len) {
   case MODE_TEXT:
     currentMode = MODE_TEXT;
     setText(decodedFrame.textMsg, decodedFrame.textColor,
-            decodedFrame.textSpeed);
+            decodedFrame.textSpeed, decodedFrame.fontIndex);
 
     // Update brightness if needed
     if (decodedFrame.brightness != storedBrightness) {
