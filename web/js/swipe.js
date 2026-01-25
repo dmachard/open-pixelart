@@ -5,7 +5,8 @@ class SwipeHandler {
         this.onSwipe = onSwipe; // callback(direction)
         this.touchStartX = 0;
         this.touchStartY = 0;
-        this.minSwipeDistance = 30; // px
+        this.minSwipeDistance = 20; // Lower threshold often feels faster
+        this.hasSwiped = false; // Flag to prevent multiple triggers per swipe
 
         this.handleTouchStart = this.handleTouchStart.bind(this);
         this.handleTouchMove = this.handleTouchMove.bind(this);
@@ -29,33 +30,44 @@ class SwipeHandler {
     handleTouchStart(e) {
         this.touchStartX = e.changedTouches[0].screenX;
         this.touchStartY = e.changedTouches[0].screenY;
+        this.hasSwiped = false; // Reset flag
     }
 
     handleTouchMove(e) {
         // Prevent scrolling while swiping on the game area
         if (e.cancelable) e.preventDefault();
+
+        if (this.hasSwiped) return; // Already triggered for this gesture
+
+        const touchCurrentX = e.changedTouches[0].screenX;
+        const touchCurrentY = e.changedTouches[0].screenY;
+
+        const deltaX = touchCurrentX - this.touchStartX;
+        const deltaY = touchCurrentY - this.touchStartY;
+
+        // Check horizontal
+        if (Math.abs(deltaX) > this.minSwipeDistance) {
+            if (Math.abs(deltaX) > Math.abs(deltaY)) { // Ensure it's mostly horizontal
+                if (deltaX > 0) this.onSwipe('RIGHT');
+                else this.onSwipe('LEFT');
+                this.hasSwiped = true;
+                return;
+            }
+        }
+
+        // Check vertical
+        if (Math.abs(deltaY) > this.minSwipeDistance) {
+            if (Math.abs(deltaY) > Math.abs(deltaX)) { // Ensure it's mostly vertical
+                if (deltaY > 0) this.onSwipe('DOWN');
+                else this.onSwipe('UP');
+                this.hasSwiped = true;
+                return;
+            }
+        }
     }
 
     handleTouchEnd(e) {
-        const touchEndX = e.changedTouches[0].screenX;
-        const touchEndY = e.changedTouches[0].screenY;
-
-        const deltaX = touchEndX - this.touchStartX;
-        const deltaY = touchEndY - this.touchStartY;
-
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            // Horizontal Swipe
-            if (Math.abs(deltaX) > this.minSwipeDistance) {
-                if (deltaX > 0) this.onSwipe('RIGHT');
-                else this.onSwipe('LEFT');
-            }
-        } else {
-            // Vertical Swipe
-            if (Math.abs(deltaY) > this.minSwipeDistance) {
-                if (deltaY > 0) this.onSwipe('DOWN');
-                else this.onSwipe('UP');
-            }
-        }
+        this.hasSwiped = false;
     }
 }
 
