@@ -260,7 +260,7 @@
             if (dir === 'RIGHT') moveRight();
             if (dir === 'DOWN') moveDown();
             if (dir === 'UP') rotatePiece();
-            if (dir === 'DOUBLE_TAP') hardDrop();
+            if (dir === 'DOUBLE_TAP') rotatePiece();
         });
 
         initBoard();
