@@ -1,4 +1,5 @@
 #include "ble.h"
+#include "nightlight.h"
 
 NimBLEServer *pServer = nullptr;
 NimBLECharacteristic *pCharData = nullptr;
@@ -16,14 +17,20 @@ void ServerCallbacks::onConnect(NimBLEServer *pServer,
   Serial.printf("✓ Client connected (initial MTU: %d bytes)\n",
                 connInfo.getMTU());
 
+  const NightLightConfig &nl = getNightLightConfig();
+
   // Send device info upon connection
-  String deviceInfo = String("{\"model\":\"") + DEVICE_MODEL +
-                      "\",\"width\":" + MATRIX_WIDTH +
-                      ",\"height\":" + MATRIX_HEIGHT +
-                      ",\"brightness\":" + currentBLEBrightness +
-                      ",\"clockColorIndex\":" + currentClockColorIndex +
-                      ",\"clockGradientIndex\":" + currentClockGradientIndex +
-                      ",\"mtu\":" + connInfo.getMTU() + "}";
+  String deviceInfo =
+      String("{\"model\":\"") + DEVICE_MODEL + "\",\"width\":" + MATRIX_WIDTH +
+      ",\"height\":" + MATRIX_HEIGHT +
+      ",\"brightness\":" + currentBLEBrightness +
+      ",\"clockColorIndex\":" + currentClockColorIndex +
+      ",\"clockGradientIndex\":" + currentClockGradientIndex +
+      ",\"nlEnabled\":" + (nl.enabled ? 1 : 0) +
+      ",\"nlStartH\":" + nl.startHour + ",\"nlStartM\":" + nl.startMinute +
+      ",\"nlEndH\":" + nl.endHour + ",\"nlEndM\":" + nl.endMinute +
+      ",\"nlColor\":" + nl.colorIndex + ",\"nlBrightness\":" + nl.brightness +
+      ",\"mtu\":" + connInfo.getMTU() + "}";
   pCharInfo->setValue(deviceInfo.c_str());
   pCharInfo->notify();
   Serial.println("→ Device info sent: " + deviceInfo);

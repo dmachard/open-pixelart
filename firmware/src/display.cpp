@@ -15,11 +15,21 @@ int getPhysicalLedIndex(int x, int y) {
 
 void initDisplay(uint8_t brightness) {
 #ifdef USE_WS2812
-  FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(leds, NUM_LEDS);
+  static bool initialized = false;
+  memset(leds, 0, sizeof(leds));
+  if (!initialized) {
+    FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(leds, NUM_LEDS);
+    initialized = true;
+  }
   FastLED.setBrightness(brightness);
+  FastLED.setDither(0); // Disable dithering to avoid startup flicker
   FastLED.clear();
   FastLED.show();
-  Serial.printf("✓ WS2812 ready (brightness: %d)\n", brightness);
+  delay(10);
+  FastLED.show();
+  delay(10);
+  FastLED.show();
+  Serial.printf("✓ WS2812 initialized (brightness: %d)\n", brightness);
 #endif
 }
 

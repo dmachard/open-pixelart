@@ -180,6 +180,30 @@ bool FrameDecoder::decode(Frame &out, const uint8_t *data, size_t len) {
     return true;
   }
 
+  // Special handling for Night Light config (7)
+  // JS Payload: [7, brightness, colorIdx, startH, startM, endH, endM, enabled]
+  if (deviceMode == MODE_NIGHTLIGHT) {
+    out.deviceMode = MODE_NIGHTLIGHT;
+    out.brightness = data[1];
+    out.frameIndex = data[2];  // colorIdx mapped to frameIndex
+    out.frameTotal = data[3];  // startH mapped to frameTotal
+    out.audioStyle = data[4];  // startM mapped to audioStyle
+    out.textSpeed = data[5];   // endH mapped to textSpeed
+    out.fontIndex = data[6];   // endM mapped to fontIndex
+    out.textColor.r = data[7]; // enabled mapped to textColor.r
+    return true;               // Config is entirely in the 8-byte header
+  }
+
+  // -------------------------------------------------------------
+  // If we only need the header/settings (like MODE_CLOCK color update
+  // or MODE_SETTINGS parameters), we can bypass full pixel check if
+  // the length is too small, OR explicitly return early.
+  // We'll return early for SETTINGS and CLOCK.
+  if (deviceMode == MODE_SETTINGS || deviceMode == MODE_CLOCK) {
+    return true;
+  }
+  // -------------------------------------------------------------
+
   // read palette
   Serial.printf("Palette size: %d colors\n", paletteSize);
   size_t paletteBytes = paletteSize * 3;

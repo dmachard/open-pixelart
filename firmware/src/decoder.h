@@ -15,6 +15,7 @@
 #define MODE_AUDIO 4
 #define MODE_GAME 5
 #define MODE_TEXT 6
+#define MODE_NIGHTLIGHT 7
 
 // Buffer size calculation:
 // 16x16: 8 (header) + 48 (palette) + (16x16/2) = 184 bytes

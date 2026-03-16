@@ -75,6 +75,12 @@ void syncClockWithRTC() {
   Serial.printf("RTC Synced: %02d:%02d:%02d\n", hours, minutes, seconds);
 }
 
+void getCurrentTime(uint8_t &h, uint8_t &m, uint8_t &s) {
+  h = hours;
+  m = minutes;
+  s = seconds;
+}
+
 void setClockColorIndex(uint8_t index) {
   if (index < CLOCK_PALETTE_SIZE) {
     storedColorIndex = index;
@@ -84,19 +90,21 @@ void setClockColorIndex(uint8_t index) {
 void setClockGradientIndex(uint8_t index) { storedGradientIndex = index; }
 
 void drawClock() {
-  // Clear border
-  for (int x = 0; x < 16; x++) {
-    drawPixel(x, 0, Pixel{0, 0, 0});
-    drawPixel(x, 15, Pixel{0, 0, 0});
-  }
-  for (int y = 1; y < 15; y++) {
-    drawPixel(0, y, Pixel{0, 0, 0});
-    drawPixel(15, y, Pixel{0, 0, 0});
+  // Sanitize values to prevent out-of-bounds rendering
+  uint8_t h = hours % 24;
+  uint8_t m = minutes % 60;
+  uint8_t s = seconds % 60;
+
+  // 1. Clear entire screen first (0-15)
+  for (int y = 0; y < 16; y++) {
+    for (int x = 0; x < 16; x++) {
+      drawPixel(x, y, Pixel{0, 0, 0});
+    }
   }
 
-  // Draw animated border
-  for (int s = 0; s <= seconds; s++) {
-    int pos = (s + 8) % 60;
+  // 2. Draw animated border
+  for (int i = 0; i <= s; i++) {
+    int pos = (i + 8) % 60;
     int bx, by;
     if (pos < 16) {
       bx = pos;
@@ -112,56 +120,49 @@ void drawClock() {
       by = 15 - (pos - 45);
     }
 
-    Pixel color;
+    Pixel borderCol;
     if (storedGradientIndex == 0) {
       // Classic Rainbow
-      if (s < 15)
-        color = Pixel{255, 255, 0};
-      else if (s < 30)
-        color = Pixel{0, 255, 0};
-      else if (s < 45)
-        color = Pixel{0, 0, 255};
+      if (i < 15)
+        borderCol = Pixel{255, 255, 0};
+      else if (i < 30)
+        borderCol = Pixel{0, 255, 0};
+      else if (i < 45)
+        borderCol = Pixel{0, 0, 255};
       else
-        color = Pixel{255, 0, 0};
+        borderCol = Pixel{255, 0, 0};
     } else if (storedGradientIndex == 1) {
-      // White
-      color = Pixel{255, 255, 255};
+      borderCol = Pixel{255, 255, 255};
     } else if (storedGradientIndex == 2) {
-      // Cool (Blue -> Cyan -> Purple)
-      if (s < 20)
-        color = Pixel{0, 0, 255}; // Blue
-      else if (s < 40)
-        color = Pixel{0, 255, 255}; // Cyan
+      if (i < 20)
+        borderCol = Pixel{0, 0, 255};
+      else if (i < 40)
+        borderCol = Pixel{0, 255, 255};
       else
-        color = Pixel{128, 0, 255}; // Purple
+        borderCol = Pixel{128, 0, 255};
     } else if (storedGradientIndex == 3) {
-      // Warm (Red -> Orange -> Yellow)
-      if (s < 20)
-        color = Pixel{255, 0, 0}; // Red
-      else if (s < 40)
-        color = Pixel{255, 165, 0}; // Orange
+      if (i < 20)
+        borderCol = Pixel{255, 0, 0};
+      else if (i < 40)
+        borderCol = Pixel{255, 165, 0};
       else
-        color = Pixel{255, 255, 0}; // Yellow
+        borderCol = Pixel{255, 255, 0};
+    } else {
+      borderCol = Pixel{255, 255, 255};
     }
 
-    drawPixel(bx, by, color);
+    drawPixel(bx, by, borderCol);
   }
 
-  // Clear background (inner)
-  for (int y = 1; y < 15; y++) {
-    for (int x = 1; x < 15; x++) {
-      drawPixel(x, y, Pixel{0, 0, 0});
-    }
-  }
-
+  // 3. Draw digits and separator
   Pixel color =
       clockPalette[min(storedColorIndex, (uint8_t)(CLOCK_PALETTE_SIZE - 1))];
-  drawDigit(6, 2, hours / 10, color);
-  drawDigit(10, 2, hours % 10, color);
-  drawDigit(6, 9, minutes / 10, color);
-  drawDigit(10, 9, minutes % 10, color);
+  drawDigit(6, 2, h / 10, color);
+  drawDigit(10, 2, h % 10, color);
+  drawDigit(6, 9, m / 10, color);
+  drawDigit(10, 9, m % 10, color);
 
-  if (seconds % 2 == 0) {
+  if (s % 2 == 0) {
     drawPixel(4, 7, color);
     drawPixel(4, 9, color);
   }

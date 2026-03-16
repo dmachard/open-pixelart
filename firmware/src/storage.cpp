@@ -1,4 +1,5 @@
 #include "storage.h"
+#include "nightlight.h"
 #include <Arduino.h>
 #include <Preferences.h>
 #include <stdint.h>
@@ -37,6 +38,27 @@ void saveDefaultMode(uint8_t mode) {
 
 uint8_t loadDefaultMode(uint8_t defaultVal) {
   return preferences.getUChar("default_mode", defaultVal);
+}
+
+void saveNightLightConfig(const NightLightConfig &cfg) {
+  preferences.putBool("nl_enabled", cfg.enabled);
+  preferences.putUChar("nl_start_h", cfg.startHour);
+  preferences.putUChar("nl_start_m", cfg.startMinute);
+  preferences.putUChar("nl_end_h", cfg.endHour);
+  preferences.putUChar("nl_end_m", cfg.endMinute);
+  preferences.putUChar("nl_color", cfg.colorIndex);
+  preferences.putUChar("nl_bright", cfg.brightness);
+  Serial.println("NightLight config saved to NVS");
+}
+
+void loadNightLightConfig(NightLightConfig &cfg) {
+  cfg.enabled = preferences.getBool("nl_enabled", false);
+  cfg.startHour = preferences.getUChar("nl_start_h", 22);
+  cfg.startMinute = preferences.getUChar("nl_start_m", 0);
+  cfg.endHour = preferences.getUChar("nl_end_h", 7);
+  cfg.endMinute = preferences.getUChar("nl_end_m", 0);
+  cfg.colorIndex = preferences.getUChar("nl_color", 0);
+  cfg.brightness = preferences.getUChar("nl_bright", 5);
 }
 
 void saveFrame(const Frame &f) {

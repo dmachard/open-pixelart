@@ -2,6 +2,7 @@
 #define STORAGE_H
 
 #include "decoder.h"
+#include "nightlight.h"
 #include <Arduino.h>
 
 void initStorage();
@@ -17,6 +18,9 @@ uint8_t loadClockGradient(uint8_t defaultVal);
 
 void saveDefaultMode(uint8_t mode);
 uint8_t loadDefaultMode(uint8_t defaultVal);
+
+void saveNightLightConfig(const NightLightConfig &cfg);
+void loadNightLightConfig(NightLightConfig &cfg);
 
 void saveFrame(const Frame &f);
 bool loadFrame(Frame &f);
