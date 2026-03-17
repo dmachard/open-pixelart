@@ -18,575 +18,512 @@
 <body>
 
     <!-- PAGE 1: CONNECTION -->
-    <div id="connectionPage" class="page active connection-page">
-        <div class="connection-container">
-            <div class="connection-icon">📶</div>
-            <h1>PixelBox</h1>
-            <p>Connect to your LED matrix via Bluetooth to get started</p>
-            <button id="connectBtn" class="btn-connect" style="width: 100%; height: 48px; font-size: 1.1rem;">
-                Connect Device
-            </button>
-            <div id="connectionStatus" class="connection-status">
-                <span id="connectionMessage"></span>
-            </div>
+<div id="connectionPage" class="page active connection-page">
+    <div class="connection-container">
+        <div class="connection-icon">📶</div>
+        <h1>PixelBox</h1>
+        <p>Connect to your LED matrix via Bluetooth to get started</p>
+        <button id="connectBtn" class="btn-connect" style="width: 100%; height: 48px; font-size: 1.1rem;">
+            Connect Device
+        </button>
+        <div id="connectionStatus" class="connection-status">
+            <span id="connectionMessage"></span>
         </div>
     </div>
+</div>
     <!-- PAGE 2: MODE SELECTION -->
-    <div id="modePage" class="page mode-page">
-        <div class="mode-container">
-            <div class="mode-header">
-                <h1>Select Mode</h1>
-                <div class="device-name">Connected to: <span id="deviceName">Device</span></div>
+<div id="modePage" class="page mode-page">
+    <div class="mode-container">
+        <div class="mode-header">
+            <h1>Select Mode</h1>
+            <div class="device-name">Connected to: <span id="deviceName">Device</span></div>
+        </div>
+
+        <div class="mode-grid">
+            <div class="mode-card" data-mode="draw">
+                <span class="mode-icon">🎨</span>
+                <div class="mode-name">Draw</div>
+                <div class="mode-description">Create your own pixel art designs</div>
             </div>
 
-            <div class="mode-grid">
-                <div class="mode-card" data-mode="draw">
-                    <span class="mode-icon">🎨</span>
-                    <div class="mode-name">Draw</div>
-                    <div class="mode-description">Create your own pixel art designs</div>
-                </div>
+            <div class="mode-card" data-mode="gallery">
+                <span class="mode-icon">🎞️</span>
+                <div class="mode-name">Gallery</div>
+                <div class="mode-description">Browse and send preset drawings</div>
+            </div>
 
-                <div class="mode-card" data-mode="gallery">
-                    <span class="mode-icon">🎞️</span>
-                    <div class="mode-name">Gallery</div>
-                    <div class="mode-description">Browse and send preset drawings</div>
-                </div>
+            <div class="mode-card" data-mode="clock">
+                <span class="mode-icon">🕒</span>
+                <div class="mode-name">Clock</div>
+                <div class="mode-description">Display the current time</div>
+            </div>
 
-                <div class="mode-card" data-mode="clock">
-                    <span class="mode-icon">🕒</span>
-                    <div class="mode-name">Clock</div>
-                    <div class="mode-description">Display the current time</div>
-                </div>
+            <div class="mode-card" data-mode="text">
+                <span class="mode-icon">💬</span>
+                <div class="mode-name">Message</div>
+                <div class="mode-description">Scroll text on screen</div>
+            </div>
 
-                <div class="mode-card" data-mode="text">
-                    <span class="mode-icon">💬</span>
-                    <div class="mode-name">Message</div>
-                    <div class="mode-description">Scroll text on screen</div>
-                </div>
+            <div class="mode-card" data-mode="audio">
+                <span class="mode-icon">🎵</span>
+                <div class="mode-name">Audio</div>
+                <div class="mode-description">Real-time audio visualizer</div>
+            </div>
 
-                <div class="mode-card" data-mode="audio">
-                    <span class="mode-icon">🎵</span>
-                    <div class="mode-name">Audio</div>
-                    <div class="mode-description">Real-time audio visualizer</div>
-                </div>
-
-                <div class="mode-card" data-mode="snake">
-                    <span class="mode-icon">🐍</span>
-                    <div class="mode-name">Snake</div>
-                    <div class="mode-description">Classic Snake game</div>
-                </div>
+            <div class="mode-card" data-mode="snake">
+                <span class="mode-icon">🐍</span>
+                <div class="mode-name">Snake</div>
+                <div class="mode-description">Classic Snake game</div>
+            </div>
 
 
 
-                <div class="mode-card" data-mode="simon">
-                    <span class="mode-icon">🧠</span>
-                    <div class="mode-name">Simon</div>
-                    <div class="mode-description">Memory Game</div>
-                </div>
+            <div class="mode-card" data-mode="simon">
+                <span class="mode-icon">🧠</span>
+                <div class="mode-name">Simon</div>
+                <div class="mode-description">Memory Game</div>
+            </div>
 
 
 
-                <div class="mode-card" data-mode="game">
-                    <span class="mode-icon">🕹️</span>
-                    <div class="mode-name">Tetris</div>
-                    <div class="mode-description">Play Tetris on your matrix</div>
-                </div>
+            <div class="mode-card" data-mode="game">
+                <span class="mode-icon">🕹️</span>
+                <div class="mode-name">Tetris</div>
+                <div class="mode-description">Play Tetris on your matrix</div>
+            </div>
 
-                <div class="mode-card" data-mode="nightlight">
-                    <span class="mode-icon">🌙</span>
-                    <div class="mode-name">Sleep mode</div>
-                    <div class="mode-description">Turn off at night</div>
-                </div>
+            <div class="mode-card" data-mode="nightlight">
+                <span class="mode-icon">🌙</span>
+                <div class="mode-name">Sleep mode</div>
+                <div class="mode-description">Turn off at night</div>
+            </div>
 
-                <div class="mode-card" data-mode="settings">
-                    <span class="mode-icon">⚙️</span>
-                    <div class="mode-name">Settings</div>
-                    <div class="mode-description">Configure device preferences</div>
-                </div>
+            <div class="mode-card" data-mode="settings">
+                <span class="mode-icon">⚙️</span>
+                <div class="mode-name">Settings</div>
+                <div class="mode-description">Configure device preferences</div>
+            </div>
 
-                <div class="mode-card" data-mode="disconnect">
-                    <span class="mode-icon">🔌</span>
-                    <div class="mode-name">Disconnect</div>
-                    <div class="mode-description">Disconnect from device</div>
-                </div>
+            <div class="mode-card" data-mode="disconnect">
+                <span class="mode-icon">🔌</span>
+                <div class="mode-name">Disconnect</div>
+                <div class="mode-description">Disconnect from device</div>
             </div>
         </div>
     </div>
+</div>
     <!-- PAGE: GALLERY MODE -->
-    <div id="galleryPage" class="page gallery-page">
-        <div class="gallery-header">
-            <h1>Gallery</h1>
-        </div>
-
-        <div class="slideshow-controls">
-            <div class="control-btn" id="backFromSlideshow">
-                <span class="icon">←</span>
-                <span>Back</span>
-            </div>
-
-            <div class="control-btn" id="sendSlideshowBtn">
-                <span class="icon">🎞️</span>
-                <span>Slideshow</span>
-            </div>
-
-
-            <div class="brightness-card" title="Frame duration">
-                <span class="icon">⏱️</span>
-                <select id="frameDurationSelect">
-                    <option value="1">1s</option>
-                    <option value="3" selected>3s</option>
-                    <option value="5">5s</option>
-                    <option value="10">10s</option>
-                    <option value="15">15s</option>
-                    <option value="20">20s</option>
-                    <option value="30">30s</option>
-                    <option value="60">60s</option>
-                </select>
-            </div>
-
-            <div class="control-btn hidden" id="sendSelectedBtn">
-                <span class="icon">📤</span>
-                <span>Send</span>
-            </div>
-
-        </div>
-
-        <!-- Progress bar -->
-        <div id="progressBar" class="progress-bar hidden">
-            <div class="progress-info">
-                <span id="progressText">Sending...</span>
-                <span id="progressPercent">0%</span>
-            </div>
-            <div class="progress-track">
-                <div id="progressFill" class="progress-fill"></div>
-            </div>
-        </div>
-
-        <div id="gallery" class="gallery-container"></div>
+<div id="galleryPage" class="page gallery-page">
+    <div class="gallery-header">
+        <h1>Gallery</h1>
     </div>
-    <!-- PAGE: DRAW MODE -->
-    <div id="drawPage" class="page draw-page">
-        <div class="draw-header">
-            <h1>Draw</h1>
-        </div>
-        <div class="slideshow-controls">
 
-            <div class="control-btn" id="backFromDraw">
-                <span class="icon">←</span>
-                <span>Back</span>
-            </div>
-
-            <div class="control-btn" id="clearBtn">
-                <span class="icon">🗑️</span>
-                <span>Clear</span>
-            </div>
-
-            <div class="control-btn" id="saveBtn">
-                <span class="icon">💾</span>
-                <span>Save</span>
-            </div>
-
-            <div class="control-btn" id="loadBtn">
-                <span class="icon">📁</span>
-                <span>Load</span>
-            </div>
-
-
-            <input type="file" id="fileInput" accept=".json" style="display:none">
-        </div>
-
-        <div class="grid-wrapper">
-            <div id="grid" class="grid"></div>
-        </div>
-
-        <div id="palette" class="palette-container">
-            <div id="eraser" class="swatch eraser" title="Eraser">✕</div>
-            <div class="swatch" data-color="#ffffff" style="background:#ffffff"></div>
-            <div class="swatch" data-color="#ff0000" style="background:#ff0000"></div>
-            <div class="swatch" data-color="#00ff00" style="background:#00ff00"></div>
-            <div class="swatch" data-color="#0000ff" style="background:#0000ff"></div>
-            <div class="swatch" data-color="#ffff00" style="background:#ffff00"></div>
-            <div class="swatch" data-color="#00ffff" style="background:#00ffff"></div>
-            <div class="swatch" data-color="#ffa500" style="background:#ffa500"></div>
-            <div class="swatch" data-color="#ffc0cb" style="background:#ffc0cb"></div>
-            <div class="swatch" data-color="#ff1493" style="background:#ff1493"></div>
-            <div class="swatch" data-color="#1e90ff" style="background:#1e90ff"></div>
-            <div class="swatch" data-color="#8a2be2" style="background:#8a2be2"></div>
-            <div class="swatch" data-color="#adff2f" style="background:#adff2f"></div>
-            <div class="swatch" data-color="#8b4513" style="background:#8b4513"></div>
-            <div class="swatch" data-color="#808080" style="background:#808080"></div>
-            <input id="customColor" class="color-picker" type="color" value="#ffffff" title="Custom">
-        </div>
-    </div>
-    <!-- PAGE: SETTINGS MODE -->
-    <div id="settingsPage" class="page settings-page">
-        <div class="settings-header">
-            <h1>Settings</h1>
-            <p>Customize your PixelBox experience</p>
-        </div>
-
-        <div class="settings-container">
-            <div class="settings-card">
-                <div class="settings-label">
-                    <span class="icon">💡</span>
-                    <span>Global brightness</span>
-                </div>
-                <div class="settings-control">
-                    <select id="brightnessSettingsSelect">
-                        <option value="10">10 - Dark</option>
-                        <option value="20">20 - Soft</option>
-                        <option value="25">25 - Default</option>
-                        <option value="50">50 - Medium</option>
-                        <option value="75">75 - Bright</option>
-                        <option value="100">100 - Maximum</option>
-                    </select>
-                </div>
-                <p class="settings-help">The brightness is automatically saved in the device's memory.
-                </p>
-            </div>
-
-            <div class="settings-card">
-                <div class="settings-label">
-                    <span class="icon">🚀</span>
-                    <span>Default mode at startup</span>
-                </div>
-                <div class="settings-control">
-                    <select id="defaultModeSettingsSelect">
-                        <option value="0">Drawing (Last image)</option>
-                        <option value="1">Gallery (Disabled)</option>
-                        <option value="3">Clock</option>
-                    </select>
-                </div>
-                <p class="settings-help">The selected mode will be activated automatically when the device is powered
-                    on.
-                </p>
-            </div>
-
-            <div class="settings-card">
-                <div class="settings-label">
-                    <span class="icon">🎨</span>
-                    <span>Clock Digit Color</span>
-                </div>
-                <div class="settings-control">
-                    <select id="clockColorSettingsSelect">
-                        <option value="0">Lime</option>
-                        <option value="1">White</option>
-                        <option value="2">Cyan (Default)</option>
-                        <option value="3">Orange</option>
-                    </select>
-                </div>
-                <p class="settings-help">Select the color of the digits in Clock mode.</p>
-            </div>
-
-            <div class="settings-card">
-                <div class="settings-label">
-                    <span class="icon">🌈</span>
-                    <span>Clock Gradient</span>
-                </div>
-                <div class="settings-control">
-                    <select id="clockGradientSettingsSelect">
-                        <option value="0">Rainbow (Default)</option>
-                        <option value="1">White</option>
-                        <option value="2">Cool (Blue-Cyan-Purple)</option>
-                        <option value="3">Warm (Red-Orange-Yellow)</option>
-                    </select>
-                </div>
-                <p class="settings-help">Select the color style for the seconds ring.</p>
-            </div>
-
-            <div class="settings-card">
-                <div class="settings-label">
-                    <span class="icon">ℹ️</span>
-                    <span>Device information</span>
-                </div>
-                <div class="settings-help">
-                    Model: <strong id="infoModel">-</strong><br>
-                    Resolution: <strong id="infoResolution">-</strong><br>
-                    Connection: <strong>Bluetooth Low Energy</strong>
-                </div>
-            </div>
-
-            <div class="control-btn" id="backFromSettings">
-                <span class="icon">←</span>
-                <span>Retour au Menu</span>
-            </div>
-        </div>
-    </div>
-    <!-- PAGE: TEXT MODE -->
-    <div id="textPage" class="page text-page">
-        <div class="text-header">
-            <h1>Message</h1>
-            <p>Send scrolling text to the device</p>
-        </div>
-
-        <div class="text-container">
-            <div class="input-group">
-                <label>Text</label>
-                <input type="text" id="textInput" maxlength="30" value="HELLO WORLD">
-            </div>
-
-            <div class="input-group">
-                <label>Color</label>
-                <div class="color-select-wrapper">
-                    <input type="color" id="textColorPicker" value="#00FF00">
-                    <span id="textColorValue">#00FF00</span>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>Text Effect</label>
-                <select id="textEffectSelect" class="settings-control" style="width: 100%; padding: 8px;">
-                    <option value="0">Normal</option>
-                    <option value="1">Shadow</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>Speed: <span id="textSpeedValue">Fast</span></label>
-                <input type="range" id="textSpeedInput" min="20" max="250" value="80" step="10" style="direction: rtl">
-            </div>
-
-            <button id="sendTextBtn" class="control-btn" style="width: 100%; flex-direction: row; gap: 10px;">
-                <span class="icon">🚀</span>
-                <span>SEND MESSAGE</span>
-            </button>
-        </div>
-
-        <div class="control-btn" id="backFromText" style="margin-top: 20px;">
+    <div class="slideshow-controls">
+        <div class="control-btn" id="backFromSlideshow">
             <span class="icon">←</span>
             <span>Back</span>
         </div>
-    </div>
-    <!-- PAGE: AUDIO MODE -->
-    <div id="audioPage" class="page audio-page">
-        <div class="audio-header">
-            <h1>Audio Visualizer</h1>
-            <p>Make your matrix dance to the music</p>
+
+        <div class="control-btn" id="sendSlideshowBtn">
+            <span class="icon">🎞️</span>
+            <span>Slideshow</span>
         </div>
 
-        <div class="audio-container"
-            style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
 
-            <div class="settings-card" style="width: 100%; max-width: 300px; margin-bottom: 20px;">
-                <div class="settings-label">
-                    <span class="icon">📊</span>
-                    <span>Style</span>
-                </div>
-                <div class="settings-control">
-                    <select id="audioStyleSelect">
-                        <option value="0">Bars (Classic)</option>
-                        <option value="1">Radial (Pulse)</option>
-                    </select>
-                </div>
+        <div class="brightness-card" title="Frame duration">
+            <span class="icon">⏱️</span>
+            <select id="frameDurationSelect">
+                <option value="1">1s</option>
+                <option value="3" selected>3s</option>
+                <option value="5">5s</option>
+                <option value="10">10s</option>
+                <option value="15">15s</option>
+                <option value="20">20s</option>
+                <option value="30">30s</option>
+                <option value="60">60s</option>
+            </select>
+        </div>
+
+        <div class="control-btn hidden" id="sendSelectedBtn">
+            <span class="icon">📤</span>
+            <span>Send</span>
+        </div>
+
+    </div>
+
+    <!-- Progress bar -->
+    <div id="progressBar" class="progress-bar hidden">
+        <div class="progress-info">
+            <span id="progressText">Sending...</span>
+            <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-track">
+            <div id="progressFill" class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div id="gallery" class="gallery-container"></div>
+</div>
+    <!-- PAGE: DRAW MODE -->
+<div id="drawPage" class="page draw-page">
+    <div class="draw-header">
+        <h1>Draw</h1>
+    </div>
+    <div class="slideshow-controls">
+
+        <div class="control-btn" id="backFromDraw">
+            <span class="icon">←</span>
+            <span>Back</span>
+        </div>
+
+        <div class="control-btn" id="clearBtn">
+            <span class="icon">🗑️</span>
+            <span>Clear</span>
+        </div>
+
+        <div class="control-btn" id="saveBtn">
+            <span class="icon">💾</span>
+            <span>Save</span>
+        </div>
+
+        <div class="control-btn" id="loadBtn">
+            <span class="icon">📁</span>
+            <span>Load</span>
+        </div>
+
+
+        <input type="file" id="fileInput" accept=".json" style="display:none">
+    </div>
+
+    <div class="grid-wrapper">
+        <div id="grid" class="grid"></div>
+    </div>
+
+    <div id="palette" class="palette-container">
+        <div id="eraser" class="swatch eraser" title="Eraser">✕</div>
+        <div class="swatch" data-color="#ffffff" style="background:#ffffff"></div>
+        <div class="swatch" data-color="#ff0000" style="background:#ff0000"></div>
+        <div class="swatch" data-color="#00ff00" style="background:#00ff00"></div>
+        <div class="swatch" data-color="#0000ff" style="background:#0000ff"></div>
+        <div class="swatch" data-color="#ffff00" style="background:#ffff00"></div>
+        <div class="swatch" data-color="#00ffff" style="background:#00ffff"></div>
+        <div class="swatch" data-color="#ffa500" style="background:#ffa500"></div>
+        <div class="swatch" data-color="#ffc0cb" style="background:#ffc0cb"></div>
+        <div class="swatch" data-color="#ff1493" style="background:#ff1493"></div>
+        <div class="swatch" data-color="#1e90ff" style="background:#1e90ff"></div>
+        <div class="swatch" data-color="#8a2be2" style="background:#8a2be2"></div>
+        <div class="swatch" data-color="#adff2f" style="background:#adff2f"></div>
+        <div class="swatch" data-color="#8b4513" style="background:#8b4513"></div>
+        <div class="swatch" data-color="#808080" style="background:#808080"></div>
+        <input id="customColor" class="color-picker" type="color" value="#ffffff" title="Custom">
+    </div>
+</div>
+    <!-- PAGE: SETTINGS MODE -->
+<div id="settingsPage" class="page settings-page">
+    <div class="settings-header">
+        <h1>Settings</h1>
+        <p>Customize your PixelBox experience</p>
+    </div>
+
+    <div class="settings-container">
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">💡</span>
+                <span>Global brightness</span>
             </div>
-
-
-
-            <p class="settings-help" style="text-align: center; margin-top: 10px;">
-                Grant microphone access to start the visualization.
+            <div class="settings-control">
+                <select id="brightnessSettingsSelect">
+                    <option value="10">10 - Dark</option>
+                    <option value="20">20 - Soft</option>
+                    <option value="25">25 - Default</option>
+                    <option value="50">50 - Medium</option>
+                    <option value="75">75 - Bright</option>
+                    <option value="100">100 - Maximum</option>
+                </select>
+            </div>
+            <p class="settings-help">The brightness is automatically saved in the device's memory.
             </p>
         </div>
 
-        <div class="slideshow-controls"
-            style="margin-top: 20px; width: 100%; justify-content: center; gap: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px;">
-            <div class="control-btn" id="backFromAudio">
-                <span class="icon">←</span>
-                <span>Back</span>
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">🚀</span>
+                <span>Default mode at startup</span>
             </div>
-            <div class="control-btn" id="toggleAudioBtn">
-                <span class="icon">▶️</span>
-                <span id="audioStatusText">Start</span>
+            <div class="settings-control">
+                <select id="defaultModeSettingsSelect">
+                    <option value="0">Drawing (Last image)</option>
+                    <option value="1">Gallery (Disabled)</option>
+                    <option value="3">Clock</option>
+                </select>
+            </div>
+            <p class="settings-help">The selected mode will be activated automatically when the device is powered
+                on.
+            </p>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">🎨</span>
+                <span>Clock Digit Color</span>
+            </div>
+            <div class="settings-control">
+                <select id="clockColorSettingsSelect">
+                    <option value="0">Lime</option>
+                    <option value="1">White</option>
+                    <option value="2">Cyan (Default)</option>
+                    <option value="3">Orange</option>
+                </select>
+            </div>
+            <p class="settings-help">Select the color of the digits in Clock mode.</p>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">🌈</span>
+                <span>Clock Gradient</span>
+            </div>
+            <div class="settings-control">
+                <select id="clockGradientSettingsSelect">
+                    <option value="0">Rainbow (Default)</option>
+                    <option value="1">White</option>
+                    <option value="2">Cool (Blue-Cyan-Purple)</option>
+                    <option value="3">Warm (Red-Orange-Yellow)</option>
+                </select>
+            </div>
+            <p class="settings-help">Select the color style for the seconds ring.</p>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">ℹ️</span>
+                <span>Device information</span>
+            </div>
+            <div class="settings-help">
+                Model: <strong id="infoModel">-</strong><br>
+                Resolution: <strong id="infoResolution">-</strong><br>
+                Connection: <strong>Bluetooth Low Energy</strong>
             </div>
         </div>
+
+        <div class="control-btn" id="backFromSettings">
+            <span class="icon">←</span>
+            <span>Retour au Menu</span>
+        </div>
     </div>
+</div>
+    <!-- PAGE: TEXT MODE -->
+<div id="textPage" class="page text-page">
+    <div class="text-header">
+        <h1>Message</h1>
+        <p>Send scrolling text to the device</p>
+    </div>
+
+    <div class="text-container">
+        <div class="input-group">
+            <label>Text</label>
+            <input type="text" id="textInput" maxlength="30" value="HELLO WORLD">
+        </div>
+
+        <div class="input-group">
+            <label>Color</label>
+            <div class="color-select-wrapper">
+                <input type="color" id="textColorPicker" value="#00FF00">
+                <span id="textColorValue">#00FF00</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Text Effect</label>
+            <select id="textEffectSelect" class="settings-control" style="width: 100%; padding: 8px;">
+                <option value="0">Normal</option>
+                <option value="1">Shadow</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Speed: <span id="textSpeedValue">Fast</span></label>
+            <input type="range" id="textSpeedInput" min="20" max="250" value="80" step="10" style="direction: rtl">
+        </div>
+
+        <button id="sendTextBtn" class="control-btn" style="width: 100%; flex-direction: row; gap: 10px;">
+            <span class="icon">🚀</span>
+            <span>SEND MESSAGE</span>
+        </button>
+    </div>
+
+    <div class="control-btn" id="backFromText" style="margin-top: 20px;">
+        <span class="icon">←</span>
+        <span>Back</span>
+    </div>
+</div>
+    <!-- PAGE: AUDIO MODE -->
+<div id="audioPage" class="page audio-page">
+    <div class="audio-header">
+        <h1>Audio Visualizer</h1>
+        <p>Make your matrix dance to the music</p>
+    </div>
+
+    <div class="audio-container"
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+
+        <div class="settings-card" style="width: 100%; max-width: 300px; margin-bottom: 20px;">
+            <div class="settings-label">
+                <span class="icon">📊</span>
+                <span>Style</span>
+            </div>
+            <div class="settings-control">
+                <select id="audioStyleSelect">
+                    <option value="0">Bars (Classic)</option>
+                    <option value="1">Radial (Pulse)</option>
+                </select>
+            </div>
+        </div>
+
+
+
+        <p class="settings-help" style="text-align: center; margin-top: 10px;">
+            Grant microphone access to start the visualization.
+        </p>
+    </div>
+
+    <div class="slideshow-controls"
+        style="margin-top: 20px; width: 100%; justify-content: center; gap: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px;">
+        <div class="control-btn" id="backFromAudio">
+            <span class="icon">←</span>
+            <span>Back</span>
+        </div>
+        <div class="control-btn" id="toggleAudioBtn">
+            <span class="icon">▶️</span>
+            <span id="audioStatusText">Start</span>
+        </div>
+    </div>
+</div>
     <!-- PAGE: TETRIS MODE -->
-    <div id="gamePage" class="page game-page">
-        <div class="game-header">
-            <h1>Tetris</h1>
+<div id="gamePage" class="page game-page">
+    <div class="game-header">
+        <h1>Tetris</h1>
+    </div>
+
+    <!-- Top Controls: Back & Restart -->
+    <div class="top-controls">
+        <div class="control-btn" id="backFromGame">
+            <span class="icon">←</span>
+            <span>Back</span>
         </div>
-
-        <!-- Top Controls: Back & Restart -->
-        <div class="top-controls">
-            <div class="control-btn" id="backFromGame">
-                <span class="icon">←</span>
-                <span>Back</span>
-            </div>
-            <div class="control-btn" id="startTetrisBtn">
-                <span class="icon">▶️</span>
-                <span id="tetrisStatusText">Start</span>
-            </div>
-        </div>
-
-        <!-- Score Display (Now Compact) -->
-        <div class="score-container">
-            <div class="score-display">
-                <span class="score-label">SCORE</span>
-                <span id="tetrisScore" class="score-value">0</span>
-            </div>
-        </div>
-
-        <!-- Swipe Zone -->
-        <div id="tetrisSwipeArea" class="swipe-area"></div>
-
-        <!-- Bottom Controls: D-Pad -->
-        <div class="game-controls">
-            <div class="dpad-row">
-                <button id="btnRotate" class="game-btn action-btn">↻</button>
-            </div>
-            <div class="dpad-row">
-                <button id="btnLeft" class="game-btn">←</button>
-                <button id="btnDown" class="game-btn">↓</button>
-                <button id="btnRight" class="game-btn">→</button>
-            </div>
+        <div class="control-btn" id="startTetrisBtn">
+            <span class="icon">▶️</span>
+            <span id="tetrisStatusText">Start</span>
         </div>
     </div>
+
+    <!-- Score Display (Now Compact) -->
+    <div class="score-container">
+        <div class="score-display">
+            <span class="score-label">SCORE</span>
+            <span id="tetrisScore" class="score-value">0</span>
+        </div>
+    </div>
+
+    <!-- Swipe Zone -->
+    <div id="tetrisSwipeArea" class="swipe-area"></div>
+
+    <!-- Bottom Controls: D-Pad -->
+    <div class="game-controls">
+        <div class="dpad-row">
+            <button id="btnRotate" class="game-btn action-btn">↻</button>
+        </div>
+        <div class="dpad-row">
+            <button id="btnLeft" class="game-btn">←</button>
+            <button id="btnDown" class="game-btn">↓</button>
+            <button id="btnRight" class="game-btn">→</button>
+        </div>
+    </div>
+</div>
     <!-- PAGE: SNAKE MODE -->
-    <div id="snakePage" class="page game-page">
-        <div class="game-header">
-            <h1
-                style="background: linear-gradient(to right, #00ff00, #ffff00); -webkit-background-clip: text; background-clip: text;">
-                Snake
-            </h1>
+<div id="snakePage" class="page game-page">
+    <div class="game-header">
+        <h1
+            style="background: linear-gradient(to right, #00ff00, #ffff00); -webkit-background-clip: text; background-clip: text;">
+            Snake
+        </h1>
+    </div>
+
+    <div class="top-controls">
+        <div class="control-btn" id="backFromSnake">
+            <span class="icon">←</span>
+            <span>Back</span>
         </div>
-
-        <div class="top-controls">
-            <div class="control-btn" id="backFromSnake">
-                <span class="icon">←</span>
-                <span>Back</span>
-            </div>
-            <div class="control-btn" id="startSnakeBtn">
-                <span class="icon">▶️</span>
-                <span id="snakeStatusText">Start</span>
-            </div>
-        </div>
-
-        <div class="score-container">
-            <div class="score-display">
-                <span class="score-label">SCORE</span>
-                <span id="snakeScore" class="score-value">0</span>
-            </div>
-        </div>
-
-        <!-- Swipe Zone -->
-        <div id="snakeSwipeArea" class="swipe-area"></div>
-
-        <div class="game-controls">
-            <!-- Snake doesn't need rotate, but we keep d-pad structure -->
-            <div class="dpad-row">
-                <button id="btnSnakeUp" class="game-btn">↑</button>
-            </div>
-            <div class="dpad-row">
-                <button id="btnSnakeLeft" class="game-btn">←</button>
-                <button id="btnSnakeDown" class="game-btn">↓</button>
-                <button id="btnSnakeRight" class="game-btn">→</button>
-            </div>
+        <div class="control-btn" id="startSnakeBtn">
+            <span class="icon">▶️</span>
+            <span id="snakeStatusText">Start</span>
         </div>
     </div>
+
+    <div class="score-container">
+        <div class="score-display">
+            <span class="score-label">SCORE</span>
+            <span id="snakeScore" class="score-value">0</span>
+        </div>
+    </div>
+
+    <!-- Swipe Zone -->
+    <div id="snakeSwipeArea" class="swipe-area"></div>
+
+    <div class="game-controls">
+        <!-- Snake doesn't need rotate, but we keep d-pad structure -->
+        <div class="dpad-row">
+            <button id="btnSnakeUp" class="game-btn">↑</button>
+        </div>
+        <div class="dpad-row">
+            <button id="btnSnakeLeft" class="game-btn">←</button>
+            <button id="btnSnakeDown" class="game-btn">↓</button>
+            <button id="btnSnakeRight" class="game-btn">→</button>
+        </div>
+    </div>
+</div>
     <!-- PAGE: SIMON MODE -->
-    <div id="simonPage" class="page game-page">
-        <div class="game-header">
-            <h1
-                style="background: linear-gradient(to right, #ff0000, #00ff00, #0000ff); -webkit-background-clip: text; background-clip: text;">
-                Simon</h1>
-        </div>
+<div id="simonPage" class="page game-page">
+    <div class="game-header">
+        <h1
+            style="background: linear-gradient(to right, #ff0000, #00ff00, #0000ff); -webkit-background-clip: text; background-clip: text;">
+            Simon</h1>
+    </div>
 
-        <div class="top-controls">
-            <div class="control-btn" id="backFromSimon">
-                <span class="icon">←</span>
-                <span>Back</span>
-            </div>
-            <div class="control-btn" id="startSimonBtn">
-                <span class="icon">▶️</span>
-                <span id="simonStatusText">Start</span>
-            </div>
+    <div class="top-controls">
+        <div class="control-btn" id="backFromSimon">
+            <span class="icon">←</span>
+            <span>Back</span>
         </div>
-
-        <div class="score-container"
-            style="flex: 0.5; display: flex; align-items: center; justify-content: center; width: 100%;">
-            <div class="score-display" style="flex-direction: column;">
-                <span class="score-label">LEVEL</span>
-                <span id="simonScore" class="score-value">1</span>
-            </div>
-        </div>
-
-        <div class="simon-controls" style="flex: 2; justify-content: center;">
-            <div
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 300px; padding: 20px;">
-                <button id="btnSimonGreen" class="game-btn"
-                    style="width: 100%; height: 120px; border-radius: 20px; background: #00ff00; border: 4px solid #00aa00;"></button>
-                <button id="btnSimonRed" class="game-btn"
-                    style="width: 100%; height: 120px; border-radius: 20px; background: #ff0000; border: 4px solid #aa0000;"></button>
-                <button id="btnSimonYellow" class="game-btn"
-                    style="width: 100%; height: 120px; border-radius: 20px; background: #ffff00; border: 4px solid #aaaa00;"></button>
-                <button id="btnSimonBlue" class="game-btn"
-                    style="width: 100%; height: 120px; border-radius: 20px; background: #0000ff; border: 4px solid #0000aa;"></button>
-            </div>
+        <div class="control-btn" id="startSimonBtn">
+            <span class="icon">▶️</span>
+            <span id="simonStatusText">Start</span>
         </div>
     </div>
-    <!-- PAGE: NIGHT LIGHT (VEILLEUSE) -->
-    <div id="nightlightPage" class="page nightlight-page">
-        <div class="settings-header">
-            <h1>🌙 Sleep mode</h1>
-            <p>Turn off the screen automatically at night</p>
-        </div>
 
-        <div class="settings-container">
-
-            <!-- Toggle ON/OFF -->
-            <div class="settings-card nightlight-toggle-card">
-                <div class="settings-label">
-                    <span class="icon">🌙</span>
-                    <span>Enable sleep mode</span>
-                </div>
-                <div class="settings-control">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="nightlightEnabled">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                <p class="settings-help">The matrix will automatically turn off during the configured time frame.</p>
-            </div>
-
-            <!-- Heure de début -->
-            <div class="settings-card">
-                <div class="settings-label">
-                    <span class="icon">🌆</span>
-                    <span>Start time</span>
-                </div>
-                <div class="settings-control">
-                    <input type="time" id="nightlightStart" value="22:00" class="time-input">
-                </div>
-                <p class="settings-help">The night light turns on starting at this time.</p>
-            </div>
-
-            <!-- Heure de fin -->
-            <div class="settings-card">
-                <div class="settings-label">
-                    <span class="icon">🌅</span>
-                    <span>End time</span>
-                </div>
-                <div class="settings-control">
-                    <input type="time" id="nightlightEnd" value="07:00" class="time-input">
-                </div>
-                <p class="settings-help">The night light turns off at this time (can cross midnight).</p>
-            </div>
-
-
-
-            <!-- Bouton Enregistrer -->
-            <div class="control-btn nightlight-save-btn" id="nightlightSave">
-                <span class="icon">💾</span>
-                <span>Save</span>
-            </div>
-
-            <!-- Bouton Retour -->
-            <div class="control-btn" id="backFromNightlight">
-                <span class="icon">←</span>
-                <span>Back to Menu</span>
-            </div>
-
+    <div class="score-container"
+        style="flex: 0.5; display: flex; align-items: center; justify-content: center; width: 100%;">
+        <div class="score-display" style="flex-direction: column;">
+            <span class="score-label">LEVEL</span>
+            <span id="simonScore" class="score-value">1</span>
         </div>
     </div>
+
+    <div class="simon-controls" style="flex: 2; justify-content: center;">
+        <div
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 300px; padding: 20px;">
+            <button id="btnSimonGreen" class="game-btn"
+                style="width: 100%; height: 120px; border-radius: 20px; background: #00ff00; border: 4px solid #00aa00;"></button>
+            <button id="btnSimonRed" class="game-btn"
+                style="width: 100%; height: 120px; border-radius: 20px; background: #ff0000; border: 4px solid #aa0000;"></button>
+            <button id="btnSimonYellow" class="game-btn"
+                style="width: 100%; height: 120px; border-radius: 20px; background: #ffff00; border: 4px solid #aaaa00;"></button>
+            <button id="btnSimonBlue" class="game-btn"
+                style="width: 100%; height: 120px; border-radius: 20px; background: #0000ff; border: 4px solid #0000aa;"></button>
+        </div>
+    </div>
+</div>
+    <!-- INCLUDE: pages/sleepmode.html -->
 
     <script src="./js/ble.js?v=7" defer></script>
     <script src="./js/esp32.js?v=14" defer></script>
@@ -599,7 +536,7 @@
     <script src="./js/text.js?v=3"></script>
     <script src="./js/sleepmode.js?v=1"></script>
 
-    <script src="./js/app.js?v=87"></script>
+    <script src="./js/app.js?v=86"></script>
     <script src="./js/swipe.js?v=4"></script>
 </body>
 
