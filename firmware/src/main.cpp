@@ -5,6 +5,7 @@
 #include "config.h"
 #include "decoder.h"
 #include "display.h"
+#include "nightlight.h"
 #include "storage.h"
 #include "text.h"
 
@@ -26,6 +27,7 @@ uint8_t storedClockColorIndex = 2;    // Cyan by default
 uint8_t storedClockGradientIndex = 0; // Rainbow by default
 uint8_t defaultMode = MODE_CLOCK;
 uint8_t currentMode = MODE_CLOCK;
+bool nightLightActive = false; // true while the veilleuse is displayed
 
 volatile bool isUpdatingDisplay = false;
 
@@ -108,7 +110,8 @@ void onIncomingData(uint8_t *data, size_t len) {
     }
 
     displayFrame(frames[0]);
-    saveFrame(frames[0]);
+    // REMOVED `saveFrame(frames[0]);` to prevent NVS flash wear and BLE packet
+    // drops during fast drawing strokes (up to 50 frames/sec sent by webapp).
     Serial.println("Switched to DRAW Mode.");
     break;
   case MODE_GALLERY:
@@ -137,7 +140,8 @@ void onIncomingData(uint8_t *data, size_t len) {
       }
 
       displayFrame(frames[0]);
-      saveFrame(frames[0]);
+      // saveFrame(frames[0]); // REMOVED: Saving during animation load causes
+      // BLE drops and first frame visual glitch
       Serial.printf("Switched to GALLERY Mode: %d frames ready.\n", frameCount);
     }
     break;
@@ -181,6 +185,7 @@ void onIncomingData(uint8_t *data, size_t len) {
         storedClockColorIndex = decodedFrame.frameIndex;
         currentClockColorIndex = storedClockColorIndex; // Sync BLE manager
         setClockColorIndex(storedClockColorIndex);
+        saveClockColor(storedClockColorIndex);
         Serial.printf("Clock color saved to NVS: %d\n", storedClockColorIndex);
       }
     }
@@ -210,6 +215,25 @@ void onIncomingData(uint8_t *data, size_t len) {
     currentMode = MODE_GAME;
     drawGameFrame(decodedFrame.gameData);
     break;
+  case MODE_NIGHTLIGHT: {
+    // Save and apply the new night-light configuration
+    NightLightConfig cfg;
+    cfg.enabled =
+        (decodedFrame.textColor.r & 0x01) != 0; // mapped to textColor.r
+    cfg.colorIndex = decodedFrame.frameIndex;   // mapped to frameIndex
+    cfg.brightness = decodedFrame.brightness;   // mapped to brightness
+    cfg.startHour = decodedFrame.frameTotal;    // mapped to frameTotal
+    cfg.startMinute = decodedFrame.audioStyle;  // mapped to audioStyle
+    cfg.endHour = decodedFrame.textSpeed;       // mapped to textSpeed
+    cfg.endMinute = decodedFrame.fontIndex;     // mapped to fontIndex
+    setNightLightConfig(cfg);
+    saveNightLightConfig(cfg);
+    Serial.printf("NightLight config received: enabled=%d %02d:%02d->%02d:%02d "
+                  "color=%d bright=%d\n",
+                  cfg.enabled, cfg.startHour, cfg.startMinute, cfg.endHour,
+                  cfg.endMinute, cfg.colorIndex, cfg.brightness);
+    break;
+  }
   default:
     Serial.printf("Unknown Mode received: %d\n", decodedFrame.deviceMode);
     frameCount = 0;
@@ -228,59 +252,94 @@ void onClientDisconnect() {
 }
 
 void setup() {
-  // Initialize serial for debugging
+  // 1. COMMENCE INITIALIZATION (SERIAL + STORAGE)
   Serial.begin(115200);
+  Serial.println("\n--- PixelBox Stable Startup ---");
 
-  // Initialize clock
-  initClock();
-
-  // Initialize text
-  initText();
-
-  // Initialize audio
-  initAudio();
-
-  // Initialize game
-  initGame();
-
-  // Initialize storage
   initStorage();
   storedBrightness = loadBrightness(25);
-  storedClockColorIndex = loadClockColor(2);
-  storedClockGradientIndex = loadClockGradient(0);
-  currentClockColorIndex = storedClockColorIndex;       // Sync BLE manager
-  currentClockGradientIndex = storedClockGradientIndex; // Sync BLE manager
-  setClockColorIndex(storedClockColorIndex);
-  setClockGradientIndex(storedClockGradientIndex);
+  if (storedBrightness > 120)
+    storedBrightness = 25;
+
   defaultMode = loadDefaultMode(MODE_CLOCK);
   currentMode = defaultMode;
-  Serial.printf("Loaded brightness from NVS: %d\n", storedBrightness);
-  Serial.printf("Loaded clock color from NVS: %d\n", storedClockColorIndex);
-  Serial.printf("Loaded clock gradient from NVS: %d\n",
-                storedClockGradientIndex);
-  Serial.printf("Loaded default mode from NVS: %d\n", defaultMode);
+  storedClockColorIndex = loadClockColor(2);
+  storedClockGradientIndex = loadClockGradient(0);
+  setClockColorIndex(storedClockColorIndex);
+  setClockGradientIndex(storedClockGradientIndex);
 
-  // Initialize display
+  // 2. INITIALIZE DISPLAY (BLACK)
   initDisplay(storedBrightness);
+  delay(200); // Let power and bus settle
 
-  // Restore last image if available and not in clock mode
-  if (currentMode != MODE_CLOCK && loadFrame(frames[0])) {
-    frameCount = 1;
-    currentFrameIndex = 0;
-    displayFrame(frames[0]);
-  } else if (currentMode == MODE_CLOCK) {
+  // 3. INITIALIZE RTC AND OTHER MODULES
+  initClock();
+  initText();
+  initAudio();
+  initGame();
+
+  NightLightConfig nlCfg;
+  loadNightLightConfig(nlCfg);
+  setNightLightConfig(nlCfg);
+  initNightLight();
+
+  // 4. PERFORM FIRST RENDER
+  syncClockWithRTC();
+  if (currentMode == MODE_CLOCK) {
     drawClock();
     showDisplay();
+  } else {
+    if (loadFrame(frames[0])) {
+      frameCount = 1;
+      currentFrameIndex = 0;
+      displayFrame(frames[0]);
+    } else {
+      currentMode = MODE_CLOCK;
+      drawClock();
+      showDisplay();
+    }
   }
 
-  // Initialize BLE with callbacks
+  // 5. START COMMUNICATION
   initBLE(onIncomingData, onClientDisconnect, storedBrightness,
           storedClockColorIndex, storedClockGradientIndex);
+  Serial.println("--- Setup Complete ---");
 }
 
 void loop() {
-  // Continuously update display
-  updateDisplay();
+  // ---- Night-light automatic schedule check (every ~30s) ----
+  static unsigned long lastNLCheck = 0;
+  if (millis() - lastNLCheck >= 30000UL) {
+    lastNLCheck = millis();
+    syncClockWithRTC(); // refresh h/m/s from RTC
+    uint8_t curH = 0, curM = 0, curS = 0;
+    getCurrentTime(curH, curM, curS);
+    bool shouldBeActive = isNightLightTime(curH, curM);
+    if (shouldBeActive && !nightLightActive) {
+      nightLightActive = true;
+      Serial.println("NightLight: activating");
+      drawNightLight();
+    } else if (!shouldBeActive && nightLightActive) {
+      nightLightActive = false;
+      Serial.println("NightLight: deactivating, restoring previous mode");
+      // Restore previous mode display
+      if (currentMode == MODE_CLOCK) {
+        setDisplayBrightness(storedBrightness);
+        drawClock();
+        showDisplay();
+      } else if (frameCount > 0) {
+        displayFrame(frames[currentFrameIndex]);
+      }
+    } else if (shouldBeActive && nightLightActive) {
+      // Refresh the glow periodically
+      drawNightLight();
+    }
+  }
+
+  // Continuously update display (only when veilleuse is not active)
+  if (!nightLightActive) {
+    updateDisplay();
+  }
 
   // Allow background tasks to run
   yield();

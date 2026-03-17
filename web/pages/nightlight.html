@@ -1,0 +1,64 @@
+<!-- PAGE: NIGHT LIGHT (VEILLEUSE) -->
+<div id="nightlightPage" class="page nightlight-page">
+    <div class="settings-header">
+        <h1>🌙 Sleep mode</h1>
+        <p>Turn off the screen automatically at night</p>
+    </div>
+
+    <div class="settings-container">
+
+        <!-- Toggle ON/OFF -->
+        <div class="settings-card nightlight-toggle-card">
+            <div class="settings-label">
+                <span class="icon">🌙</span>
+                <span>Enable sleep mode</span>
+            </div>
+            <div class="settings-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="nightlightEnabled">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <p class="settings-help">The matrix will automatically turn off during the configured time frame.</p>
+        </div>
+
+        <!-- Heure de début -->
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">🌆</span>
+                <span>Start time</span>
+            </div>
+            <div class="settings-control">
+                <input type="time" id="nightlightStart" value="22:00" class="time-input">
+            </div>
+            <p class="settings-help">The night light turns on starting at this time.</p>
+        </div>
+
+        <!-- Heure de fin -->
+        <div class="settings-card">
+            <div class="settings-label">
+                <span class="icon">🌅</span>
+                <span>End time</span>
+            </div>
+            <div class="settings-control">
+                <input type="time" id="nightlightEnd" value="07:00" class="time-input">
+            </div>
+            <p class="settings-help">The night light turns off at this time (can cross midnight).</p>
+        </div>
+
+
+
+        <!-- Bouton Enregistrer -->
+        <div class="control-btn nightlight-save-btn" id="nightlightSave">
+            <span class="icon">💾</span>
+            <span>Save</span>
+        </div>
+
+        <!-- Bouton Retour -->
+        <div class="control-btn" id="backFromNightlight">
+            <span class="icon">←</span>
+            <span>Back to Menu</span>
+        </div>
+
+    </div>
+</div>

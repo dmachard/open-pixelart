@@ -113,6 +113,20 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
             if (infoModelEl) infoModelEl.textContent = deviceLabel;
             if (infoResEl) infoResEl.textContent = dimensionsText;
 
+            // Load NightLight config if available
+            if (currentDeviceInfo.nlEnabled !== undefined) {
+                window.nightLightConfig = {
+                    enabled: currentDeviceInfo.nlEnabled === 1,
+                    startH: currentDeviceInfo.nlStartH,
+                    startM: currentDeviceInfo.nlStartM,
+                    endH: currentDeviceInfo.nlEndH,
+                    endM: currentDeviceInfo.nlEndM,
+                    colorIndex: currentDeviceInfo.nlColor,
+                    brightness: currentDeviceInfo.nlBrightness
+                };
+                console.log('Restored NightLight info:', window.nightLightConfig);
+            }
+
             // Update clock color if available
             if (currentDeviceInfo.clockColorIndex !== undefined) {
                 window.clockColorIndex = currentDeviceInfo.clockColorIndex;
@@ -347,6 +361,9 @@ if (modeGrid) {
             initSnakeMode();
         } else if (mode === 'simon') {
             initSimonMode();
+        } else if (mode === 'nightlight') {
+            initNightLightMode();
+            showPage('nightlightPage');
         } else if (mode === 'text') {
             initTextMode();
             showPage('textPage');
