@@ -123,7 +123,14 @@ void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
   pService->start();
 
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
+  
+  // Create advertising data
+  NimBLEAdvertisementData advData;
+  advData.setName(BLE_DEVICE_NAME); // Adds Complete Local Name (0x09)
+  advData.setCompleteServices(NimBLEUUID(SERVICE_UUID));
+  
+  // Set the custom advertising data
+  pAdvertising->setAdvertisementData(advData);
   pAdvertising->start();
 
   Serial.printf("✓ NimBLE started - Model: %s (%dx%d)\n", DEVICE_MODEL,
