@@ -106,10 +106,12 @@ void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
   pCharData =
       pService->createCharacteristic(CHAR_DATA_UUID, NIMBLE_PROPERTY::WRITE);
   pCharData->setCallbacks(new DataCallbacks());
+  pCharData->createDescriptor("2901", NIMBLE_PROPERTY::READ)->setValue("Frame Data");
 
   // Characteristic for device info (READ + NOTIFY)
   pCharInfo = pService->createCharacteristic(
       CHAR_INFO_UUID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
+  pCharInfo->createDescriptor("2901", NIMBLE_PROPERTY::READ)->setValue("Device Info");
 
   // Define device info
   String deviceInfo =
@@ -124,13 +126,18 @@ void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
 
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
   
-  // Create advertising data
+  // Primary advertising data (max 31 bytes)
   NimBLEAdvertisementData advData;
   advData.setName(BLE_DEVICE_NAME); // Adds Complete Local Name (0x09)
-  advData.setCompleteServices(NimBLEUUID(SERVICE_UUID));
+  advData.setFlags(BLE_HS_ADV_F_DISC_GEN | BLE_HS_ADV_F_BREDR_UNSUP); // General Discoverable, BR/EDR Not Supported
+
+  // Scan response data (additional 31 bytes)
+  NimBLEAdvertisementData scanResponseData;
+  scanResponseData.setCompleteServices(NimBLEUUID(SERVICE_UUID));
   
-  // Set the custom advertising data
+  // Set both datasets
   pAdvertising->setAdvertisementData(advData);
+  pAdvertising->setScanResponseData(scanResponseData);
   pAdvertising->start();
 
   Serial.printf("✓ NimBLE started - Model: %s (%dx%d)\n", DEVICE_MODEL,
