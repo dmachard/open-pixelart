@@ -28,6 +28,9 @@ uint8_t storedClockGradientIndex = 0; // Rainbow by default
 uint8_t defaultMode = MODE_CLOCK;
 uint8_t currentMode = MODE_CLOCK;
 bool nightLightActive = false; // true while the veilleuse is displayed
+bool bleActive = true;
+unsigned long lastBLEActivity = 0;
+uint8_t bleTimeoutMinutes = 15;
 
 volatile bool isUpdatingDisplay = false;
 
@@ -62,6 +65,7 @@ void updateDisplay() {
 }
 
 void onIncomingData(uint8_t *data, size_t len) {
+  lastBLEActivity = millis();
   if (!decoder.decode(decodedFrame, data, len)) {
     Serial.println("Failed to decode frame");
     return;
@@ -301,6 +305,8 @@ void setup() {
   }
 
   // 5. START COMMUNICATION
+  bleTimeoutMinutes = loadBLETimeout(15);
+  lastBLEActivity = millis();
   initBLE(onIncomingData, onClientDisconnect, storedBrightness,
           storedClockColorIndex, storedClockGradientIndex);
   Serial.println("--- Setup Complete ---");
@@ -339,6 +345,21 @@ void loop() {
   // Continuously update display (only when veilleuse is not active)
   if (!nightLightActive) {
     updateDisplay();
+  }
+
+  // BLE Timeout Logic
+  if (bleActive) {
+    if (isBLEConnected()) {
+      lastBLEActivity = millis(); // Reset timeout while connected
+    } else {
+      if (bleTimeoutMinutes > 0 &&
+          (millis() - lastBLEActivity >
+           (unsigned long)bleTimeoutMinutes * 60 * 1000)) {
+        Serial.println("BLE Timeout reached - stopping BLE to save power");
+        stopBLE();
+        bleActive = false;
+      }
+    }
   }
 
   // Allow background tasks to run

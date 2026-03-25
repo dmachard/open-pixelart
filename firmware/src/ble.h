@@ -35,4 +35,7 @@ void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
              uint8_t initialBrightness, uint8_t initialClockColor,
              uint8_t initialClockGradient);
 
+void stopBLE();
+bool isBLEConnected();
+
 #endif

@@ -143,3 +143,13 @@ void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
   Serial.printf("✓ NimBLE started - Model: %s (%dx%d)\n", DEVICE_MODEL,
                 MATRIX_WIDTH, MATRIX_HEIGHT);
 }
+
+void stopBLE() {
+  if (NimBLEDevice::isInitialized()) {
+    NimBLEDevice::deinit(true);
+    deviceConnected = false;
+    Serial.println("✓ NimBLE stopped");
+  }
+}
+
+bool isBLEConnected() { return deviceConnected; }

@@ -19,6 +19,9 @@ uint8_t loadClockGradient(uint8_t defaultVal);
 void saveDefaultMode(uint8_t mode);
 uint8_t loadDefaultMode(uint8_t defaultVal);
 
+void saveBLETimeout(uint8_t minutes);
+uint8_t loadBLETimeout(uint8_t defaultVal);
+
 void saveNightLightConfig(const NightLightConfig &cfg);
 void loadNightLightConfig(NightLightConfig &cfg);
 

@@ -40,6 +40,14 @@ uint8_t loadDefaultMode(uint8_t defaultVal) {
   return preferences.getUChar("default_mode", defaultVal);
 }
 
+void saveBLETimeout(uint8_t minutes) {
+  preferences.putUChar("ble_timeout", minutes);
+}
+
+uint8_t loadBLETimeout(uint8_t defaultVal) {
+  return preferences.getUChar("ble_timeout", defaultVal);
+}
+
 void saveNightLightConfig(const NightLightConfig &cfg) {
   preferences.putBool("nl_enabled", cfg.enabled);
   preferences.putUChar("nl_start_h", cfg.startHour);
