@@ -28,4 +28,7 @@ void loadNightLightConfig(NightLightConfig &cfg);
 void saveFrame(const Frame &f);
 bool loadFrame(Frame &f);
 
+void saveAutoDST(bool enabled);
+bool loadAutoDST(bool defaultVal = true);
+
 #endif // STORAGE_H

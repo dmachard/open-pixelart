@@ -1,4 +1,5 @@
 #include "clock.h"
+#include "storage.h"
 #include <RTClib.h>
 #include <Wire.h>
 
@@ -64,9 +65,48 @@ void initClock() {
   }
 }
 
+// Helper to determine if a date is in European Summer Time (CEST)
+// Rules: Starts last Sunday of March 02:00 CET, Ends last Sunday of October
+// 03:00 CEST.
+bool isEuropeanSummerTime(DateTime dt) {
+  int month = dt.month();
+  int day = dt.day();
+  int hour = dt.hour();
+  int dow = dt.dayOfTheWeek(); // 0 is Sunday
+
+  if (month < 3 || month > 10)
+    return false;
+  if (month > 3 && month < 10)
+    return true;
+
+  // Last Sunday of March or October
+  // A day is in the "last week" if d + (7 - dow) > 31
+  if (month == 3) {
+    if (day - dow < 25)
+      return false;
+    if (dow == 0 && hour < 2)
+      return false;
+    return true;
+  } else if (month == 10) {
+    if (day - dow < 25)
+      return true;
+    if (dow == 0 && hour < 3)
+      return true;
+    return false;
+  }
+  return false;
+}
+
 void syncClockWithRTC() {
   DateTime now = rtc.now();
   hours = now.hour();
+
+  if (loadAutoDST(true)) {
+    if (isEuropeanSummerTime(now)) {
+      hours = (hours + 1) % 24;
+    }
+  }
+
   minutes = now.minute();
   seconds = now.second();
   lastSync = millis();

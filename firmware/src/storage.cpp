@@ -84,3 +84,9 @@ bool loadFrame(Frame &f) {
   }
   return false;
 }
+
+void saveAutoDST(bool enabled) { preferences.putBool("auto_dst", enabled); }
+
+bool loadAutoDST(bool defaultVal) {
+  return preferences.getBool("auto_dst", defaultVal);
+}

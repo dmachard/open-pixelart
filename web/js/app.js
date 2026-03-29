@@ -27,6 +27,7 @@ let currentDeviceInfo = null;
 window.globalBrightness = 25; // Default brightness
 window.clockColorIndex = 2;   // Default color (Cyan)
 window.clockGradientIndex = 0; // Default gradient (Rainbow)
+window.autoDST = 1;            // Default Auto DST (On)
 
 const SERVICE_UUID = '12345678-1234-1234-1234-123456789012';
 const CHAR_UUID = '87654321-4321-4321-4321-210987654321';
@@ -135,6 +136,11 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
             // Update clock gradient if available
             if (currentDeviceInfo.clockGradientIndex !== undefined) {
                 window.clockGradientIndex = currentDeviceInfo.clockGradientIndex;
+            }
+
+            // Update auto DST if available
+            if (currentDeviceInfo.autoDST !== undefined) {
+                window.autoDST = currentDeviceInfo.autoDST;
             }
         } else {
             deviceNameEl.textContent = deviceLabel;
@@ -379,6 +385,7 @@ function initSettingsMode() {
     const defaultModeSelect = document.getElementById('defaultModeSettingsSelect');
     const clockColorSelect = document.getElementById('clockColorSettingsSelect');
     const clockGradientSelect = document.getElementById('clockGradientSettingsSelect');
+    const autoDSTSelect = document.getElementById('autoDSTSettingsSelect');
 
     // Helper to replace element to strip listeners
     const replaceElement = (el) => {
@@ -490,6 +497,31 @@ function initSettingsMode() {
             } catch (err) {
                 console.error('Error saving clock gradient:', err);
                 showNotification('✗ Error saving clock gradient', true);
+            }
+        });
+    }
+
+    // 6. Auto DST
+    const newAutoDSTSelect = replaceElement(autoDSTSelect);
+    if (newAutoDSTSelect) {
+        newAutoDSTSelect.value = window.autoDST;
+        newAutoDSTSelect.addEventListener('change', async (e) => {
+            window.autoDST = parseInt(e.target.value);
+            console.log('Changing Auto DST to:', window.autoDST);
+
+            try {
+                await window.ledmatrix.esp32.send({
+                    pixels: new Array(16 * 16).fill(0),
+                    palette: ['#000000'],
+                    brightness: window.globalBrightness,
+                    mode: 2, // MODE_SETTINGS
+                    frameIndex: 255, // No change to default mode
+                    totalFrames: window.autoDST // Using totalFrames for AutoDST
+                });
+                showNotification('✓ Auto DST saved');
+            } catch (err) {
+                console.error('Error saving Auto DST:', err);
+                showNotification('✗ Error saving Auto DST', true);
             }
         });
     }

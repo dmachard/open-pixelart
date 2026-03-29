@@ -176,6 +176,17 @@ void onIncomingData(uint8_t *data, size_t len) {
       saveDefaultMode(defaultMode);
       Serial.printf("Default mode saved to NVS: %d\n", defaultMode);
     }
+
+    // Update AutoDST if frameTotal is used (0=off, 1=on, 255=no change)
+    if (decodedFrame.frameTotal != 255) {
+      saveAutoDST(decodedFrame.frameTotal == 1);
+      Serial.printf("AutoDST saved to NVS: %d\n", decodedFrame.frameTotal == 1);
+      if (currentMode == MODE_CLOCK) {
+        syncClockWithRTC();
+        drawClock();
+        showDisplay();
+      }
+    }
     break;
   case MODE_CLOCK:
     currentMode = MODE_CLOCK;
@@ -308,7 +319,7 @@ void setup() {
   bleTimeoutMinutes = loadBLETimeout(15);
   lastBLEActivity = millis();
   initBLE(onIncomingData, onClientDisconnect, storedBrightness,
-          storedClockColorIndex, storedClockGradientIndex);
+          storedClockColorIndex, storedClockGradientIndex, loadAutoDST(true));
   Serial.println("--- Setup Complete ---");
 }
 

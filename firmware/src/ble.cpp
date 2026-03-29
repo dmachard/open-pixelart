@@ -10,6 +10,7 @@ DisconnectCallback disconnectCallback = nullptr;
 uint8_t currentBLEBrightness = 25;
 uint8_t currentClockColorIndex = 0;
 uint8_t currentClockGradientIndex = 0;
+bool currentAutoDST = true;
 
 void ServerCallbacks::onConnect(NimBLEServer *pServer,
                                 NimBLEConnInfo &connInfo) {
@@ -30,6 +31,7 @@ void ServerCallbacks::onConnect(NimBLEServer *pServer,
       ",\"nlStartH\":" + nl.startHour + ",\"nlStartM\":" + nl.startMinute +
       ",\"nlEndH\":" + nl.endHour + ",\"nlEndM\":" + nl.endMinute +
       ",\"nlColor\":" + nl.colorIndex + ",\"nlBrightness\":" + nl.brightness +
+      ",\"autoDST\":" + (currentAutoDST ? 1 : 0) +
       ",\"mtu\":" + connInfo.getMTU() + "}";
   pCharInfo->setValue(deviceInfo.c_str());
   pCharInfo->notify();
@@ -62,6 +64,7 @@ void ServerCallbacks::onMTUChange(uint16_t mtu, NimBLEConnInfo &connInfo) {
                         ",\"brightness\":" + currentBLEBrightness +
                         ",\"clockColorIndex\":" + currentClockColorIndex +
                         ",\"clockGradientIndex\":" + currentClockGradientIndex +
+                        ",\"autoDST\":" + (currentAutoDST ? 1 : 0) +
                         ",\"mtu\":" + mtu + "}";
     pCharInfo->setValue(deviceInfo.c_str());
     pCharInfo->notify();
@@ -81,12 +84,13 @@ void DataCallbacks::onWrite(NimBLECharacteristic *pChar,
 
 void initBLE(DataCallback callback, DisconnectCallback onDisconnect,
              uint8_t initialBrightness, uint8_t initialClockColor,
-             uint8_t initialClockGradient) {
+             uint8_t initialClockGradient, bool initialAutoDST) {
   dataCallback = callback;
   disconnectCallback = onDisconnect;
   currentBLEBrightness = initialBrightness;
   currentClockColorIndex = initialClockColor;
   currentClockGradientIndex = initialClockGradient;
+  currentAutoDST = initialAutoDST;
 
   Serial.println("Initializing NimBLE...");
 
