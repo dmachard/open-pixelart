@@ -20,7 +20,7 @@ jobs:
         working-directory: ./firmware
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       
       - name: Cache pip
         uses: actions/cache@v5
